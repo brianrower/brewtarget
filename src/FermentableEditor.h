@@ -53,12 +53,13 @@ public slots:
    void changed(QMetaProperty,QVariant);
 
 private:
-   Fermentable* obsFerm;
    /*! Updates the UI elements effected by the \b metaProp of
     *  the fermentable we are watching. If \b metaProp is null,
     *  then update all the UI elements at once.
     */
    void showChanges(QMetaProperty* metaProp = 0);
+
+   Fermentable* _ferm;
 };
 
 #endif   /* _FERMENTABLEEDITOR_H */

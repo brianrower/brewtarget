@@ -29,7 +29,7 @@
 #include "brewtarget.h"
 
 FermentableEditor::FermentableEditor( QWidget* parent )
-        : QDialog(parent), obsFerm(0)
+        : QDialog(parent), _ferm(0)
 {
    setupUi(this);
 
@@ -40,46 +40,46 @@ FermentableEditor::FermentableEditor( QWidget* parent )
 
 void FermentableEditor::setFermentable( Fermentable* f )
 {
-   if( obsFerm )
-      disconnect( obsFerm, 0, this, 0 );
+   if( _ferm )
+      disconnect( _ferm, 0, this, 0 );
 
-   obsFerm = f;
-   if( obsFerm )
+   _ferm = f;
+   if( _ferm )
    {
-      connect( obsFerm, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(changed(QMetaProperty,QVariant)) );
+      connect( _ferm, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(changed(QMetaProperty,QVariant)) );
       showChanges();
    }
 }
 
 void FermentableEditor::save()
 {
-   if( obsFerm == 0 )
+   if( _ferm == 0 )
    {
       setVisible(false);
       return;
    }
 
-   obsFerm->setName(lineEdit_name->text());
+   _ferm->setName(lineEdit_name->text());
 
    // NOTE: the following assumes that Fermentable::Type is enumerated in the same
    // order as the combobox.
-   obsFerm->setType( static_cast<Fermentable::Type>(comboBox_type->currentIndex()) );
-   obsFerm->setAmount_kg(lineEdit_amount->toSI());
-   obsFerm->setInventoryAmount(lineEdit_inventory->toSI());
-   obsFerm->setYield_pct(lineEdit_yield->toSI());
-   obsFerm->setColor_srm(lineEdit_color->toSI());
-   obsFerm->setAddAfterBoil( (checkBox_addAfterBoil->checkState() == Qt::Checked)? true : false );
-   obsFerm->setOrigin( lineEdit_origin->text() );
-   obsFerm->setSupplier( lineEdit_supplier->text() );
-   obsFerm->setCoarseFineDiff_pct( lineEdit_coarseFineDiff->toSI() );
-   obsFerm->setMoisture_pct( lineEdit_moisture->toSI() );
-   obsFerm->setDiastaticPower_lintner( lineEdit_diastaticPower->toSI() );
-   obsFerm->setProtein_pct( lineEdit_protein->toSI() );
-   obsFerm->setMaxInBatch_pct( lineEdit_maxInBatch->toSI() );
-   obsFerm->setRecommendMash( (checkBox_recommendMash->checkState() == Qt::Checked) ? true : false );
-   obsFerm->setIsMashed( (checkBox_isMashed->checkState() == Qt::Checked) ? true : false );
-   obsFerm->setIbuGalPerLb( lineEdit_ibuGalPerLb->toSI() );
-   obsFerm->setNotes( textEdit_notes->toPlainText() );
+   _ferm->setType( static_cast<Fermentable::Type>(comboBox_type->currentIndex()) );
+   _ferm->setAmount_kg(lineEdit_amount->toSI());
+   _ferm->setInventoryAmount(lineEdit_inventory->toSI());
+   _ferm->setYield_pct(lineEdit_yield->toSI());
+   _ferm->setColor_srm(lineEdit_color->toSI());
+   _ferm->setAddAfterBoil( (checkBox_addAfterBoil->checkState() == Qt::Checked)? true : false );
+   _ferm->setOrigin( lineEdit_origin->text() );
+   _ferm->setSupplier( lineEdit_supplier->text() );
+   _ferm->setCoarseFineDiff_pct( lineEdit_coarseFineDiff->toSI() );
+   _ferm->setMoisture_pct( lineEdit_moisture->toSI() );
+   _ferm->setDiastaticPower_lintner( lineEdit_diastaticPower->toSI() );
+   _ferm->setProtein_pct( lineEdit_protein->toSI() );
+   _ferm->setMaxInBatch_pct( lineEdit_maxInBatch->toSI() );
+   _ferm->setRecommendMash( (checkBox_recommendMash->checkState() == Qt::Checked) ? true : false );
+   _ferm->setIsMashed( (checkBox_isMashed->checkState() == Qt::Checked) ? true : false );
+   _ferm->setIbuGalPerLb( lineEdit_ibuGalPerLb->toSI() );
+   _ferm->setNotes( textEdit_notes->toPlainText() );
 
    setVisible(false);
 }
@@ -92,13 +92,13 @@ void FermentableEditor::clearAndClose()
 
 void FermentableEditor::changed(QMetaProperty prop, QVariant /*val*/)
 {
-   if( sender() == obsFerm )
+   if( sender() == _ferm )
       showChanges(&prop);
 }
 
 void FermentableEditor::showChanges(QMetaProperty* metaProp)
 {
-   if( obsFerm == 0 )
+   if( _ferm == 0 )
       return;
 
    QString propName;
@@ -112,99 +112,99 @@ void FermentableEditor::showChanges(QMetaProperty* metaProp)
 
    if( propName == "name" || updateAll )
    {
-      lineEdit_name->setText(obsFerm->name());
+      lineEdit_name->setText(_ferm->name());
       lineEdit_name->setCursorPosition(0);
       if( ! updateAll )
          return;
    }
    if( propName == "type" || updateAll) {
       // NOTE: assumes the comboBox entries are in same order as Fermentable::Type
-      comboBox_type->setCurrentIndex(obsFerm->type());
+      comboBox_type->setCurrentIndex(_ferm->type());
        if( ! updateAll )
          return;
    }
    if( propName == "amount_kg" || updateAll) {
-      lineEdit_amount->setText(obsFerm);
+      lineEdit_amount->setText(_ferm);
       if( ! updateAll )
          return;
    }
 
    if( propName == "inventory" || updateAll) {
-      lineEdit_inventory->setText(obsFerm);
+      lineEdit_inventory->setText(_ferm);
       if( ! updateAll )
          return;
    }
    if( propName == "yield_pct" || updateAll) {
-      lineEdit_yield->setText(obsFerm);
+      lineEdit_yield->setText(_ferm);
       if( ! updateAll )
          return;
    }
    if( propName == "color_srm" || updateAll) {
-      lineEdit_color->setText(obsFerm, 0);
+      lineEdit_color->setText(_ferm, 0);
        if( ! updateAll )
          return;
    }
    if( propName == "addAfterBoil" || updateAll) {
-      checkBox_addAfterBoil->setCheckState( obsFerm->addAfterBoil() ? Qt::Checked : Qt::Unchecked );
+      checkBox_addAfterBoil->setCheckState( _ferm->addAfterBoil() ? Qt::Checked : Qt::Unchecked );
        if( ! updateAll )
          return;
    }
    if( propName == "origin" || updateAll)
    {
-      lineEdit_origin->setText(obsFerm->origin());
+      lineEdit_origin->setText(_ferm->origin());
       lineEdit_origin->setCursorPosition(0);
       if( ! updateAll )
          return;
    }
    if( propName == "supplier" || updateAll)
    {
-      lineEdit_supplier->setText(obsFerm->supplier());
+      lineEdit_supplier->setText(_ferm->supplier());
       lineEdit_supplier->setCursorPosition(0);
        if( ! updateAll )
          return;
    }
    if( propName == "coarseFineDiff_pct" || updateAll) {
-      lineEdit_coarseFineDiff->setText(obsFerm);
+      lineEdit_coarseFineDiff->setText(_ferm);
       if( ! updateAll )
          return;
    }
    if( propName == "moisture_pct" || updateAll) {
-      lineEdit_moisture->setText(obsFerm);
+      lineEdit_moisture->setText(_ferm);
       if( ! updateAll )
          return;
    }
    if( propName == "diastaticPower_lintner" || updateAll) {
-      lineEdit_diastaticPower->setText(obsFerm);
+      lineEdit_diastaticPower->setText(_ferm);
       if( ! updateAll )
          return;
    }
    if( propName == "protein_pct" || updateAll) {
-      lineEdit_protein->setText(obsFerm);
+      lineEdit_protein->setText(_ferm);
       if( ! updateAll )
          return;
    }
    if( propName == "maxInBatch_pct" || updateAll) {
-      lineEdit_maxInBatch->setText(obsFerm);
+      lineEdit_maxInBatch->setText(_ferm);
       if( ! updateAll )
          return;
    }
    if( propName == "recommendMash" || updateAll) {
-      checkBox_recommendMash->setCheckState( obsFerm->recommendMash() ? Qt::Checked : Qt::Unchecked );
+      checkBox_recommendMash->setCheckState( _ferm->recommendMash() ? Qt::Checked : Qt::Unchecked );
       if( ! updateAll )
          return;
    }
    if( propName == "isMashed" || updateAll) {
-      checkBox_isMashed->setCheckState( obsFerm->isMashed() ? Qt::Checked : Qt::Unchecked );
+      checkBox_isMashed->setCheckState( _ferm->isMashed() ? Qt::Checked : Qt::Unchecked );
        if( ! updateAll )
          return;
    }
    if( propName == "ibuGalPerLb" || updateAll) {
-      lineEdit_ibuGalPerLb->setText(obsFerm);
+      lineEdit_ibuGalPerLb->setText(_ferm);
       if( ! updateAll )
          return;
    }
    if( propName == "notes" || updateAll) {
-      textEdit_notes->setPlainText( obsFerm->notes() );
+      textEdit_notes->setPlainText( _ferm->notes() );
       if( ! updateAll )
          return;
    }
