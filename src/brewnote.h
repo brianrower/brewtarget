@@ -22,6 +22,7 @@
 #ifndef _BREWNOTE_H
 #define _BREWNOTE_H
 
+#include <memory>
 #include <QDomNode>
 #include <QDomDocument>
 #include <QString>
@@ -33,6 +34,7 @@
 // Forward declarations;
 class Recipe;
 class BrewNote;
+class BrewNoteDB;
 bool operator<(BrewNote const& lhs, BrewNote const& rhs);
 bool operator==(BrewNote const& lhs, BrewNote const& rhs);
 
@@ -52,7 +54,7 @@ class BrewNote : public BeerXMLElement
 public:
    enum {DONOTUSE, RECIPE};
 
-   virtual ~BrewNote() {}
+   virtual ~BrewNote();
 
    Q_PROPERTY( QDateTime brewDate READ brewDate WRITE setBrewDate /*NOTIFY changed*/ STORED false )
    Q_PROPERTY( QDateTime fermentDate READ fermentDate  WRITE setFermentDate /*NOTIFY changed*/ STORED false )
@@ -177,7 +179,12 @@ public:
 signals:
    void brewDateChanged(const QDateTime&);
 
+protected:
+   virtual ItemDb* getDB() const override;
+
 private:
+   std::unique_ptr<BrewNoteDB> _db;
+
    BrewNote();
    BrewNote(BrewNote const& other);
    bool loading;

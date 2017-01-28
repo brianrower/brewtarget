@@ -21,13 +21,15 @@
 #include <iostream>
 #include <string>
 #include <QVector>
+#include <QDomElement>
+#include <QDomText>
+#include <QObject>
+
 #include "mash.h"
 #include "mashstep.h"
 #include "brewtarget.h"
 #include "database.h"
-#include <QDomElement>
-#include <QDomText>
-#include <QObject>
+#include "MashDB.h"
 
 QHash<QString,QString> Mash::tagToProp = Mash::tagToPropHash();
 
@@ -59,6 +61,17 @@ bool operator==(Mash &m1, Mash &m2)
 Mash::Mash()
    : BeerXMLElement()
 {
+   _db.reset(new MashDB());
+}
+
+Mash::~Mash()
+{
+
+}
+
+ItemDb* Mash::getDB() const
+{
+   return _db.get();
 }
 
 void Mash::setGrainTemp_c( double var ) { set("grainTemp_c", "grain_temp", var); }

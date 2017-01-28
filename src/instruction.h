@@ -24,10 +24,13 @@
 
 // This class is completely outside the BeerXML spec.
 
+#include <memory>
 #include <QString>
 #include <QVector>
 #include <QDomNode>
 #include "BeerXMLElement.h"
+
+class InstructionDB;
 
 /*!
  * \class Instruction
@@ -43,7 +46,7 @@ class Instruction : public BeerXMLElement
    friend class Database;
 public:
    
-   virtual ~Instruction() {}
+   virtual ~Instruction();
 
    Q_PROPERTY( QString directions READ directions WRITE setDirections /*NOTIFY changed*/ /*changedDirections*/ )
    Q_PROPERTY( bool hasTimer READ hasTimer WRITE setHasTimer /*NOTIFY changed*/ /*changedHasTimer*/ )
@@ -83,7 +86,12 @@ signals:
    void changedReagents(QVector<QString>);
    */
 
+protected:
+   virtual ItemDb* getDB() const override;
+
 private:
+   std::unique_ptr<InstructionDB> _db;
+
    //! Only database gets to construct instances.
    Instruction();
    Instruction( Instruction const& other );

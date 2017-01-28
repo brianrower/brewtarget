@@ -22,6 +22,7 @@
 #ifndef _WATER_H
 #define _WATER_H
 
+#include <memory>
 #include <QString>
 #include "BeerXMLElement.h"
 
@@ -45,7 +46,7 @@ class Water : public BeerXMLElement
    friend class Database;
 public:
 
-   virtual ~Water() {}
+   virtual ~Water();
    
    //! \brief The amount in liters.
    Q_PROPERTY( double amount_l READ amount_l WRITE setAmount_l /*NOTIFY changed*/ /*changedAmount_l*/ )
@@ -102,7 +103,12 @@ signals:
    void changedNotes(QString);
    */
    
+protected:
+   virtual ItemDb* getDB() const override;
+
 private:
+   std::unique_ptr<WaterDB> _db;
+
    Water();
    Water( Water const& other );
    

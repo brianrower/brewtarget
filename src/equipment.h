@@ -22,8 +22,11 @@
 #ifndef _EQUIPMENT_H
 #define _EQUIPMENT_H
 
+#include <memory>
 #include <QDomNode>
 #include "BeerXMLElement.h"
+
+class EquipmentDB;
 
 /*!
  * \class Equipment
@@ -41,7 +44,7 @@ class Equipment : public BeerXMLElement
    friend class Database;
 public:
 
-   virtual ~Equipment() {}
+   virtual ~Equipment();
    
    //! \brief The boil size in liters.
    Q_PROPERTY( double boilSize_l            READ boilSize_l            WRITE setBoilSize_l            NOTIFY changedBoilSize_l )
@@ -140,7 +143,11 @@ signals:
    void changedGrainAbsorption_LKg(double);
    void changedBoilingPoint_c(double);
    
+protected:
+   virtual ItemDb* getDB() const override;
+
 private:
+   std::unique_ptr<EquipmentDB> _db;
    Equipment();
    Equipment( Equipment const& other);
    

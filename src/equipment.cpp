@@ -25,6 +25,7 @@
 #include "equipment.h"
 #include "brewtarget.h"
 #include "HeatCalculations.h"
+#include "EquipmentDB.h"
 
 QHash<QString,QString> Equipment::tagToProp = Equipment::tagToPropHash();
 
@@ -93,11 +94,23 @@ void Equipment::setDefaults()
 Equipment::Equipment()
    : BeerXMLElement()
 {
+   _db.reset(new EquipmentDB());
 }
 
 Equipment::Equipment( Equipment const& other )
    : BeerXMLElement(other)
 {
+   _db.reset(new EquipmentDB());
+}
+
+Equipment::~Equipment()
+{
+
+}
+
+ItemDb* Equipment::getDB() const
+{
+   return _db.get();
 }
 
 //============================"SET" METHODS=====================================

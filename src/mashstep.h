@@ -21,12 +21,14 @@
 #ifndef _MASHSTEP_H
 #define _MASHSTEP_H
 
+#include <memory>
 #include "BeerXMLElement.h"
 #include <QStringList>
 #include <QString>
 
 // Forward declarations.
 class MashStep;
+class MashStepDB;
 bool operator<(MashStep &m1, MashStep &m2);
 bool operator==(MashStep &m1, MashStep &m2);
 
@@ -48,7 +50,7 @@ public:
    enum Type { Infusion, Temperature, Decoction, flySparge, batchSparge };
    Q_ENUMS( Type )
    
-   virtual ~MashStep() {}
+   virtual ~MashStep();
 
    //! \brief The \c Type.
    Q_PROPERTY( Type type READ type WRITE setType /*NOTIFY changed*/ /*changedType*/ )
@@ -115,7 +117,12 @@ signals:
    void changedDecoctionAmount_l(double);
    */
    
+protected:
+   virtual ItemDb* getDB() const override;
+
 private:
+   std::unique_ptr<MashStepDB> _db;
+
    MashStep();
    MashStep( MashStep const& other );
    

@@ -35,6 +35,7 @@
 #include "equipment.h"
 #include "mash.h"
 #include "yeast.h"
+#include "BrewNoteDB.h"
 
 QHash<QString,QString> BrewNote::tagToProp = BrewNote::tagToPropHash();
 
@@ -90,7 +91,18 @@ bool operator==(BrewNote const& lhs, BrewNote const& rhs)
 BrewNote::BrewNote()
    : BeerXMLElement()
 {
+   _db.reset(new BrewNoteDB());
    loading = false;
+}
+
+BrewNote::~BrewNote()
+{
+
+}
+
+ItemDb* BrewNote::getDB() const
+{
+   _db.get();
 }
 
 void BrewNote::populateNote(Recipe* parent)

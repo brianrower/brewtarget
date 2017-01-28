@@ -19,16 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "brewtarget.h"
 #include <iostream>
 #include <string>
 #include <QVector>
-#include "misc.h"
-#include "brewtarget.h"
 #include <QDomElement>
 #include <QDomText>
 #include <QObject>
 #include <QDebug>
+#include "misc.h"
+#include "brewtarget.h"
+#include "MiscDB.h"
 
 QStringList Misc::uses = QStringList() << "Boil" << "Mash" << "Primary" << "Secondary" << "Bottling";
 QStringList Misc::types = QStringList() << "Spice" << "Fining" << "Water Agent" << "Herb" << "Flavor" << "Other";
@@ -52,10 +52,21 @@ QHash<QString,QString> Misc::tagToPropHash()
 //============================CONSTRUCTORS======================================
 Misc::Misc() : BeerXMLElement()
 {
+   _db.reset(new MiscDb());
 }
 
 Misc::Misc(Misc const& other) : BeerXMLElement(other)
 {
+   _db.reset(new MiscDb());
+}
+
+Misc::~Misc()
+{
+}
+
+ItemDb* Misc::getDB() const
+{
+   return _db.get();
 }
 
 //============================"GET" METHODS=====================================

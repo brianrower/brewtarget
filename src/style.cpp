@@ -21,6 +21,7 @@
 #include "brewtarget.h"
 #include "style.h"
 #include <QDebug>
+#include "StyleDB.h"
 
 QStringList Style::types = QStringList() << "Lager" << "Ale" << "Mead" << "Wheat" << "Mixed" << "Cider";
 QHash<QString,QString> Style::tagToProp = Style::tagToPropHash();
@@ -66,6 +67,17 @@ bool operator==(Style &s1, Style &s2)
 Style::Style()
    : BeerXMLElement()
 {
+   _db.reset(new StyleDB());
+}
+
+Style::~Style()
+{
+
+}
+
+ItemDb* Style::getDB() const
+{
+   return _db.get();
 }
 
 //==============================="SET" METHODS==================================

@@ -27,6 +27,7 @@
 #include <QDebug>
 #include "fermentable.h"
 #include "brewtarget.h"
+#include "FermentablesDB.h"
 
 QStringList Fermentable::types = QStringList() << "Grain" << "Sugar" << "Extract" << "Dry Extract" << "Adjunct";
 QHash<QString,QString> Fermentable::tagToProp = Fermentable::tagToPropHash();
@@ -70,11 +71,22 @@ bool operator==(Fermentable &f1, Fermentable &f2)
 Fermentable::Fermentable()
    : BeerXMLElement()
 {
+   _db.reset(new FermentablesDb());
 }
 
 Fermentable::Fermentable( Fermentable const& other )
         : BeerXMLElement( other )
 {
+   _db.reset(new FermentablesDb());
+}
+
+Fermentable::~Fermentable()
+{
+}
+
+ItemDb* Fermentable::getDB() const
+{
+   return _db.get();
 }
 
 // Get

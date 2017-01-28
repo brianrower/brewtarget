@@ -51,6 +51,7 @@
 #include "HeatCalculations.h"
 #include "PhysicalConstants.h"
 #include "QueuedMethod.h"
+#include "RecipeDB.h"
 
 QHash<QString,QString> Recipe::tagToProp = Recipe::tagToPropHash();
 
@@ -130,11 +131,22 @@ Recipe::Recipe()
      _uninitializedCalcs(true)
 {
    setObjectName("Recipe"); 
+   _db.reset(new RecipeDB());
 }
 
 Recipe::Recipe( Recipe const& other ) : BeerXMLElement(other)
 {
    setObjectName("Recipe"); 
+   _db.reset(new RecipeDB());
+}
+
+Recipe::~Recipe()
+{
+}
+
+ItemDb* Recipe::getDB() const
+{
+   return _db.get();
 }
 
 void Recipe::removeInstruction(Instruction* ins)

@@ -20,6 +20,7 @@
 #include <QVector>
 #include "mashstep.h"
 #include "brewtarget.h"
+#include "MashStepDB.h"
 
 QStringList MashStep::types = QStringList() << "Infusion" << "Temperature" << "Decoction" << "Fly Sparge" << "Batch Sparge";
 QStringList MashStep::typesTr = QStringList() << QObject::tr("Infusion") << QObject::tr("Temperature") << QObject::tr("Decoction") << QObject::tr("Fly Sparge") << QObject::tr("Batch Sparge");
@@ -56,6 +57,16 @@ bool operator==(MashStep &m1, MashStep &m2)
 MashStep::MashStep()
    : BeerXMLElement()
 {
+   _db.reset(new MashStepDB());
+}
+
+MashStep::~MashStep()
+{
+}
+
+ItemDb* MashStep::getDB() const
+{
+   return _db.get();
 }
 
 //================================"SET" METHODS=================================

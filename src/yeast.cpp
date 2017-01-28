@@ -26,6 +26,7 @@
 #include <QObject>
 #include "yeast.h"
 #include "brewtarget.h"
+#include "YeastDB.h"
 
 QStringList Yeast::types = QStringList() << "Ale" << "Lager" << "Wheat" << "Wine" << "Champagne";
 QStringList Yeast::forms = QStringList() << "Liquid" << "Dry" << "Slant" << "Culture";
@@ -69,10 +70,21 @@ bool operator==(Yeast &y1, Yeast &y2)
 Yeast::Yeast()
    : BeerXMLElement()
 {
+   _db.reset(new YeastDB());
 }
 
 Yeast::Yeast(Yeast const& other) : BeerXMLElement(other)
 {
+   _db.reset(new YeastDB());
+}
+
+Yeast::~Yeast()
+{
+}
+
+ItemDb* Yeast::getDb() const
+{
+   return _db.get();
 }
 
 //============================="GET" METHODS====================================

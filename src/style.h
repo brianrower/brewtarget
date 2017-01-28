@@ -22,12 +22,14 @@
 #ifndef _STYLE_H
 #define _STYLE_H
 
+#include <memory>
 #include <QString>
 #include <QStringList>
 #include "BeerXMLElement.h"
 
 // Forward declarations.
 class Style;
+class StyleDB;
 bool operator<(Style &s1, Style &s2);
 bool operator==(Style &s1, Style &s2);
 
@@ -46,7 +48,7 @@ class Style : public BeerXMLElement
    friend class Database;
 public:
 
-   virtual ~Style() {}
+   virtual ~Style();
 
    //! \brief The type of beverage.
    enum Type {Lager, Ale, Mead, Wheat, Mixed, Cider};
@@ -168,7 +170,12 @@ signals:
    void changedExamples(QString);
    */
 
+protected:
+   virtual ItemDb* getDB() const override;
+
 private:
+   std::unique_ptr<StyleDB> _db;
+
    Style();
    Style( Style const& other );
    

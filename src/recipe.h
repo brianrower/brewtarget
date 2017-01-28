@@ -24,6 +24,7 @@
 
 class Recipe;
 
+#include <memory>
 #include <QColor>
 #include <QVariant>
 #include <QList>
@@ -50,6 +51,7 @@ class Instruction;
 class PreInstruction;
 class BrewNote;
 class MashStep;
+class RecipeDB;
 
 //! \brief Compares recipes based on name.
 bool operator<(Recipe &r1, Recipe &r2 );
@@ -71,7 +73,7 @@ class Recipe : public BeerXMLElement
    friend class Database;
 public:
 
-   virtual ~Recipe() {}
+   virtual ~Recipe();
 
    friend bool operator<(Recipe &r1, Recipe &r2 );
    friend bool operator==(Recipe &r1, Recipe &r2 );
@@ -352,8 +354,12 @@ public slots:
    void setPrimingSugarEquiv( double var );
    void setKegPrimingFactor( double var );
    
+protected:
+   virtual ItemDb* getDB() const override;
+
 private:
-   
+   std::unique_ptr<RecipeDB> _db;
+
    Recipe();
    Recipe(Recipe const& other);
    

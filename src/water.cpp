@@ -25,6 +25,7 @@
 #include <QObject>
 #include "water.h"
 #include "brewtarget.h"
+#include "WaterDB.h"
 
 QHash<QString,QString> Water::tagToProp = Water::tagToPropHash();
 
@@ -57,6 +58,17 @@ bool operator==(Water &w1, Water &w2)
 Water::Water()
    : BeerXMLElement()
 {
+   _db.reset(new WaterDB());
+}
+
+Water::~Water()
+{
+
+}
+
+ItemDb* getDB() const
+{
+   return _db.get();
 }
 
 //================================"SET" METHODS=================================

@@ -23,6 +23,7 @@
 #ifndef _HOP_H
 #define _HOP_H
 
+#include <memory>
 #include <QString>
 #include <QStringList>
 #include "BeerXMLElement.h"
@@ -30,6 +31,7 @@
 // Forward declarations.
 class Hop;
 class HopException;
+class HopsDB;
 bool operator<( Hop &h1, Hop &h2 );
 bool operator==( Hop &h1, Hop &h2 );
 
@@ -56,7 +58,7 @@ public:
    enum Use {Mash, First_Wort, Boil, UseAroma, Dry_Hop }; // NOTE: way bad. We have a duplicate enum (Aroma), and BeerXML expects a space for "Dry Hop" and "First Wort". Damn. Damn damn.
    Q_ENUMS( Type Form Use )
    
-   virtual ~Hop() {}
+   virtual ~Hop();
    
    //! \brief The percent alpha.
    Q_PROPERTY( double alpha_pct READ alpha_pct WRITE setAlpha_pct /*NOTIFY changed*/ /*changedAlpha_pct*/ )
@@ -159,7 +161,12 @@ signals:
    void changedMyrcene_pct(double);
    */
    
+protected:
+   virtual ItemDb* getDB() const override;
+
 private:
+   std::unique_ptr<HopsDB> _db;
+
    Hop();
    Hop( Hop const& other );
    

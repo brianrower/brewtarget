@@ -25,6 +25,7 @@
 #include <QObject>
 #include "hop.h"
 #include "brewtarget.h"
+#include "HopsDB.h"
 
 QStringList Hop::types = QStringList() << "Bittering" << "Aroma" << "Both";
 QStringList Hop::forms = QStringList() << "Leaf" << "Pellet" << "Plug";
@@ -83,11 +84,23 @@ bool Hop::isValidForm(const QString& str)
 Hop::Hop()
    : BeerXMLElement()
 {
+   _db.reset(new HopDB());
 }
 
 Hop::Hop( Hop const& other )
    : BeerXMLElement(other)
 {
+   _db.reset(new HopDB());
+}
+
+Hop::~Hop()
+{
+
+}
+
+ItemDb* Hop::getDB() const
+{
+   return _db.get();
 }
 
 //============================="SET" METHODS====================================

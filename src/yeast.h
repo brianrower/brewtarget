@@ -23,12 +23,14 @@
 #ifndef _YEAST_H
 #define _YEAST_H
 
+#include <memory>
 #include "BeerXMLElement.h"
 #include <QString>
 #include <QStringList>
 
 // Forward declarations.
 class Yeast;
+class YeastDB;
 bool operator<(Yeast &y1, Yeast &y2);
 bool operator==(Yeast &y1, Yeast &y2);
 
@@ -54,7 +56,7 @@ public:
    enum Flocculation {Low, Medium, High, Very_High}; // NOTE: BeerXML expects a space in "Very High", but not possible with enum. What to do?
    Q_ENUMS( Type Form Flocculation )
    
-   virtual ~Yeast() {}
+   virtual ~Yeast();
    
    //! \brief The \c Type.
    Q_PROPERTY( Type type READ type WRITE setType /*NOTIFY changed*/ /*changedType*/ )
@@ -148,7 +150,12 @@ signals:
    //! \brief Emitted when \c name() changes.
    void changedName(QString);
 
+protected:
+   virtual ItemDb* getDB() const override;
+
 private:
+   std::unique_ptr<YeastDB> _db;
+
    Yeast();
    Yeast(Yeast const& other);
    

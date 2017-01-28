@@ -23,11 +23,13 @@
 #ifndef _MISC_H
 #define _MISC_H
 
+#include <memory>
 #include <QString>
 #include "BeerXMLElement.h"
 
 // Forward declarations.
 class Misc;
+class MiscDB;
 
 /*!
  * \class Misc
@@ -52,7 +54,7 @@ public:
    enum AmountType { AmountType_Weight, AmountType_Volume };
    Q_ENUMS( Type Use AmountType )
    
-   virtual ~Misc() {}
+   virtual ~Misc();
    
    //! \brief The \c Type.
    Q_PROPERTY( Type type READ type WRITE setType /*NOTIFY changed*/ /*changedType*/ )
@@ -129,7 +131,12 @@ signals:
    void changedNotes(QString);
    */
    
+protected:
+   virtual ItemDb* getDB() const override;
+
 private:
+   std::unique_ptr<MiscDB> _db;
+
    Misc();
    Misc(Misc const& other);
    

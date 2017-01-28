@@ -24,6 +24,7 @@
 #ifndef _FERMENTABLE_H
 #define _FERMENTABLE_H
 
+#include <memory>
 #include <QStringList>
 #include <QString>
 #include "BeerXMLElement.h"
@@ -31,6 +32,7 @@
 
 // Forward declarations.
 class Fermentable;
+class FermentablesDb;
 bool operator<(Fermentable &f1, Fermentable &f2);
 bool operator==(Fermentable &f1, Fermentable &f2);
 
@@ -58,7 +60,7 @@ public:
    enum AdditionTime {Normal, Late};
    Q_ENUMS( Type AdditionMethod AdditionTime )
 
-   virtual ~Fermentable() {}
+   virtual ~Fermentable();
    
    //! \brief The \c Type.
    Q_PROPERTY( Type type                     READ type                   WRITE setType                   /*NOTIFY changed*/ /*changedType*/ )
@@ -195,8 +197,14 @@ signals:
    void changedIbuGalPerLb( double newIbuGalPerLb );
    void changedIsMashed( bool newIsMashed );
    */
+
+protected:
+   virtual ItemDb* getDB() const override;
    
 private:
+
+   std::unique_ptr<FermentablesDb> _db;
+
    Fermentable();
    Fermentable( Fermentable const& other );
    

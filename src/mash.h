@@ -23,11 +23,13 @@
 #ifndef _MASH_H
 #define _MASH_H
 
+#include <memory>
 #include "BeerXMLElement.h"
 
 // Forward declarations.
 class Mash;
 class MashStep;
+class MashDB;
 bool operator<(Mash &m1, Mash &m2);
 bool operator==(Mash &m1, Mash &m2);
 
@@ -46,7 +48,7 @@ class Mash : public BeerXMLElement
    friend class Database;
 public:
 
-   virtual ~Mash() {}
+   virtual ~Mash();
    
    //! \brief The initial grain temp in Celsius.
    Q_PROPERTY( double grainTemp_c READ grainTemp_c WRITE setGrainTemp_c /*NOTIFY changed*/ /*changedGrainTemp_c*/ )
@@ -112,8 +114,13 @@ signals:
    
    // Emitted when the number of steps change, or when you should call mashSteps() again.
    void mashStepsChanged();
-   
+
+protected:
+   virtual ItemDb* getDB() const override;
+
 private:
+   std::unique_ptr<MashDB> _db;
+
    Mash();
    Mash( Mash const& other );
    

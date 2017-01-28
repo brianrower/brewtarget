@@ -21,6 +21,7 @@
 #include "instruction.h"
 #include "brewtarget.h"
 #include "database.h"
+#include "InstructionDB.h"
 
 QHash<QString,QString> Instruction::tagToProp = Instruction::tagToPropHash();
 
@@ -42,6 +43,16 @@ Instruction::Instruction()
    : BeerXMLElement()
 {
    setObjectName("Instruction"); 
+   _db.reset(new InstructionDB());
+}
+
+Instruction::~Instruction()
+{
+}
+
+ItemDb* Instruction::getDB() const
+{
+   return _db.get();
 }
 
 // Setters ====================================================================
