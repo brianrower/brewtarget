@@ -52,19 +52,19 @@ QHash<QString,QString> Misc::tagToPropHash()
 //============================CONSTRUCTORS======================================
 Misc::Misc() : BeerXMLElement()
 {
-   _db.reset(new MiscDb());
+   _db.reset(new MiscDB());
 }
 
 Misc::Misc(Misc const& other) : BeerXMLElement(other)
 {
-   _db.reset(new MiscDb());
+   _db.reset(new MiscDB());
 }
 
 Misc::~Misc()
 {
 }
 
-ItemDb* Misc::getDB() const
+ItemDB* Misc::getDB() const
 {
    return _db.get();
 }

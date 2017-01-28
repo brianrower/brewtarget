@@ -1,13 +1,13 @@
-#ifndef ITEMDB_H
-#define ITEMDB_H
+#pragma once
 
 #include "brewtarget.h"
 
-class ItemDb
+class ItemDB
 {
    Q_OBJECT
+
 public:
-   ItemDb();
+   ItemDB();
    virtual void setName(const QString& name);
 
 signals:
@@ -20,4 +20,3 @@ protected:
    int _id; //Referenced as "key" other places
 };
 
-#endif // ITEMDB_H

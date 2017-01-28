@@ -28,6 +28,7 @@
 
 // Forward declarations.
 class Water;
+class WaterDB;
 bool operator<(Water &w1, Water &w2);
 bool operator==(Water &w1, Water &w2);
 
@@ -104,7 +105,7 @@ signals:
    */
    
 protected:
-   virtual ItemDb* getDB() const override;
+   virtual ItemDB* getDB() const override;
 
 private:
    std::unique_ptr<WaterDB> _db;

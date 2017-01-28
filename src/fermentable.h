@@ -199,7 +199,7 @@ signals:
    */
 
 protected:
-   virtual ItemDb* getDB() const override;
+   virtual ItemDB* getDB() const override;
    
 private:
 

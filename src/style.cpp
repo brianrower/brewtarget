@@ -75,7 +75,7 @@ Style::~Style()
 
 }
 
-ItemDb* Style::getDB() const
+ItemDB* Style::getDB() const
 {
    return _db.get();
 }

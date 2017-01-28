@@ -100,9 +100,9 @@ BrewNote::~BrewNote()
 
 }
 
-ItemDb* BrewNote::getDB() const
+ItemDB* BrewNote::getDB() const
 {
-   _db.get();
+   return _db.get();
 }
 
 void BrewNote::populateNote(Recipe* parent)

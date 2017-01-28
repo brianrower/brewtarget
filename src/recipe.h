@@ -355,7 +355,7 @@ public slots:
    void setKegPrimingFactor( double var );
    
 protected:
-   virtual ItemDb* getDB() const override;
+   virtual ItemDB* getDB() const override;
 
 private:
    std::unique_ptr<RecipeDB> _db;

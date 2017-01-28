@@ -64,7 +64,7 @@ MashStep::~MashStep()
 {
 }
 
-ItemDb* MashStep::getDB() const
+ItemDB* MashStep::getDB() const
 {
    return _db.get();
 }

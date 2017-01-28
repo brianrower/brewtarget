@@ -116,7 +116,7 @@ signals:
    void mashStepsChanged();
 
 protected:
-   virtual ItemDb* getDB() const override;
+   virtual ItemDB* getDB() const override;
 
 private:
    std::unique_ptr<MashDB> _db;

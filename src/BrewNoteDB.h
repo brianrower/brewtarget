@@ -1,6 +1,7 @@
-#ifndef BREWNOTEDB_H
-#define BREWNOTEDB_H
 
+#pragma once
+
+#include "ItemDB.h"
 
 class BrewNoteDB : public ItemDB
 {
@@ -8,4 +9,3 @@ public:
    BrewNoteDB();
 };
 
-#endif // BREWNOTEDB_H

@@ -108,7 +108,7 @@ Equipment::~Equipment()
 
 }
 
-ItemDb* Equipment::getDB() const
+ItemDB* Equipment::getDB() const
 {
    return _db.get();
 }

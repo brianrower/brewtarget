@@ -84,7 +84,7 @@ Fermentable::~Fermentable()
 {
 }
 
-ItemDb* Fermentable::getDB() const
+ItemDB* Fermentable::getDB() const
 {
    return _db.get();
 }

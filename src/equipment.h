@@ -144,7 +144,7 @@ signals:
    void changedBoilingPoint_c(double);
    
 protected:
-   virtual ItemDb* getDB() const override;
+   virtual ItemDB* getDB() const override;
 
 private:
    std::unique_ptr<EquipmentDB> _db;

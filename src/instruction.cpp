@@ -50,7 +50,7 @@ Instruction::~Instruction()
 {
 }
 
-ItemDb* Instruction::getDB() const
+ItemDB* Instruction::getDB() const
 {
    return _db.get();
 }

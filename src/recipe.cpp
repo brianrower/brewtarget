@@ -144,7 +144,7 @@ Recipe::~Recipe()
 {
 }
 
-ItemDb* Recipe::getDB() const
+ItemDB* Recipe::getDB() const
 {
    return _db.get();
 }

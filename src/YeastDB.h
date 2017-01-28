@@ -1,6 +1,6 @@
-#ifndef YEASTDB_H
-#define YEASTDB_H
+#pragma once
 
+#include "ItemDB.h"
 
 class YeastDB : public ItemDB
 {
@@ -8,4 +8,3 @@ public:
    YeastDB();
 };
 
-#endif // YEASTDB_H

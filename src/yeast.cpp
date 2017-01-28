@@ -82,7 +82,7 @@ Yeast::~Yeast()
 {
 }
 
-ItemDb* Yeast::getDb() const
+ItemDB* Yeast::getDb() const
 {
    return _db.get();
 }

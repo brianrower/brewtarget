@@ -69,7 +69,7 @@ Mash::~Mash()
 
 }
 
-ItemDb* Mash::getDB() const
+ItemDB* Mash::getDB() const
 {
    return _db.get();
 }

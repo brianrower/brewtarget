@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "ItemDb.h"
+#include "ItemDB.h"
 
-class FermentablesDb : public ItemDb
+class FermentablesDb : public ItemDB
 {
 public:
    FermentablesDb();

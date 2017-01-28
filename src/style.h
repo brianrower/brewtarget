@@ -171,7 +171,7 @@ signals:
    */
 
 protected:
-   virtual ItemDb* getDB() const override;
+   virtual ItemDB* getDB() const override;
 
 private:
    std::unique_ptr<StyleDB> _db;

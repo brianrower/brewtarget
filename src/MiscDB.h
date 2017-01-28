@@ -1,6 +1,6 @@
-#ifndef MISCDB_H
-#define MISCDB_H
+#pragma once
 
+#include "ItemDB.h"
 
 class MiscDB : public ItemDB
 {
@@ -8,4 +8,3 @@ public:
    MiscDB();
 };
 
-#endif // MISCDB_H

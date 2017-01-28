@@ -1,5 +1,6 @@
-#ifndef EQUIPMENTDB_H
-#define EQUIPMENTDB_H
+#pragma once
+
+#include "ItemDB.h"
 
 
 class EquipmentDB : public ItemDB
@@ -8,4 +9,3 @@ public:
    EquipmentDB();
 };
 
-#endif // EQUIPMENTDB_H

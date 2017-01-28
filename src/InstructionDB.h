@@ -1,5 +1,6 @@
-#ifndef INSTRUCTIONDB_H
-#define INSTRUCTIONDB_H
+#pragma once
+
+#include "ItemDB.h"
 
 
 class InstructionDB : public ItemDB
@@ -8,4 +9,3 @@ public:
    InstructionDB();
 };
 
-#endif // INSTRUCTIONDB_H

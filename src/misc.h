@@ -132,7 +132,7 @@ signals:
    */
    
 protected:
-   virtual ItemDb* getDB() const override;
+   virtual ItemDB* getDB() const override;
 
 private:
    std::unique_ptr<MiscDB> _db;

@@ -1,5 +1,6 @@
-#ifndef MASHSTEPDB_H
-#define MASHSTEPDB_H
+#pragma once
+
+#include "ItemDB.h"
 
 
 class MashStepDB : public ItemDB
@@ -7,5 +8,3 @@ class MashStepDB : public ItemDB
 public:
    MashStepDB();
 };
-
-#endif // MASHSTEPDB_H

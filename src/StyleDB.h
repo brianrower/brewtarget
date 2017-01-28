@@ -1,6 +1,6 @@
-#ifndef STYLEDB_H
-#define STYLEDB_H
+#pragma once
 
+#include "ItemDB.h"
 
 class StyleDB
 {
@@ -8,4 +8,3 @@ public:
    StyleDB();
 };
 
-#endif // STYLEDB_H

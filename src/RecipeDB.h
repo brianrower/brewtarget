@@ -1,6 +1,6 @@
-#ifndef RECIPEDB_H
-#define RECIPEDB_H
+#pragma once
 
+#include "ItemDB.h"
 
 class RecipeDB : public ItemDB
 {
@@ -8,4 +8,3 @@ public:
    RecipeDB();
 };
 
-#endif // RECIPEDB_H

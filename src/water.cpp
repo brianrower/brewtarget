@@ -66,7 +66,7 @@ Water::~Water()
 
 }
 
-ItemDb* getDB() const
+ItemDB* getDB() const
 {
    return _db.get();
 }
