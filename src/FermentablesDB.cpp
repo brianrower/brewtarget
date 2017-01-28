@@ -1,7 +1,6 @@
 #include "FermentablesDB.h"
 
-FermentablesDb::FermentablesDb()
+FermentablesDb::FermentablesDb():
+   _tableName("fermentable")
 {
-
 }
-

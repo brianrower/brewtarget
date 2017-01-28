@@ -1,11 +1,13 @@
-#ifndef FERMENTABLESDB_H
-#define FERMENTABLESDB_H
 
+#pragma once
 
-class FermentablesDb : public Database
+#include "ItemDb.h"
+
+class FermentablesDb : public ItemDb
 {
 public:
    FermentablesDb();
+
+
 };
 
-#endif // FERMENTABLESDB_H
