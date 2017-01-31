@@ -1,6 +1,7 @@
 #include "WaterDB.h"
 
-WaterDB::WaterDB()
+WaterDB::WaterDB():
+   ItemDB(Brewtarget::WATERTABLE, Brewtarget::NOTABLE)
 {
 
 }

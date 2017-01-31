@@ -1,6 +1,7 @@
 #include "YeastDB.h"
 
-YeastDB::YeastDB()
+YeastDB::YeastDB():
+   ItemDB(Brewtarget::YEASTTABLE, Brewtarget::YEASTINVTABLE)
 {
 
 }

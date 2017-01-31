@@ -1,6 +1,7 @@
 #include "BrewNoteDB.h"
 
-BrewNoteDB::BrewNoteDB()
+BrewNoteDB::BrewNoteDB():
+      ItemDB(Brewtarget::BREWNOTETABLE, Brewtarget::NOTABLE)
 {
 
 }

@@ -1,6 +1,7 @@
-#ifndef WATERDB_H
-#define WATERDB_H
 
+#pragma once
+
+#include "ItemDB.h"
 
 class WaterDB : public ItemDB
 {
@@ -8,4 +9,3 @@ public:
    WaterDB();
 };
 
-#endif // WATERDB_H

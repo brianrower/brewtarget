@@ -3,10 +3,10 @@
 
 #include "ItemDB.h"
 
-class FermentablesDb : public ItemDB
+class FermentablesDB : public ItemDB
 {
 public:
-   FermentablesDb();
+   FermentablesDB();
 
 
 };

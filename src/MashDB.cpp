@@ -1,6 +1,7 @@
 #include "MashDB.h"
 
-MashDB::MashDB()
+MashDB::MashDB():
+   ItemDB(Brewtarget::MASHTABLE, Brewtarget::NOTABLE)
 {
 
 }

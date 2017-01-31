@@ -1,6 +1,7 @@
 #include "MashStepDB.h"
 
-MashStepDB::MashStepDB()
+MashStepDB::MashStepDB():
+   ItemDB(Brewtarget::MASHSTEPTABLE, Brewtarget::NOTABLE)
 {
 
 }

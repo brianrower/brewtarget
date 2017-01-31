@@ -71,13 +71,13 @@ bool operator==(Fermentable &f1, Fermentable &f2)
 Fermentable::Fermentable()
    : BeerXMLElement()
 {
-   _db.reset(new FermentablesDb());
+   _db.reset(new FermentablesDB());
 }
 
 Fermentable::Fermentable( Fermentable const& other )
         : BeerXMLElement( other )
 {
-   _db.reset(new FermentablesDb());
+   _db.reset(new FermentablesDB());
 }
 
 Fermentable::~Fermentable()

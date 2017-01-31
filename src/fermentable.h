@@ -32,7 +32,7 @@
 
 // Forward declarations.
 class Fermentable;
-class FermentablesDb;
+class FermentablesDB;
 bool operator<(Fermentable &f1, Fermentable &f2);
 bool operator==(Fermentable &f1, Fermentable &f2);
 
@@ -203,7 +203,7 @@ protected:
    
 private:
 
-   std::unique_ptr<FermentablesDb> _db;
+   std::unique_ptr<FermentablesDB> _db;
 
    Fermentable();
    Fermentable( Fermentable const& other );

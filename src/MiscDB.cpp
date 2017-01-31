@@ -1,6 +1,7 @@
 #include "MiscDB.h"
 
-MiscDB::MiscDB()
+MiscDB::MiscDB():
+   ItemDB(Brewtarget::MISCTABLE, Brewtarget::MISCINVTABLE)
 {
 
 }

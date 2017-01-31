@@ -2,7 +2,7 @@
 
 #include "ItemDB.h"
 
-class StyleDB
+class StyleDB: public ItemDB
 {
 public:
    StyleDB();

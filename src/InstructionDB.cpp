@@ -1,6 +1,7 @@
 #include "InstructionDB.h"
 
-InstructionDB::InstructionDB()
+InstructionDB::InstructionDB():
+   ItemDB(Brewtarget::INSTRUCTIONTABLE, Brewtarget::NOTABLE)
 {
 
 }

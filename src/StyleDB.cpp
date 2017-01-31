@@ -1,6 +1,7 @@
 #include "StyleDB.h"
 
-StyleDB::StyleDB()
+StyleDB::StyleDB():
+   ItemDB(Brewtarget::STYLETABLE, Brewtarget::NOTABLE)
 {
 
 }

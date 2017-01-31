@@ -31,6 +31,7 @@
 // Forward declarations.
 class Yeast;
 class YeastDB;
+class ItemDB;
 bool operator<(Yeast &y1, Yeast &y2);
 bool operator==(Yeast &y1, Yeast &y2);
 

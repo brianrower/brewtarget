@@ -1,6 +1,6 @@
 #include "FermentablesDB.h"
 
-FermentablesDb::FermentablesDb():
-   _tableName("fermentable")
+FermentablesDB::FermentablesDB():
+      ItemDB(Brewtarget::FERMTABLE, Brewtarget::FERMINVTABLE)
 {
 }

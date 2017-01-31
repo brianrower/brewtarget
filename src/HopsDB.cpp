@@ -1,6 +1,7 @@
 #include "HopsDB.h"
 
-HopsDB::HopsDB()
+HopsDB::HopsDB():
+   ItemDB(Brewtarget::HOPTABLE, Brewtarget::HOPINVTABLE)
 {
 
 }

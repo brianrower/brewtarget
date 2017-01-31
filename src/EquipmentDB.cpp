@@ -1,6 +1,7 @@
 #include "EquipmentDB.h"
 
-EquipmentDB::EquipmentDB()
+EquipmentDB::EquipmentDB():
+   ItemDB(Brewtarget::EQUIPTABLE, Brewtarget::NOTABLE)
 {
 
 }
