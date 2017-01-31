@@ -1524,13 +1524,12 @@ Yeast* Database::newYeast(Yeast* other)
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-void Database::deleteRecord( Brewtarget::DBTable table, BeerXMLElement* object )
+void Database::deleteRecord( Brewtarget::DBTable table, int key )
 {
    int ndx = object->metaObject()->indexOfProperty("deleted");
 
    try {
-      updateEntry( table, object->_key, "deleted", Brewtarget::dbTrue(),
-                   object->metaObject()->property(ndx), object, true);
+      updateEntry( table, key, "deleted", Brewtarget::dbTrue());
    }
    catch (QString e) {
       Brewtarget::logE( QString("%1 %2").arg(Q_FUNC_INFO).arg(e) );
@@ -1582,7 +1581,7 @@ QString Database::getDbFileName()
 }
 
 // Cthulhu weeps (and we lose 2 SAN points)
-void Database::updateEntry( Brewtarget::DBTable table, int key, const char* col_name, QVariant value, QMetaProperty prop, BeerXMLElement* object, bool notify, bool transact )
+void Database::updateEntry( Brewtarget::DBTable table, int key, const char* col_name, QVariant value, bool transact )
 {
    // Assumes the table has a column called 'deleted'.
    QString tableName = tableNames[table];
@@ -1618,10 +1617,6 @@ void Database::updateEntry( Brewtarget::DBTable table, int key, const char* col_
 
    if ( transact )
       sqlDatabase().commit();
-
-   if ( notify )
-      emit object->changed(prop,value);
-
 }
 
 // Inventory functions ========================================================

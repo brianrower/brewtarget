@@ -121,7 +121,7 @@ public:
     * NOTE: This cannot be simplified without a bit more work. The inventory
     * needs to specify a table other than the one named by the beerXML element
     */
-   void updateEntry( Brewtarget::DBTable table, int key, const char* col_name, QVariant value, QMetaProperty prop, BeerXMLElement* object, bool notify = true, bool transact = false );
+   void updateEntry( Brewtarget::DBTable table, int key, const char* col_name, QVariant value, bool transact = false );
 
    //! \brief Get the contents of the cell specified by table/key/col_name.
    QVariant get( Brewtarget::DBTable table, int key, const char* col_name )
@@ -652,7 +652,7 @@ private:
    }
 
    //! Mark the \b object in \b table as deleted.
-   void deleteRecord( Brewtarget::DBTable table, BeerXMLElement* object );
+   void deleteRecord( Brewtarget::DBTable table, int key );
 
    // TODO: encapsulate this in a QUndoCommand.
    // Note -- this has to happen on a transactional boundary. We are touching
