@@ -26,6 +26,7 @@
 #include <QMetaProperty>
 #include "brewtarget.h"
 #include "database.h"
+#include "ItemDB.h"
 
 BeerXMLElement::BeerXMLElement()
    : QObject(0),
@@ -107,7 +108,7 @@ QString BeerXMLElement::name() const
 
 void BeerXMLElement::setName(const QString var)
 {
-   set( "name", "name", var );
+   getDB()->setName(var);
    _name = var;
    emit changedName(var);
 }
@@ -244,48 +245,6 @@ QString BeerXMLElement::text(int val)
 QString BeerXMLElement::text(QDate const& val)
 {
    return val.toString(Qt::ISODate);
-}
-
-void BeerXMLElement::set( const char* prop_name, const char* col_name, QVariant const& value, bool notify )
-{
-   if (prop_name != NULL && col_name != NULL) {
-    // Get the meta property.
-    int ndx = metaObject()->indexOfProperty(prop_name);
-
-    // Should schedule an update of the appropriate entry in table,
-    // then use prop to emit its notification signal.
-    Database::instance().updateEntry( _table, _key, col_name, value, metaObject()->property(ndx), this, notify );
-   }
-}
-
-QVariant BeerXMLElement::get( const char* col_name ) const
-{
-   return Database::instance().get( _table, _key, col_name );
-}
-
-void BeerXMLElement::setInventory( const char* prop_name, const char* col_name, QVariant const& value, bool notify )
-{
-    // Get the meta property.
-    int ndx = metaObject()->indexOfProperty(prop_name);
-
-    int invkey = Database::instance().getInventoryID(_table, _key);
-    Brewtarget::DBTable invtable = Database::instance().getInventoryTable(_table);
-    if(invkey == 0){ //no inventory row in the database so lets make one
-      Database::instance().newInventory(_table,_key);
-      invkey = Database::instance().getInventoryID(_table, _key);
-    }
-    Database::instance().updateEntry( invtable, invkey, col_name, value, metaObject()->property(ndx), this, notify );
-}
-
-QVariant BeerXMLElement::getInventory( const char* col_name ) const
-{
-   int invkey = Database::instance().getInventoryID(_table, _key);
-   Brewtarget::DBTable invtable = Database::instance().getInventoryTable(_table);
-   QVariant val = 0.0;
-   if(invkey != 0){
-      val = Database::instance().get( invtable , invkey, col_name );
-   }
-   return val;
 }
 
 bool BeerXMLElement::isValid()

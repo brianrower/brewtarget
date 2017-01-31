@@ -43,6 +43,7 @@
 Q_DECLARE_METATYPE( uintptr_t )
 
 class BeerXMLElement;
+class ItemDB;
 
 /*!
  * \class BeerXMLElement
@@ -140,6 +141,8 @@ signals:
    void changedName(QString);
 
 protected:
+
+   virtual ItemDB* getDB() const = 0;
 
    //! The key of this ingredient in its table.
    int _key;
