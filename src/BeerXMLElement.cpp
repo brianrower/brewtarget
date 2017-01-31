@@ -32,10 +32,7 @@ BeerXMLElement::BeerXMLElement()
    : QObject(0),
      _key(-1),
      _table(Brewtarget::NOTABLE),
-     _folder(QString()),
-     _name(QString()),
-     _display(QVariant()),
-     _deleted(QVariant())
+     _folder(QString())
 {
    _valid = true;
 }
@@ -44,73 +41,58 @@ BeerXMLElement::BeerXMLElement(BeerXMLElement const& other)
    : QObject(0),
    _key(other._key),
    _table(other._table),
-   _folder(QString()),
-   _name(QString()),
-   _display(QVariant()),
-   _deleted(QVariant())
+   _folder(QString())
 {
    _valid = true;
 }
 
 bool BeerXMLElement::deleted() const
 {
-
-   if ( ! _deleted.isValid() )
-      _deleted = get("deleted");
-
-   return _deleted.toBool();
+   return getDB()->getDeleted();
 }
 
 bool BeerXMLElement::display() const
 {
-   if ( ! _display.isValid() )
-      _display = get("display");
-
-   return _display.toBool();
+   return getDB()->getDisplay();
 }
 
 // Sigh. New databases, more complexity
 void BeerXMLElement::setDeleted(const bool var)
 {
-   set("deleted", "deleted", var ? Brewtarget::dbTrue() : Brewtarget::dbFalse());
-   _deleted = var;
+   getDB()->setDeleted(var);
 }
 
 void BeerXMLElement::setDisplay(bool var)
 {
-   set("display", "display", var ? Brewtarget::dbTrue() : Brewtarget::dbFalse());
-   _display = var;
+   getDB()->setDisplay(var);
 }
 
 QString BeerXMLElement::folder() const
 {
-   if ( _folder.isEmpty() )
-      _folder = get("folder").toString();
-
-   return _folder;
+   return getDB()->getFolder();
 }
 
-void BeerXMLElement::setFolder(const QString var, bool signal)
+void BeerXMLElement::setFolder(const QString& var, bool signal)
 {
-   set( "folder", "folder", var );
-   _folder = var;
+   getDB()->setFolder(var);
    if ( signal )
       emit changedFolder(var);
 }
 
 QString BeerXMLElement::name() const
 {
-   if ( _name.isEmpty() )
-      _name = get("name").toString();
-
-   return _name;
+   return getDB()->getName();
 }
 
-void BeerXMLElement::setName(const QString var)
+void BeerXMLElement::setName(const QString newName)
 {
-   getDB()->setName(var);
-   _name = var;
-   emit changedName(var);
+   getDB()->setName(newName);
+   emit changedName(newName);
+}
+
+void BeerXMLElement::remove()
+{
+   getDB()->remove();
 }
 
 int BeerXMLElement::key() const { return _key; }

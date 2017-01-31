@@ -2,20 +2,60 @@
 #include "database.h"
 
 const QString kNameColumn("name");
+const QString kDeletedColumn("deleted");
+const QString kDisplayColumn("display");
+const QString kFolderColumn("folder");
 
-ItemDB::ItemDB()
+ItemDB::ItemDB(Brewtarget::DBTable table, Brewtarget::DBTable inventoryTable):
+      _table(table),
+      _inventoryTable(inventoryTable)
 {
 
 }
 
 void ItemDB::setName(const QString& name)
 {
-   update(kNameColumn, name);
+   updateColumn(kNameColumn, name);
 }
 
 QString ItemDB::getName() const
 {
    return getColumn(kNameColumn).toString();
+}
+
+void ItemDB::setDeleted(bool isDeleted)
+{
+   updateColumn(kDeletedColumn, isDeleted ? Brewtarget::dbTrue() : Brewtarget::dbFalse());
+}
+
+bool ItemDB::isDeleted() const
+{
+   return getColumn(kDeletedColumn).toBool();
+}
+
+void ItemDB::setDisplay(bool display)
+{
+   updateColumn(kDisplayColumn, display ? Brewtarget::dbTrue() : Brewtarget::dbFalse());
+}
+
+bool ItemDB::getDisplay() const
+{
+   return getColumn(kDisplayColumn).toBool();
+}
+
+void ItemDB::setFolder(const QString& folder)
+{
+   updateColumn(kFolderColumn, folder);
+}
+
+QString ItemDB::getFolder() const
+{
+   return getColumn(kFolderColumn);
+}
+
+void ItemDB::remove()
+{
+   Database::instance().deleteRecord(_table, _id);
 }
 
 void ItemDB::updateColumn(const QString& colName, const QVariant& value)

@@ -82,10 +82,12 @@ public:
    void setDeleted(const bool var);
    void setDisplay(const bool var);
    //! and a way to set the folder
-   virtual void setFolder(const QString var, bool signal=true);
+   virtual void setFolder(const QString& var, bool signal=true);
 
    //!
-   void setName(const QString var);
+   void setName(const QString newName);
+
+   void remove();
 
    //! \returns our key in the table we are stored in.
    int key() const;
@@ -149,25 +151,6 @@ protected:
    //! The table where this ingredient is stored.
    Brewtarget::DBTable _table;
 
-   /*!
-    * \param prop_name A meta-property name
-    * \param col_name The appropriate column in the table.
-    * \param value the new value
-    * \param notify true to call NOTIFY method associated with \c prop_name
-    * Should do the following:
-    * 1) Set the appropriate value in the appropriate table row.
-    * 2) Call the NOTIFY method associated with \c prop_name if \c notify == true.
-    */
-   void set( const char* prop_name, const char* col_name, QVariant const& value, bool notify = true );
-
-   /*!
-    * \param col_name - The database column of the attribute we want to get.
-    * Returns the value of the attribute specified by key/table/col_name.
-    */
-   QVariant get( const char* col_name ) const;
-
-   void setInventory( const char* prop_name, const char* col_name, QVariant const& value, bool notify = true );
-   QVariant getInventory( const char* col_name ) const;
 
 private:
    /*!
@@ -175,10 +158,7 @@ private:
     * XML. I'm hoping this helps fix it
     */
   bool _valid;
-  mutable QString _folder;
-  mutable QString _name;
-  mutable QVariant _display;
-  mutable QVariant _deleted;
+  QString _folder;
 
 };
 
