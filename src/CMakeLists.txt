@@ -61,6 +61,7 @@ SET( brewtarget_SRCS
     ${SRCDIR}/BrewDayWidget.cpp
     ${SRCDIR}/BrewDayScrollWidget.cpp
     ${SRCDIR}/brewnote.cpp
+    ${SRCDIR}/BrewNoteDB.cpp
     ${SRCDIR}/BrewNoteWidget.cpp
     ${SRCDIR}/BtTabWidget.cpp
     ${SRCDIR}/BtTreeItem.cpp
@@ -83,18 +84,21 @@ SET( brewtarget_SRCS
     ${SRCDIR}/DatabaseSchemaHelper.cpp
     ${SRCDIR}/DiastaticPowerUnitSystem.cpp
     ${SRCDIR}/equipment.cpp
+    ${SRCDIR}/EquipmentDB.cpp
     ${SRCDIR}/EbcColorUnitSystem.cpp
     ${SRCDIR}/EquipmentButton.cpp
     ${SRCDIR}/EquipmentListModel.cpp
     ${SRCDIR}/EquipmentEditor.cpp
     ${SRCDIR}/FahrenheitTempUnitSystem.cpp
     ${SRCDIR}/fermentable.cpp
+    ${SRCDIR}/FermentablesDB.cpp
     ${SRCDIR}/FermentableEditor.cpp
     ${SRCDIR}/FermentableDialog.cpp
     ${SRCDIR}/FermentableSortFilterProxyModel.cpp
     ${SRCDIR}/FermentableTableModel.cpp
     ${SRCDIR}/HeatCalculations.cpp
     ${SRCDIR}/hop.cpp
+    ${SRCDIR}/HopsDB.cpp
     ${SRCDIR}/HopDialog.cpp
     ${SRCDIR}/HopEditor.cpp
     ${SRCDIR}/HopSortFilterProxyModel.cpp
@@ -102,24 +106,29 @@ SET( brewtarget_SRCS
     ${SRCDIR}/Html.cpp
     ${SRCDIR}/HydrometerTool.cpp
     ${SRCDIR}/instruction.cpp
+    ${SRCDIR}/InstructionDB.cpp
     ${SRCDIR}/IbuGuSlider.cpp
     ${SRCDIR}/IbuMethods.cpp
     ${SRCDIR}/ImperialVolumeUnitSystem.cpp
     ${SRCDIR}/InventoryFormatter.cpp
     ${SRCDIR}/InstructionWidget.cpp
+    ${SRCDIR}/ItemDB.cpp
     ${SRCDIR}/Log.cpp
     ${SRCDIR}/MainWindow.cpp
     ${SRCDIR}/mash.cpp
+    ${SRCDIR}/MashDB.cpp
     ${SRCDIR}/MashButton.cpp
     ${SRCDIR}/MashEditor.cpp
     ${SRCDIR}/MashListModel.cpp
     ${SRCDIR}/mashstep.cpp
+    ${SRCDIR}/MashStepDB.cpp
     ${SRCDIR}/MashStepEditor.cpp
     ${SRCDIR}/MashStepTableModel.cpp
     ${SRCDIR}/MashStepTableWidget.cpp
     ${SRCDIR}/MashWizard.cpp
     ${SRCDIR}/matrix.cpp
     ${SRCDIR}/misc.cpp
+    ${SRCDIR}/MiscDB.cpp
     ${SRCDIR}/MiscEditor.cpp
     ${SRCDIR}/MiscDialog.cpp
     ${SRCDIR}/MiscSortFilterProxyModel.cpp
@@ -133,6 +142,7 @@ SET( brewtarget_SRCS
     ${SRCDIR}/QueuedMethod.cpp
     ${SRCDIR}/RangedSlider.cpp
     ${SRCDIR}/recipe.cpp
+    ${SRCDIR}/RecipeDB.cpp
     ${SRCDIR}/RecipeFormatter.cpp
     ${SRCDIR}/RefractoDialog.cpp
     ${SRCDIR}/ScaleRecipeTool.cpp
@@ -142,6 +152,7 @@ SET( brewtarget_SRCS
     ${SRCDIR}/SrmColorUnitSystem.cpp
     ${SRCDIR}/StrikeWaterDialog.cpp
     ${SRCDIR}/style.cpp
+    ${SRCDIR}/StyleDB.cpp
     ${SRCDIR}/StyleButton.cpp
     ${SRCDIR}/StyleListModel.cpp
     ${SRCDIR}/StyleEditor.cpp
@@ -157,10 +168,12 @@ SET( brewtarget_SRCS
     ${SRCDIR}/USVolumeUnitSystem.cpp
     ${SRCDIR}/USWeightUnitSystem.cpp
     ${SRCDIR}/water.cpp
+    ${SRCDIR}/WaterDB.cpp
     ${SRCDIR}/WaterTableModel.cpp
     ${SRCDIR}/WaterTableWidget.cpp
     ${SRCDIR}/WaterEditor.cpp
     ${SRCDIR}/yeast.cpp
+    ${SRCDIR}/YeastDB.cpp
     ${SRCDIR}/YeastDialog.cpp
     ${SRCDIR}/YeastEditor.cpp
     ${SRCDIR}/YeastTableModel.cpp
@@ -214,6 +227,7 @@ SET( brewtarget_MOC_HEADERS
     ${SRCDIR}/BrewDayWidget.h
     ${SRCDIR}/BrewDayScrollWidget.h
     ${SRCDIR}/brewnote.h
+    ${SRCDIR}/BrewNoteDB.h
     ${SRCDIR}/BrewNoteWidget.h
     ${SRCDIR}/brewtarget.h
     ${SRCDIR}/BtTabWidget.h
@@ -230,31 +244,39 @@ SET( brewtarget_MOC_HEADERS
     ${SRCDIR}/ConverterTool.h
     ${SRCDIR}/CustomComboBox.h
     ${SRCDIR}/database.h
+    ${SRCDIR}/EquipmentDB.h
     ${SRCDIR}/EquipmentButton.h
     ${SRCDIR}/EquipmentListModel.h
     ${SRCDIR}/EquipmentEditor.h
+    ${SRCDIR}/FermentablesDB.h
     ${SRCDIR}/FermentableEditor.h
     ${SRCDIR}/FermentableDialog.h
     ${SRCDIR}/FermentableSortFilterProxyModel.h
     ${SRCDIR}/FermentableTableModel.h
+    ${SRCDIR}/HopsDB.h
     ${SRCDIR}/HopDialog.h
     ${SRCDIR}/HopEditor.h
     ${SRCDIR}/HopSortFilterProxyModel.h
     ${SRCDIR}/HopTableModel.h
     ${SRCDIR}/HydrometerTool.h
     ${SRCDIR}/IbuGuSlider.h
+    ${SRCDIR}/InstructionDB.h
     ${SRCDIR}/InstructionWidget.h
+    ${SRCDIR}/ItemDB.h
     ${SRCDIR}/Log.h
     ${SRCDIR}/MainWindow.h
     ${SRCDIR}/MashButton.h
     ${SRCDIR}/MashDesigner.h
     ${SRCDIR}/MashEditor.h
     ${SRCDIR}/NamedMashEditor.h
+    ${SRCDIR}/MashDB.h
     ${SRCDIR}/MashListModel.h
     ${SRCDIR}/MashStepEditor.h
+    ${SRCDIR}/MashStepDB.h
     ${SRCDIR}/MashStepTableModel.h
     ${SRCDIR}/MashStepTableWidget.h
     ${SRCDIR}/MashWizard.h
+    ${SRCDIR}/MiscDB.h
     ${SRCDIR}/MiscDialog.h
     ${SRCDIR}/MiscEditor.h
     ${SRCDIR}/MiscSortFilterProxyModel.h
@@ -265,11 +287,13 @@ SET( brewtarget_MOC_HEADERS
     ${SRCDIR}/PrimingDialog.h
     ${SRCDIR}/QueuedMethod.h
     ${SRCDIR}/RangedSlider.h
+    ${SRCDIR}/RecipeDB.h
     ${SRCDIR}/RecipeExtrasWidget.h
     ${SRCDIR}/RecipeFormatter.h
     ${SRCDIR}/RefractoDialog.h
     ${SRCDIR}/ScaleRecipeTool.h
     ${SRCDIR}/StrikeWaterDialog.h
+    ${SRCDIR}/StyleDB.h
     ${SRCDIR}/StyleButton.h
     ${SRCDIR}/StyleListModel.h
     ${SRCDIR}/StyleEditor.h
@@ -279,9 +303,11 @@ SET( brewtarget_MOC_HEADERS
     ${SRCDIR}/TimerMainDialog.h
     ${SRCDIR}/TimerWidget.h
     ${SRCDIR}/unit.h
+    ${SRCDIR}/WaterDB.h
     ${SRCDIR}/WaterTableModel.h
     ${SRCDIR}/WaterTableWidget.h
     ${SRCDIR}/WaterEditor.h
+    ${SRCDIR}/YeastDB.h
     ${SRCDIR}/YeastDialog.h
     ${SRCDIR}/YeastEditor.h
     ${SRCDIR}/YeastSortFilterProxyModel.h
