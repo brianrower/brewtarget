@@ -858,28 +858,28 @@ void BtTreeModel::deleteSelected(QModelIndexList victims)
       switch ( type(ndx) ) 
       {
          case BtTreeItem::EQUIPMENT:
-            Database::instance().remove( equipment(ndx) );
+            equipment(ndx)->remove();
             break;
          case BtTreeItem::FERMENTABLE:
-            Database::instance().remove( fermentable(ndx) );
+            fermentable(ndx)->remove();
             break;
          case BtTreeItem::HOP:
-            Database::instance().remove( hop(ndx) );
+            hop(ndx)->remove();
             break;
          case BtTreeItem::MISC:
-            Database::instance().remove( misc(ndx) );
+            misc(ndx)->remove();
             break;
          case BtTreeItem::RECIPE:
-            Database::instance().remove( recipe(ndx) );
+            recipe(ndx)->remove();
             break;
          case BtTreeItem::STYLE:
-            Database::instance().remove( style(ndx) );
+            style(ndx)->remove();
             break;
          case BtTreeItem::YEAST:
-            Database::instance().remove( yeast(ndx) );
+            yeast(ndx)->remove();
             break;
          case BtTreeItem::BREWNOTE:
-            Database::instance().remove( brewNote(ndx) );
+            brewNote(ndx)->remove();;
             break;
          case BtTreeItem::FOLDER:
             // This one is weird.

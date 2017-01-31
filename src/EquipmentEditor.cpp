@@ -536,7 +536,7 @@ void EquipmentEditor::setEquipment( Equipment* e )
 void EquipmentEditor::removeEquipment()
 {
    if( obsEquip )
-      Database::instance().remove(obsEquip);
+      obsEquip->remove();
 
    equipmentComboBox->setCurrentIndex(-1);
    setEquipment(0);

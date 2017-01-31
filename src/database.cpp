@@ -1524,18 +1524,26 @@ Yeast* Database::newYeast(Yeast* other)
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-void Database::deleteRecord( Brewtarget::DBTable table, int key )
+void Database::deleteRecord( Brewtarget::DBTable table, int id )
 {
-   int ndx = object->metaObject()->indexOfProperty("deleted");
-
    try {
-      updateEntry( table, key, "deleted", Brewtarget::dbTrue());
+      updateEntry( table, id, "deleted", Brewtarget::dbTrue());
    }
    catch (QString e) {
       Brewtarget::logE( QString("%1 %2").arg(Q_FUNC_INFO).arg(e) );
       throw;
    }
 
+}
+
+void Database::deleteRecords( Brewtarget::DBTable table, QList<int> ids )
+{
+   sqlDatabase().transaction();
+
+   for(int id : ids)
+      deleteRecord(table, id);
+
+   sqlDatabase().commit();
 }
 
 // NOTE: This really should be in a transaction, but I am going to leave that
@@ -1581,7 +1589,7 @@ QString Database::getDbFileName()
 }
 
 // Cthulhu weeps (and we lose 2 SAN points)
-void Database::updateEntry( Brewtarget::DBTable table, int key, const char* col_name, QVariant value, bool transact )
+void Database::updateEntry( Brewtarget::DBTable table, int key, const QString& col_name, const QVariant& value, bool transact )
 {
    // Assumes the table has a column called 'deleted'.
    QString tableName = tableNames[table];

@@ -139,7 +139,7 @@ void HopDialog::removeHop()
    modelIndex = hopTableProxy->mapToSource(selected[0]);
    Hop *hop = hopTableModel->getHop(modelIndex.row());
    if (hop)
-      Database::instance().remove(hop);
+      hop->remove();
 }
 
 void HopDialog::addHop(const QModelIndex& index)

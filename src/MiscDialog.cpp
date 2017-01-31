@@ -135,7 +135,7 @@ void MiscDialog::removeMisc()
    }
 
    Misc* m = miscTableModel->getMisc(miscTableProxy->mapToSource(selected[0]).row());
-   Database::instance().remove(m);
+   m->remove();
 }
 
 void MiscDialog::addMisc(const QModelIndex& index)

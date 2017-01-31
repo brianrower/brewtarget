@@ -121,10 +121,10 @@ public:
     * NOTE: This cannot be simplified without a bit more work. The inventory
     * needs to specify a table other than the one named by the beerXML element
     */
-   void updateEntry( Brewtarget::DBTable table, int key, const char* col_name, QVariant value, bool transact = false );
+   void updateEntry( Brewtarget::DBTable table, int key, const QString& col_name, const QVariant& value, bool transact = false );
 
    //! \brief Get the contents of the cell specified by table/key/col_name.
-   QVariant get( Brewtarget::DBTable table, int key, const char* col_name )
+   QVariant get( Brewtarget::DBTable table, int key, const QString& col_name )
    {
       QSqlQuery q;
       QString index = QString("%1_%2").arg(tableNames[table]).arg(col_name);
@@ -288,67 +288,11 @@ public:
    void removeFromRecipe( Recipe* rec, Instruction* ins );
 
    //! Remove \b step from \b mash.
-   void removeFrom( Mash* mash, MashStep* step );
+   void removeFrom( Mash* mash, MashStep* step );   
 
-   // Or you can mark whole lists as deleted.
-   // ONE METHOD TO CALL THEM ALL AND IN DARKNESS BIND THEM!
-   template<class T> void remove(QList<T*> list)
-   {
-      if ( list.empty() )
-         return;
-
-      const QMetaObject *meta = list[0]->metaObject();
-      Brewtarget::DBTable ingTable = classNameToTable[ meta->className() ];
-      QString propName;
-
-      int ndx = meta->indexOfClassInfo("signal");
-      if ( ndx != -1 ) {
-         propName = meta->classInfo(ndx).value();
-      }
-      else
-         throw QString("%1 cannot find signal property on %2").arg(Q_FUNC_INFO).arg(meta->className());
-
-      foreach( T* dead, list ) {
-         deleteRecord(ingTable,dead);
-      }
-
-      emit changed( metaProperty(propName.toLatin1().data()), QVariant() );
-   }
-
-   template <class T>void remove(T* ing, bool emitSignal = true)
-   {
-      const QMetaObject *meta = ing->metaObject();
-      Brewtarget::DBTable ingTable = classNameToTable[ meta->className() ];
-      QString propName;
-
-      if ( ingTable == Brewtarget::BREWNOTETABLE ) {
-         emitSignal = false;
-      }
-
-      if ( emitSignal ) {
-         int ndx = meta->indexOfClassInfo("signal");
-         if ( ndx != -1 ) {
-            propName = meta->classInfo(ndx).value();
-         }
-         else {
-            throw QString("%1 cannot find signal property on %2").arg(Q_FUNC_INFO).arg(meta->className());
-         }
-      }
-
-      try {
-         deleteRecord(ingTable, ing);
-      }
-      catch (QString e) {
-         throw;
-      }
-
-      // Brewnotes are weird and don't emit a metapropery change
-      if ( emitSignal )
-         emit changed( metaProperty(propName.toLatin1().data()), QVariant() );
-      // This was screaming until I needed to emit a freaking signal
-      if ( ingTable != Brewtarget::MASHSTEPTABLE )
-         emit deletedSignal(ing);
-   }
+   //! Mark the \b object in \b table as deleted.
+   void deleteRecord( Brewtarget::DBTable table, int id );
+   void deleteRecords( Brewtarget::DBTable table, QList<int> ids );
 
    //! Get the recipe that this \b note is part of.
    Recipe* getParentRecipe( BrewNote const* note );
@@ -650,9 +594,6 @@ private:
    {
       return metaObject()->property(metaObject()->indexOfProperty(name));
    }
-
-   //! Mark the \b object in \b table as deleted.
-   void deleteRecord( Brewtarget::DBTable table, int key );
 
    // TODO: encapsulate this in a QUndoCommand.
    // Note -- this has to happen on a transactional boundary. We are touching

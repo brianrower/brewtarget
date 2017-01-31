@@ -2008,7 +2008,7 @@ void MainWindow::removeMash()
    //remove from db
 
    m->removeAllMashSteps();
-   Database::instance().remove(m);
+   m->remove();
 
    Mash* defaultMash = Database::instance().newMash(recipeObs);
    mashStepTableModel->setMash(defaultMash);

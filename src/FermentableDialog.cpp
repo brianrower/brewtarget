@@ -139,7 +139,7 @@ void FermentableDialog::removeFermentable()
 
    translated = fermTableProxy->mapToSource(selected[0]);
    Fermentable* ferm = fermTableModel->getFermentable(translated.row());
-   Database::instance().remove(ferm);
+   ferm->remove();
 }
 
 void FermentableDialog::editSelected()
