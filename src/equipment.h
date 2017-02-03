@@ -142,7 +142,21 @@ signals:
    void changedNotes(QString);
    void changedGrainAbsorption_LKg(double);
    void changedBoilingPoint_c(double);
-   
+   void batchSizeChanged();
+   void tunVolumeChanged();
+   void tunWeightChanged();
+   void tunSpecificHeatChanged();
+   void topUpWaterChanged();
+   void trubChillerLossChanged();
+   void evaporationRateChanged();
+   void calcBoilVolumeChanged();
+   void lauterDeadspaceChanged();
+   void topUpKettleChanged();
+   void hopUtilizationChanged();
+   void notesChanged();
+   void grainAbsorptionChanged();
+   void boilingPointChanged();
+
 protected:
    virtual ItemDB* getDB() const override;
 

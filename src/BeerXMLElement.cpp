@@ -48,45 +48,44 @@ BeerXMLElement::BeerXMLElement(BeerXMLElement const& other)
 
 bool BeerXMLElement::deleted() const
 {
-   return getDB()->getDeleted();
+   return getDB()->getColumn(ItemDB::kDeletedColumn).toBool();
 }
 
 bool BeerXMLElement::display() const
 {
-   return getDB()->getDisplay();
+   return getDB()->getColumn(ItemDB::kDisplayColumn).toBool();
 }
 
-// Sigh. New databases, more complexity
 void BeerXMLElement::setDeleted(const bool var)
 {
-   getDB()->setDeleted(var);
+   getDB()->updateColumn(ItemDB::kDeletedColumn, var ? Brewtarget::dbTrue() : Brewtarget::dbFalse());
 }
 
 void BeerXMLElement::setDisplay(bool var)
 {
-   getDB()->setDisplay(var);
+   getDB()->updateColumn(ItemDB::kDisplayColumn, var ? Brewtarget::dbTrue() : Brewtarget::dbFalse());
 }
 
 QString BeerXMLElement::folder() const
 {
-   return getDB()->getFolder();
+   return getDB()->getColumn(ItemDB::kFolderColumn).toString();
 }
 
 void BeerXMLElement::setFolder(const QString& var, bool signal)
 {
-   getDB()->setFolder(var);
+   getDB()->updateColumn(ItemDB::kFolderColumn, var);
    if ( signal )
       emit changedFolder(var);
 }
 
 QString BeerXMLElement::name() const
 {
-   return getDB()->getName();
+   return getDB()->getColumn(ItemDB::kNameColumn).toString();
 }
 
 void BeerXMLElement::setName(const QString newName)
 {
-   getDB()->setName(newName);
+   getDB()->updateColumn(ItemDB::kNameColumn, newName);
    emit changedName(newName);
 }
 

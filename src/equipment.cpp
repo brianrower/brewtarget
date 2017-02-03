@@ -27,6 +27,24 @@
 #include "HeatCalculations.h"
 #include "EquipmentDB.h"
 
+const QString kBoilSizeColumn("boil_size");
+const QString kBatchSizeColumn("batch_size");
+const QString kTunVolumeColumn("tun_volume");
+const QString kTunWeightColumn("tun_weight");
+const QString kTunSpecificHeatColumn("tun_specific_heat");
+const QString kTopUpWaterColumn("top_up_water");
+const QString kTrubChillerLossColumn("trub_chiller_loss");
+const QString kEvaporationRateColumn("evap_rate");
+const QString kRealEvaporationRateColumn("real_evap_rate");
+const QString kBoilTimeColumn("boil_time");
+const QString kCalBoilVolumeColumn("calc_boil_volume");
+const QString kLauterDeadspaceColumn("lauter_deadspace");
+const QString kTopUpKettleColumn("top_up_kettle");
+const QString kHopUtilizationColumn("hop_utilization");
+const QString kNotesColumn("notes");
+const QString kAbsorptionColumn("absorption");
+const QString kBoilingPointColumn("boiling_point");
+
 QHash<QString,QString> Equipment::tagToProp = Equipment::tagToPropHash();
 
 QHash<QString,QString> Equipment::tagToPropHash()
@@ -122,11 +140,9 @@ void Equipment::setBoilSize_l( double var )
       Brewtarget::logW( QString("Equipment: boil size negative: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("boilSize_l", "boil_size", var);
-      emit changedBoilSize_l(var);
-   }
+
+   getDB()->updateColumn(EquipmentDB::kBoilSizeColumn, var);
+   emit changedBoilSize_l(var);
 }
 
 void Equipment::setBatchSize_l( double var )
@@ -136,11 +152,10 @@ void Equipment::setBatchSize_l( double var )
       Brewtarget::logW( QString("Equipment: batch size negative: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("batchSize_l", "batch_size", var);
-      doCalculations();
-   }
+
+   getDB()->updateColumn(EquipmentDB::kBatchSizeColumn, var);
+   doCalculations();
+   emit batchSizeChanged();
 }
 
 void Equipment::setTunVolume_l( double var )
@@ -150,10 +165,9 @@ void Equipment::setTunVolume_l( double var )
       Brewtarget::logW( QString("Equipment: tun volume negative: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("tunVolume_l", "tun_volume", var);
-   }
+
+   getDB()->updateColumn(EquipmentDB::kTunVolumeColumn, var);
+   emit tunVolumeChanged();
 }
 
 void Equipment::setTunWeight_kg( double var )
@@ -163,10 +177,9 @@ void Equipment::setTunWeight_kg( double var )
       Brewtarget::logW( QString("Equipment: tun weight negative: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("tunWeight_kg", "tun_weight", var);
-   }
+
+   getDB()->updateColumn(EquipmentDB::kTunWeightColumn, var);
+   emit tunWeightChanged();
 }
 
 void Equipment::setTunSpecificHeat_calGC( double var )
@@ -176,10 +189,9 @@ void Equipment::setTunSpecificHeat_calGC( double var )
       Brewtarget::logW( QString("Equipment: tun sp heat negative: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("tunSpecificHeat_calGC", "tun_specific_heat", var);
-   }
+
+   getDB()->updateColumn(EquipmentDB::kTunSpecificHeatColumn, var);
+   emit tunSpecificHeatChanged();
 }
 
 void Equipment::setTopUpWater_l( double var )
@@ -189,11 +201,10 @@ void Equipment::setTopUpWater_l( double var )
       Brewtarget::logW( QString("Equipment: top up water negative: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("topUpWater_l", "top_up_water", var);
-      doCalculations();
-   }
+
+   getDB()->updateColumn(EquipmentDB::kTopUpWaterColumn, var);
+   doCalculations();
+   emit topUpWaterChanged();
 }
 
 void Equipment::setTrubChillerLoss_l( double var )
@@ -203,11 +214,10 @@ void Equipment::setTrubChillerLoss_l( double var )
       Brewtarget::logW( QString("Equipment: trub chiller loss negative: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("trubChillerLoss_l", "trub_chiller_loss", var);
-      doCalculations();
-   }
+
+   getDB()->updateColumn(EquipmentDB::kTrubChillerLossColumn, var);
+   doCalculations();
+   emit trubChillerLossChanged();
 }
 
 void Equipment::setEvapRate_pctHr( double var )
@@ -217,12 +227,11 @@ void Equipment::setEvapRate_pctHr( double var )
       Brewtarget::logW( QString("Equipment: 0 < evap rate < 100: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("evapRate_pctHr", "evap_rate", var);
-      set("evapRate_lHr", "real_evap_rate", var/100.0 * batchSize_l() ); // We always use this one, so set it.
-      doCalculations();
-   }
+
+   getDB()->updateColumn(EquipmentDB::kEvaporationRateColumn, var);
+   getDB()->updateColumn(EquipmentDB::kRealEvaporationRateColumn, var/100.0 * batchSize_l() ); // We always use this one, so set it.
+   doCalculations();
+   emit evaporationRateChanged();
 }
 
 void Equipment::setEvapRate_lHr( double var )
@@ -232,12 +241,11 @@ void Equipment::setEvapRate_lHr( double var )
       Brewtarget::logW( QString("Equipment: evap rate negative: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("evapRate_lHr", "real_evap_rate", var);
-      setEvapRate_pctHr( var/batchSize_l() * 100.0 ); // We don't use it, but keep it current.
-      doCalculations();
-   }
+
+   getDB()->updateColumn(EquipmentDB::kRealEvaporationRateColumn, var);
+   setEvapRate_pctHr( var/batchSize_l() * 100.0 ); // We don't use it, but keep it current.
+   doCalculations();
+   emit evaporationRateChanged();
 }
 
 void Equipment::setBoilTime_min( double var )
@@ -247,19 +255,18 @@ void Equipment::setBoilTime_min( double var )
       Brewtarget::logW( QString("Equipment: boil time negative: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("boilTime_min", "boil_time", var);
-      emit changedBoilTime_min(var);
-      doCalculations();
-   }
+
+   getDB()->updateColumn(EquipmentDB::kBoilTimeColumn, var);
+   doCalculations();
+   emit changedBoilTime_min(var);
 }
 
 void Equipment::setCalcBoilVolume( bool var )
 {
-   set("calcBoilVolume", "calc_boil_volume", var);
+   getDB()->updateColumn(EquipmentDB::kCalcBoilVolumeColumn, var);
    if( var )
       doCalculations();
+   emit calcBoilVolumeChanged();
 }
 
 void Equipment::setLauterDeadspace_l( double var )
@@ -269,10 +276,9 @@ void Equipment::setLauterDeadspace_l( double var )
       Brewtarget::logW( QString("Equipment: deadspace negative: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("lauterDeadspace_l", "lauter_deadspace", var);
-   }
+
+   getDB()->updateColumn(EquipmentDB::kLauterDeadspaceColumn, var);
+   emit lauterDeadspaceChanged();
 }
 
 void Equipment::setTopUpKettle_l( double var )
@@ -282,10 +288,9 @@ void Equipment::setTopUpKettle_l( double var )
       Brewtarget::logW( QString("Equipment: top up kettle negative: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("topUpKettle_l", "top_up_kettle", var);
-   }
+
+   getDB()->updateColumn(EquipmentDB::kTopUpKettleColumn, var);
+   emit topUpKettleChanged();
 }
 
 void Equipment::setHopUtilization_pct( double var )
@@ -295,15 +300,15 @@ void Equipment::setHopUtilization_pct( double var )
       Brewtarget::logW( QString("Equipment: 0 < hop utilization: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("hopUtilization_pct", "hop_utilization", var);
-   }
+
+   getDB()->updateColumn(EquipmentDB::kHopUtilizationColumn, var);
+   emit hopUtilizationChanged();
 }
 
 void Equipment::setNotes( const QString &var )
 {
-   set("notes", "notes", var);
+   getDB()->updateColumn(EquipmentDB::kNotesColumn, var);
+   emit notesChanged();
 }
 
 void Equipment::setGrainAbsorption_LKg(double var)
@@ -313,10 +318,9 @@ void Equipment::setGrainAbsorption_LKg(double var)
       Brewtarget::logW( QString("Equipment: absorption < 0: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("absorption_LKg", "absorption", var);
-   }
+
+   getDB()->updateColumn(EquipmentDB::kAbsorptionColumn, var);
+   emit grainAbsorptionChanged();
 }
 
 void Equipment::setBoilingPoint_c(double var)
@@ -326,32 +330,30 @@ void Equipment::setBoilingPoint_c(double var)
       Brewtarget::logW( QString("Equipment: boiling point of water < 0: %1").arg(var));
       return;
    }
-   else 
-   {
-      set("boilingPoint_c", "boiling_point", var);
-   }
+
+   getDB()->updateColumn(EquipmentDB::kBoilingPointColumn, var);
+   emit boilingPointChanged();
 }
 
 //============================"GET" METHODS=====================================
 
-QString Equipment::notes() const { return get("notes").toString(); }
-bool Equipment::calcBoilVolume() const { return get("calc_boil_volume").toBool(); }
-
-double Equipment::boilSize_l() const            { return get("boil_size").toDouble(); }
-double Equipment::batchSize_l() const           { return get("batch_size").toDouble(); }
-double Equipment::tunVolume_l() const           { return get("tun_volume").toDouble(); }
-double Equipment::tunWeight_kg() const          { return get("tun_weight").toDouble(); }
-double Equipment::tunSpecificHeat_calGC() const { return get("tun_specific_heat").toDouble(); }
-double Equipment::topUpWater_l() const          { return get("top_up_water").toDouble(); }
-double Equipment::trubChillerLoss_l() const     { return get("trub_chiller_loss").toDouble(); }
-double Equipment::evapRate_pctHr() const        { return get("evap_rate").toDouble(); }
-double Equipment::evapRate_lHr() const          { return get("real_evap_rate").toDouble(); }
-double Equipment::boilTime_min() const          { return get("boil_time").toDouble(); }
-double Equipment::lauterDeadspace_l() const     { return get("lauter_deadspace").toDouble(); }
-double Equipment::topUpKettle_l() const         { return get("top_up_kettle").toDouble(); }
-double Equipment::hopUtilization_pct() const    { return get("hop_utilization").toDouble(); }
-double Equipment::grainAbsorption_LKg()         { return get("absorption").toDouble(); }
-double Equipment::boilingPoint_c() const        { return get("boiling_point").toDouble(); }
+QString Equipment::notes() const                { return getDB()->getColumn(EquipmentDB::kNotesColumn).toString(); }
+bool Equipment::calcBoilVolume() const          { return getDB()->getColumn(EquipmentDB::kCalcBoilVolumeColumn).toBool(); }
+double Equipment::boilSize_l() const            { return getDB()->getColumn(EquipmentDB::kBoilSizeColumn).toDouble(); }
+double Equipment::batchSize_l() const           { return getDB()->getColumn(EquipmentDB::kBatchSizeColumn).toDouble(); }
+double Equipment::tunVolume_l() const           { return getDB()->getColumn(EquipmentDB::kTunVolumeColumn).toDouble(); }
+double Equipment::tunWeight_kg() const          { return getDB()->getColumn(EquipmentDB::kTunWeightColumn).toDouble(); }
+double Equipment::tunSpecificHeat_calGC() const { return getDB()->getColumn(EquipmentDB::kTunSpecificHeatColumn).toDouble(); }
+double Equipment::topUpWater_l() const          { return getDB()->getColumn(EquipmentDB::kTopUpWaterColumn).toDouble(); }
+double Equipment::trubChillerLoss_l() const     { return getDB()->getColumn(EquipmentDB::kTrubChillerLossColumn).toDouble(); }
+double Equipment::evapRate_pctHr() const        { return getDB()->getColumn(EquipmentDB::kEvaporationRateColumn).toDouble(); }
+double Equipment::evapRate_lHr() const          { return getDB()->getColumn(EquipmentDB::kRealEvaporationRateColumn).toDouble(); }
+double Equipment::boilTime_min() const          { return getDB()->getColumn(EquipmentDB::kBoilTimeColumn).toDouble(); }
+double Equipment::lauterDeadspace_l() const     { return getDB()->getColumn(EquipmentDB::kLauterDeadspaceColumn).toDouble(); }
+double Equipment::topUpKettle_l() const         { return getDB()->getColumn(EquipmentDB::kTopUpKettleColumn).toDouble(); }
+double Equipment::hopUtilization_pct() const    { return getDB()->getColumn(EquipmentDB::kHopUtilizationColumn).toDouble(); }
+double Equipment::grainAbsorption_LKg()         { return getDB()->getColumn(EquipmentDB::kAbsorptionColumn).toDouble(); }
+double Equipment::boilingPoint_c() const        { return getDB()->getColumn(EquipmentDB::kBoilingPointColumn).toDouble(); }
 
 void Equipment::doCalculations()
 {
