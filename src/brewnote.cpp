@@ -219,18 +219,18 @@ BrewNote::BrewNote(BrewNote const& other)
 // Setters=====================================================================
 void BrewNote::setBrewDate(QDateTime const& date)
 {
-   set("brewDate", "brewDate", date.toString(Qt::ISODate));
+   getDB()->updateColumn(BrewNoteDB::kBrewDateColumn, date.toString(Qt::ISODate));
    emit brewDateChanged(date);
 }
 
 void BrewNote::setFermentDate(QDateTime const& date)
 {
-   set("fermentDate", "fermentDate", date.toString(Qt::ISODate));
+   getDB()->updateColumn(BrewNoteDB::kFermentDateColumn, date.toString(Qt::ISODate));
 }
 
 void BrewNote::setNotes(QString const& var, bool notify)
 {
-   set("notes", "notes", var, notify);
+   getDB()->updateColumn(BrewNoteDB::kNotesColumn, var);
 }
 
 void BrewNote::setLoading(bool flag) { loading = flag; }
@@ -240,7 +240,7 @@ void BrewNote::setLoading(bool flag) { loading = flag; }
 // the brewnote.
 void BrewNote::setSg(double var)
 {
-   set("sg", "sg", var);
+   getDB()->updateColumn(BrewNoteDB::kSpecificGravityColumn, var);
 
    if ( loading )
       return;
@@ -251,7 +251,7 @@ void BrewNote::setSg(double var)
 
 void BrewNote::setVolumeIntoBK_l(double var)
 {
-   set("volumeIntoBK_l", "volume_into_bk", var);
+   getDB()->updateColumn(BrewNoteDB::kVolumeIntoBoilColumn, var);
 
    if ( loading )
       return;
@@ -263,7 +263,7 @@ void BrewNote::setVolumeIntoBK_l(double var)
 
 void BrewNote::setOg(double var)
 {
-   set("og", "og", var);
+   getDB()->updateColumn(BrewNoteDB::kOriginalGravityColumn, var);
 
    if ( loading )
       return;
@@ -275,7 +275,7 @@ void BrewNote::setOg(double var)
 
 void BrewNote::setVolumeIntoFerm_l(double var)
 {
-   set("volumeIntoFerm_l", "volume_into_fermenter", var);
+   getDB()->updateColumn(BrewNoteDB::kVolumeIntoFermenterColumn, var);
 
    if ( loading )
       return;
@@ -285,7 +285,7 @@ void BrewNote::setVolumeIntoFerm_l(double var)
 
 void BrewNote::setFg(double var)
 {
-   set("fg", "fg", var);
+   getDB()->updateColumn(BrewNoteDB::kFinalGravityColumn, var);
 
    if ( loading )
       return;
@@ -309,7 +309,7 @@ void BrewNote::setProjPoints(double var)
       convertPnts = (total_g - 1.0 ) * 1000;
    }
 
-   set("projPoints", "projected_points", convertPnts);
+   getDB()->updateColumn(BrewNoteDB::kProjectedPointsColumn, convertPnts);
 }
 
 void BrewNote::setProjFermPoints(double var)
@@ -326,66 +326,274 @@ void BrewNote::setProjFermPoints(double var)
       convertPnts = (total_g - 1.0 ) * 1000;
    }
 
-   set("projPoints", "projected_ferm_points", convertPnts);
+   getDB()->updateColumn(BrewNoteDB::kProjectedFermentationPointsColumn, convertPnts);
 }
 
-void BrewNote::setABV(double var)               { set("abv", "abv", var); }
-void BrewNote::setEffIntoBK_pct(double var)     { set("effIntoBK_pct", "eff_into_bk", var); }
-void BrewNote::setBrewhouseEff_pct(double var)  { set("brewhouseEff_pct", "brewhouse_eff", var); }
-void BrewNote::setStrikeTemp_c(double var)      { set("strikeTemp_c", "strike_temp", var); }
-void BrewNote::setMashFinTemp_c(double var)     { set("mashFinTemp_c", "mash_final_temp", var); }
-void BrewNote::setPostBoilVolume_l(double var)  { set("postBoilVolume_l", "post_boil_volume", var); }
-void BrewNote::setPitchTemp_c(double var)       { set("pitchTemp_c", "pitch_temp", var); }
-void BrewNote::setFinalVolume_l(double var)     { set("finalVolume_l", "final_volume", var); }
-void BrewNote::setProjBoilGrav(double var)      { set("projBoilGrav", "projected_boil_grav", var); }
-void BrewNote::setProjVolIntoBK_l(double var)   { set("projVolIntoBK_l", "projected_vol_into_bk", var); }
-void BrewNote::setProjStrikeTemp_c(double var)  { set("projStrikeTemp_c", "projected_strike_temp", var); }
-void BrewNote::setProjMashFinTemp_c(double var) { set("projMashFinTemp_c", "projected_mash_fin_temp", var); }
-void BrewNote::setProjOg(double var)            { set("projOg", "projected_og", var); }
-void BrewNote::setProjVolIntoFerm_l(double var) { set("projVolIntoFerm_l", "projected_vol_into_ferm", var); }
-void BrewNote::setProjFg(double var)            { set("projFg", "projected_fg", var); }
-void BrewNote::setProjEff_pct(double var)       { set("projEff_pct", "projected_eff", var); }
-void BrewNote::setProjABV_pct(double var)       { set("projABV_pct", "projected_abv", var); }
-void BrewNote::setProjAtten(double var)         { set("projAtten", "projected_atten", var); }
-void BrewNote::setBoilOff_l(double var)         { set("boilOff_l", "boil_off", var); }
+void BrewNote::setABV(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kABVColumn, var);
+}
+
+void BrewNote::setEffIntoBK_pct(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kEfficiencyIntoBoilColumn, var);
+}
+
+void BrewNote::setBrewhouseEff_pct(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kBrewhouseEfficiencyColumn, var);
+}
+
+void BrewNote::setStrikeTemp_c(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kStrikeTempColumn, var);
+}
+
+void BrewNote::setMashFinTemp_c(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kMashFinalTempColumn, var);
+}
+
+void BrewNote::setPostBoilVolume_l(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kPostBoilVolumeColumn, var);
+}
+
+void BrewNote::setPitchTemp_c(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kPitchTempColumn, var);
+}
+
+void BrewNote::setFinalVolume_l(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kFinalVolumeColumn, var);
+}
+
+void BrewNote::setProjBoilGrav(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kProjectedBoilGravityColumn, var);
+}
+
+void BrewNote::setProjVolIntoBK_l(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kProjectedVolumeIntoBoilColumn, var);
+}
+
+void BrewNote::setProjStrikeTemp_c(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kProjectedStrikeTempColumn, var);
+}
+
+void BrewNote::setProjMashFinTemp_c(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kProjectedMashFinishTempColumn, var);
+}
+
+void BrewNote::setProjOg(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kProjectedOGColumn, var);
+}
+
+void BrewNote::setProjVolIntoFerm_l(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kProjectedVolumeIntoFermenterColumn, var);
+}
+
+void BrewNote::setProjFg(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kProjectedFGColumn, var);
+}
+
+void BrewNote::setProjEff_pct(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kProjectedEfficiencyColumn, var);
+}
+
+void BrewNote::setProjABV_pct(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kProjectedABVColumn, var);
+}
+
+void BrewNote::setProjAtten(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kProjectedAttenuationColumn, var);
+}
+
+void BrewNote::setBoilOff_l(double var)
+{
+   getDB()->updateColumn(BrewNoteDB::kBoilOffColumn, var);
+}
 
 // Getters
-QDateTime BrewNote::brewDate()      const { return QDateTime::fromString(get("brewDate").toString(),Qt::ISODate); }
-QString BrewNote::brewDate_str()    const { return get("brewDate").toString(); }
-QDateTime BrewNote::fermentDate()   const { return QDateTime::fromString(get("fermentDate").toString(),Qt::ISODate); }
-QString BrewNote::fermentDate_str() const { return get("fermentDate").toString(); }
-QString BrewNote::fermentDate_short() const { return fermentDate().toString("yyyy-MM-dd"); }
-QString BrewNote::notes()           const { return get("notes").toString(); }
-QString BrewNote::brewDate_short()  const { return Brewtarget::displayDateUserFormated(brewDate().date()); }
+QDateTime BrewNote::brewDate() const
+{
+   return QDateTime::fromString(brewDate_str(), Qt::ISODate);
+}
 
-double BrewNote::sg() const                { return get("sg").toDouble(); }
-double BrewNote::abv() const               { return get("abv").toDouble(); }
-double BrewNote::volumeIntoBK_l() const    { return get("volume_into_bk").toDouble(); }
-double BrewNote::effIntoBK_pct() const     { return get("eff_into_bk").toDouble(); }
-double BrewNote::brewhouseEff_pct() const  { return get("brewhouse_eff").toDouble(); }
-double BrewNote::strikeTemp_c() const      { return get("strike_temp").toDouble(); }
-double BrewNote::mashFinTemp_c() const     { return get("mash_final_temp").toDouble(); }
-double BrewNote::og() const                { return get("og").toDouble(); }
-double BrewNote::volumeIntoFerm_l() const  { return get("volume_into_fermenter").toDouble(); }
-double BrewNote::postBoilVolume_l() const  { return get("post_boil_volume").toDouble(); }
-double BrewNote::pitchTemp_c() const       { return get("pitch_temp").toDouble(); }
-double BrewNote::fg() const                { return get("fg").toDouble(); }
-double BrewNote::finalVolume_l() const     { return get("final_volume").toDouble(); }
-double BrewNote::projBoilGrav() const      { return get("projected_boil_grav").toDouble(); }
-double BrewNote::projVolIntoBK_l() const   { return get("projected_vol_into_bk").toDouble(); }
-double BrewNote::projStrikeTemp_c() const  { return get("projected_strike_temp").toDouble(); }
-double BrewNote::projMashFinTemp_c() const { return get("projected_mash_fin_temp").toDouble(); }
-double BrewNote::projOg() const            { return get("projected_og").toDouble(); }
-double BrewNote::projVolIntoFerm_l() const { return get("projected_vol_into_ferm").toDouble(); }
-double BrewNote::projFg() const            { return get("projected_fg").toDouble(); }
-double BrewNote::projEff_pct() const       { return get("projected_eff").toDouble(); }
-double BrewNote::projABV_pct() const       { return get("projected_abv").toDouble(); }
-double BrewNote::projPoints() const        { return get("projected_points").toDouble(); }
-double BrewNote::projFermPoints() const    { return get("projected_ferm_points").toDouble(); }
-double BrewNote::projAtten() const         { return get("projected_atten").toDouble(); }
-double BrewNote::boilOff_l() const         { return get("boil_off").toDouble(); }
+QString BrewNote::brewDate_str() const
+{
+   return getDB()->getColumn(BrewNoteDB::kBrewDateColumn).toString();
+}
 
-int BrewNote::key() const                  { return _key; }
+QString BrewNote::brewDate_short() const
+{
+   return Brewtarget::displayDateUserFormated(brewDate().date());
+}
+
+QDateTime BrewNote::fermentDate()   const
+{
+   return QDateTime::fromString(fermentDate_str(),Qt::ISODate);
+}
+
+QString BrewNote::fermentDate_str() const
+{
+   return getDB()->getColumn(BrewNoteDB::kFermentDateColumn).toString();
+}
+
+QString BrewNote::fermentDate_short() const
+{
+   return fermentDate().toString("yyyy-MM-dd");
+}
+
+QString BrewNote::notes() const
+{
+   return getDB()->getColumn(BrewNoteDB::kNotesColumn).toString();
+}
+
+double BrewNote::sg() const
+{
+   return getDB()->getColumn(BrewNoteDB::kSpecificGravityColumn).toDouble();
+}
+
+double BrewNote::abv() const
+{
+   return getDB()->getColumn(BrewNoteDB::kABVColumn).toDouble();
+}
+
+double BrewNote::volumeIntoBK_l() const
+{
+   return getDB()->getColumn(BrewNoteDB::kVolumeIntoBoilColumn).toDouble();
+}
+
+double BrewNote::effIntoBK_pct() const
+{
+   return getDB()->getColumn(BrewNoteDB::kEfficiencyIntoBoilColumn).toDouble();
+}
+
+double BrewNote::brewhouseEff_pct() const
+{
+   return getDB()->getColumn(BrewNoteDB::kBrewhouseEfficiencyColumn).toDouble();
+}
+
+double BrewNote::strikeTemp_c() const
+{
+   return getDB()->getColumn(BrewNoteDB::kStrikeTempColumn).toDouble();
+}
+
+double BrewNote::mashFinTemp_c() const
+{
+   return getDB()->getColumn(BrewNoteDB::kMashFinalTempColumn).toDouble();
+}
+
+double BrewNote::og() const
+{
+   return getDB()->getColumn(BrewNoteDB::kOriginalGravityColumn).toDouble();
+}
+
+double BrewNote::volumeIntoFerm_l() const
+{
+   return getDB()->getColumn(BrewNoteDB::kVolumeIntoFermenterColumn).toDouble();
+}
+
+double BrewNote::postBoilVolume_l() const
+{
+   return getDB()->getColumn(BrewNoteDB::kPostBoilVolumeColumn).toDouble();
+}
+
+double BrewNote::pitchTemp_c() const
+{
+   return getDB()->getColumn(BrewNoteDB::kPitchTempColumn).toDouble();
+}
+
+double BrewNote::fg() const
+{
+   return getDB()->getColumn(BrewNoteDB::kFinalGravityColumn).toDouble();
+}
+
+double BrewNote::finalVolume_l() const
+{
+   return getDB()->getColumn(BrewNoteDB::kFinalVolumeColumn).toDouble();
+}
+
+double BrewNote::projBoilGrav() const
+{
+   return getDB()->getColumn(BrewNoteDB::kProjectedBoilGravityColumn).toDouble();
+}
+
+double BrewNote::projVolIntoBK_l() const
+{
+   return getDB()->getColumn(BrewNoteDB::kProjectedVolumeIntoBoilColumn).toDouble();
+}
+
+double BrewNote::projStrikeTemp_c() const
+{
+   return getDB()->getColumn(BrewNoteDB::kProjectedStrikeTempColumn).toDouble();
+}
+
+double BrewNote::projMashFinTemp_c() const
+{
+   return getDB()->getColumn(BrewNoteDB::kProjectedMashFinishTempColumn).toDouble();
+}
+
+double BrewNote::projOg() const
+{
+   return getDB()->getColumn(BrewNoteDB::kProjectedOGColumn).toDouble();
+}
+
+double BrewNote::projVolIntoFerm_l() const
+{
+   return getDB()->getColumn(BrewNoteDB::kProjectedVolumeIntoFermenterColumn).toDouble();
+}
+
+double BrewNote::projFg() const
+{
+   return getDB()->getColumn(BrewNoteDB::kProjectedFGColumn).toDouble();
+}
+
+double BrewNote::projEff_pct() const
+{
+   return getDB()->getColumn(BrewNoteDB::kProjectedEfficiencyColumn).toDouble();
+}
+
+double BrewNote::projABV_pct() const
+{
+   return getDB()->getColumn(BrewNoteDB::kProjectedABVColumn).toDouble();
+}
+
+double BrewNote::projPoints() const
+{
+   return getDB()->getColumn(BrewNoteDB::kProjectedPointsColumn).toDouble();
+}
+
+double BrewNote::projFermPoints() const
+{
+   return getDB()->getColumn(BrewNoteDB::kProjectedFermentationPointsColumn).toDouble();
+}
+
+double BrewNote::projAtten() const
+{
+   return getDB()->getColumn(BrewNoteDB::kProjectedAttenuationColumn).toDouble();
+}
+
+double BrewNote::boilOff_l() const
+{
+   return getDB()->getColumn(BrewNoteDB::kBoilOffColumn).toDouble();
+}
+
+int BrewNote::key() const
+{
+   return _key;
+}
 
 // calculators -- these kind of act as both setters and getters.  Likely bad
 // form
