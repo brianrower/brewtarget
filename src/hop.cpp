@@ -111,10 +111,8 @@ void Hop::setAlpha_pct( double num )
       Brewtarget::logW( QString("Hop: 0 < alpha < 100: %1").arg(num) );
       return;
    }
-   else
-   {
-      set("alpha_pct", "alpha", num);
-   }
+
+   getDB()->updateColumn(HopsDB::kAlphaColumn, num);
 }
 
 void Hop::setAmount_kg( double num )
@@ -124,10 +122,8 @@ void Hop::setAmount_kg( double num )
       Brewtarget::logW( QString("Hop: amount < 0: %1").arg(num) );
       return;
    }
-   else
-   {
-      set("amount_kg", "amount", num);
-   }
+
+   getDB()->updateColumn(HopsDB::kAmountColumn, num);
 }
 
 void Hop::setInventoryAmount( double num )
@@ -137,16 +133,15 @@ void Hop::setInventoryAmount( double num )
       Brewtarget::logW( QString("Hop: inventory < 0: %1").arg(num) );
       return;
    }
-   else
-   {
-      setInventory("inventory", "amount", num);
-   }
+
+   getDB()->updateInventoryColumn(HopsDB::kAmountColumn, num);
 }
 
 void Hop::setUse(Use u)
 {
-   if ( u >= 0 )
-      set("use", "use", uses.at(u));
+   if ( u >= 0 ) {
+      getDB()->updateColumn(HopsDB::kUseColumn, uses.at(u));
+   }
 }
 
 void Hop::setTime_min( double num )
@@ -156,27 +151,26 @@ void Hop::setTime_min( double num )
       Brewtarget::logW( QString("Hop: time < 0: %1").arg(num) );
       return;
    }
-   else
-   {
-      set("time_min", "time", num);
-   }
+   getDB()->updateColumn(HopsDB::kTimeColumn, num);
 }
       
 void Hop::setNotes( const QString& str )
 {
-   set("notes", "notes", str);
+   getDB()->updateColumn(HopsDB::kNotesColumn, str);
 }
 
 void Hop::setType(Type t)
 {
-  if ( t >= 0 )
-     set("type", "htype", types.at(t));
+   if ( t >= 0 ) {
+      getDB()->updateColumn(HopsDB::kTypeColumn, types.at(t));
+   }
 }
 
 void Hop::setForm( Form f )
 {
-   if ( f >= 0 )
-     set("form", "form", forms.at(f));
+   if ( f >= 0 ) {
+      getDB()->updateColumn(HopsDB::kFormColumn, forms.at(f));
+   }
 }
 
 void Hop::setBeta_pct( double num )
@@ -186,10 +180,8 @@ void Hop::setBeta_pct( double num )
       Brewtarget::logW( QString("Hop: 0 < beta < 100: %1").arg(num) );
       return;
    }
-   else
-   {
-      set("beta_pct", "beta", num);
-   }
+
+   getDB()->updateColumn(HopsDB::kBetaColumn, num);
 }
 
 void Hop::setHsi_pct( double num )
@@ -199,20 +191,18 @@ void Hop::setHsi_pct( double num )
       Brewtarget::logW( QString("Hop: 0 < hsi < 100: %1").arg(num) );
       return;
    }
-   else
-   {
-      set("hsi_pct", "hsi", num);
-   }
+
+   getDB()->updateColumn(HopsDB::kHSIColumn, num);
 }
 
 void Hop::setOrigin( const QString& str )
 {
-   set("origin", "origin", str);
+   getDB()->updateColumn(HopsDB::kOriginColumn, str);
 }
 
 void Hop::setSubstitutes( const QString& str )
 {
-   set("substitutes", "substitutes", str);
+   getDB()->updateColumn(HopsDB::kSubstitutesColumn, str);
 }
 
 void Hop::setHumulene_pct( double num )
@@ -222,10 +212,8 @@ void Hop::setHumulene_pct( double num )
       Brewtarget::logW( QString("Hop: 0 < humulene < 100: %1").arg(num) );
       return;
    }
-   else
-   {
-      set("humulene_pct", "humulene", num);
-   }
+
+   getDB()->updateColumn(HopsDB::kHumuleneColumn, num);
 }
 
 void Hop::setCaryophyllene_pct( double num )
@@ -235,10 +223,7 @@ void Hop::setCaryophyllene_pct( double num )
       Brewtarget::logW( QString("Hop: 0 < cary < 100: %1").arg(num) );
       return;
    }
-   else
-   {
-      set("caryophyllene_pct", "caryophyllene", num);
-   }
+   getDB()->updateColumn(HopsDB::kCaryophylleneColumn, num);
 }
 
 void Hop::setCohumulone_pct( double num )
@@ -248,10 +233,8 @@ void Hop::setCohumulone_pct( double num )
       Brewtarget::logW( QString("Hop: 0 < cohumulone < 100: %1").arg(num) );
       return;
    }
-   else
-   {
-      set("cohumulone_pct", "cohumulone", num);
-   }
+
+   getDB()->updateColumn(HopsDB::kCohumuloneColumn, num);
 }
 
 void Hop::setMyrcene_pct( double num )
@@ -261,38 +244,107 @@ void Hop::setMyrcene_pct( double num )
       Brewtarget::logW( QString("Hop: 0 < myrcene < 100: %1").arg(num) );
       return;
    }
-   else
-   {
-      set("myrcene_pct", "myrcene", num);
-   }
+   getDB()->updateColumn(HopsDB::kMyrceneColumn, num);
 }
 
 //============================="GET" METHODS====================================
 
-Hop::Use Hop::use() const { return static_cast<Hop::Use>(uses.indexOf(get("use").toString())); }
-const QString Hop::useString() const { return get("use").toString(); }
-Hop::Form Hop::form() const { return static_cast<Hop::Form>(forms.indexOf(get("form").toString())); }
-const QString Hop::notes() const { return get("notes").toString(); }
-Hop::Type Hop::type() const { return static_cast<Hop::Type>(types.indexOf(get("htype").toString())); }
-const QString Hop::typeString() const { return get("htype").toString(); }
-const QString Hop::formString() const { return get("form").toString(); }
-const QString Hop::origin() const { return get("origin").toString(); }
-const QString Hop::substitutes() const { return get("substitutes").toString(); }
+Hop::Use Hop::use() const
+{
+   return static_cast<Hop::Use>(uses.indexOf(useString()));
+}
 
-double Hop::alpha_pct()          const { return get("alpha").toDouble(); }
-double Hop::amount_kg()          const { return get("amount").toDouble(); }
-double Hop::time_min()           const { return get("time").toDouble(); }
-double Hop::beta_pct()           const { return get("beta").toDouble(); }
-double Hop::hsi_pct()            const { return get("hsi").toDouble(); }
-double Hop::humulene_pct()       const { return get("humulene").toDouble(); }
-double Hop::caryophyllene_pct()  const { return get("caryophyllene").toDouble(); }
-double Hop::cohumulone_pct()     const { return get("cohumulone").toDouble(); }
-double Hop::myrcene_pct()        const { return get("myrcene").toDouble(); }
+const QString Hop::useString() const
+{
+   return getDB()->getColumn(HopsDB::kUseColumn).toString();
+}
+
+Hop::Form Hop::form() const
+{
+   QString form = getDB()->getColumn(HopsDB::kFormColumn).toString();
+   return static_cast<Hop::Form>(forms.indexOf(form));
+}
+
+const QString Hop::notes() const
+{
+   return getDB()->getColumn(HopsDB::kNotesColumn).toString();
+}
+
+Hop::Type Hop::type() const
+{
+   return static_cast<Hop::Type>(types.indexOf(typeString()));
+}
+
+const QString Hop::typeString() const
+{
+   return getDB()->getColumn(HopsDB::kTypeColumn).toString();
+}
+
+const QString Hop::formString() const
+{
+   return getDB()->getColumn(HopsDB::kFormColumn).toString();
+}
+
+const QString Hop::origin() const
+{
+   return getDB()->getColumn(HopsDB::kOriginColumn).toString();
+}
+
+const QString Hop::substitutes() const
+{
+   return getDB()->getColumn(HopsDB::kSubstitutesColumn).toString();
+}
+
+
+double Hop::alpha_pct() const
+{
+   return getDB()->getColumn(HopsDB::kAlphaColumn).toDouble();
+}
+
+double Hop::amount_kg() const
+{
+   return getDB()->getColumn(HopsDB::kAmountColumn).toDouble();
+}
+
+double Hop::time_min() const
+{
+   return getDB()->getColumn(HopsDB::kTimeColumn).toDouble();
+}
+
+double Hop::beta_pct() const
+{
+   return getDB()->getColumn(HopsDB::kBetaColumn).toDouble();
+}
+
+double Hop::hsi_pct() const
+{
+   return getDB()->getColumn(HopsDB::kHSIColumn).toDouble();
+}
+
+double Hop::humulene_pct() const
+{
+   return getDB()->getColumn(HopsDB::kHumuleneColumn).toDouble();
+}
+
+double Hop::caryophyllene_pct() const
+{
+   return getDB()->getColumn(HopsDB::kCaryophylleneColumn).toDouble();
+}
+
+double Hop::cohumulone_pct() const
+{
+   return getDB()->getColumn(HopsDB::kCohumuloneColumn).toDouble();
+}
+
+double Hop::myrcene_pct() const
+{
+   return getDB()->getColumn(HopsDB::kMyrceneColumn).toDouble();
+}
 
 // inventory still must be handled separately, and I'm still annoyed.
 double Hop::inventory() const
 {
-   return getInventory("amount").toDouble();
+   return getDB()->getInventoryColumn(HopsDB::kAmountColumn).toDouble();
 }
 
 const QString Hop::useStringTr() const
