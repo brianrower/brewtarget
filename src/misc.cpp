@@ -70,18 +70,65 @@ ItemDB* Misc::getDB() const
 }
 
 //============================"GET" METHODS=====================================
-Misc::Type Misc::type() const { return static_cast<Misc::Type>(types.indexOf(get("mtype").toString())); }
-const QString Misc::typeString() const { return types.at(type()); }
-Misc::Use Misc::use() const { return static_cast<Misc::Use>(uses.indexOf(get("use").toString())); }
-const QString Misc::useString() const { return uses.at(use()); }
-double Misc::amount()    const { return get("amount").toDouble(); }
-double Misc::time()      const { return get("time").toDouble(); }
-bool Misc::amountIsWeight() const { return get("amount_is_weight").toBool(); }
-QString Misc::useFor() const { return get("use_for").toString(); }
-QString Misc::notes() const { return get("notes").toString(); }
-double Misc::inventory() const { return getInventory("amount").toDouble(); }
-Misc::AmountType Misc::amountType() const { return amountIsWeight() ? AmountType_Weight : AmountType_Volume; }
-const QString Misc::amountTypeString() const { return amountTypes.at(amountType()); }
+Misc::Type Misc::type() const
+{
+   return static_cast<Misc::Type>(types.indexOf(typeString()));
+}
+
+const QString Misc::typeString() const
+{
+   return getDB()->getColumn(MiscDB::kTypeColumn).toString();
+}
+
+Misc::Use Misc::use() const
+{
+   return static_cast<Misc::Use>(uses.indexOf(useString()));
+}
+
+const QString Misc::useString() const
+{
+   return getDB()->getColumn(MiscDB::kUseColumn).toString();
+}
+
+double Misc::amount()    const
+{
+   return getDB()->getColumn(MiscDB::kAmountColumn).toDouble();
+}
+
+double Misc::time()      const
+{
+   return getDB()->getColumn(MiscDB::kTimeColumn).toDouble();
+}
+
+bool Misc::amountIsWeight() const
+{
+   return getDB()->getColumn(MiscDB::kAmtIsWeightColumn).toBool();
+}
+
+QString Misc::useFor() const
+{
+   return getDB()->getColumn(MiscDB::kUseForColumn).toString();
+}
+
+QString Misc::notes() const
+{
+   return getDB()->getColumn(MiscDB::kNotesColumn).toString();
+}
+
+double Misc::inventory() const
+{
+   return getDB()->getInventoryColumn(MiscDB::kAmountColumn).toDouble();
+}
+
+Misc::AmountType Misc::amountType() const
+{
+   return amountIsWeight() ? AmountType_Weight : AmountType_Volume;
+}
+
+const QString Misc::amountTypeString() const
+{
+   return amountTypes.at(amountType());
+}
 
 const QString Misc::typeStringTr() const
 {
@@ -102,19 +149,42 @@ const QString Misc::amountTypeStringTr() const
 }
 
 //============================"SET" METHODS=====================================
-void Misc::setType( Type t ) { set( "type", "mtype", types.at(t) ); }
-void Misc::setUse( Use u ) { set( "use", "use", uses.at(u) ); }
-void Misc::setAmountType( AmountType t ) { setAmountIsWeight(t == AmountType_Weight ? true : false); }
-void Misc::setUseFor( const QString& var ) { set( "useFor", "use_for", var ); }
-void Misc::setNotes( const QString& var ) { set( "notes", "notes", var ); }
-void Misc::setAmountIsWeight( bool var ) { set( "amountIsWeight", "amount_is_weight", var ); }
+void Misc::setType( Type t )
+{
+   getDB()->updateColumn(MiscDB::kTypeColumn, types.at(t) );
+}
+
+void Misc::setUse( Use u )
+{
+   getDB()->updateColumn(MiscDB::kUseColumn, uses.at(u) );
+}
+
+void Misc::setAmountType( AmountType t )
+{
+   setAmountIsWeight(t == AmountType_Weight ? true : false);
+}
+
+void Misc::setUseFor( const QString& var )
+{
+   getDB()->updateColumn(MiscDB::kUseForColumn, var );
+}
+
+void Misc::setNotes( const QString& var )
+{
+   getDB()->updateColumn(MiscDB::kNotesColumn, var );
+}
+
+void Misc::setAmountIsWeight( bool var )
+{
+   getDB()->updateColumn(MiscDB::kAmtIsWeightColumn, var );
+}
 
 void Misc::setAmount( double var )
 {
    if( var < 0.0 )
       Brewtarget::logW( QString("Misc: amount < 0: %1").arg(var) );
    else
-      set( "amount", "amount", var );
+      getDB()->updateColumn(MiscDB::kAmountColumn, var );
 }
 
 void Misc::setInventoryAmount( double var )
@@ -122,7 +192,7 @@ void Misc::setInventoryAmount( double var )
    if( var < 0.0 )
       Brewtarget::logW( QString("Misc: inventory < 0: %1").arg(var) );
    else
-      setInventory("inventory", "amount", var );
+      getDB()->updateInventoryColumn(MiscDB::kAmountColumn, var );
 }
 
 void Misc::setTime( double var )
@@ -130,7 +200,7 @@ void Misc::setTime( double var )
    if( var < 0.0 )
       Brewtarget::logW( QString("Misc: time < 0: %1").arg(var) );
    else
-      set( "time", "time", var );
+      getDB()->updateColumn(MiscDB::kTimeColumn, var );
 }
 
 //========================OTHER METHODS=========================================
