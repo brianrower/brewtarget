@@ -66,13 +66,13 @@ public:
    void addReagent(const QString& reagent);
 
    // "get" methods.
-   QString directions();
-   bool hasTimer();
-   QString timerValue();
-   bool completed();
+   QString directions() const;
+   bool hasTimer() const;
+   QString timerValue() const;
+   bool completed() const;
    //! This is a non-stored temporary in-memory set.
-   QList<QString> reagents();
-   double interval();
+   QList<QString> reagents() const;
+   double interval() const;
 
    int instructionNumber() const;
 signals:

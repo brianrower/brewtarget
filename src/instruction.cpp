@@ -58,35 +58,27 @@ ItemDB* Instruction::getDB() const
 // Setters ====================================================================
 void Instruction::setDirections(const QString& dir)
 {
-   set("directions", "directions", dir);
+   getDB()->updateColumn(InstructionDB::kDirectionsColumn, dir);
 }
 
 void Instruction::setHasTimer(bool has)
 {
-   set("hasTimer", "hasTimer", has);
+   getDB()->updateColumn(InstructionDB::kHasTimerColumn, has);
 }
 
 void Instruction::setTimerValue(const QString& timerVal)
 {
-   set("timerValue", "timerValue", timerVal);
+   getDB()->updateColumn(InstructionDB::kTimerValueColumn, timerVal);
 }
 
 void Instruction::setCompleted(bool comp)
 {
-   set("completed", "completed", comp);
+   getDB()->updateColumn(InstructionDB::kCompletedColumn, comp);
 }
-
-// TODO: figure out.
-/*
-void Instruction::setReagent(const QString& reagent)
-{
-   reagents.push_back(QString(reagent));
-}
-*/
 
 void Instruction::setInterval(double time) 
 {
-   set("interval", "interval", time);
+   getDB()->updateColumn(InstructionDB::kIntervalColumn, time);
 }
 
 void Instruction::addReagent(const QString& reagent)
@@ -95,16 +87,37 @@ void Instruction::addReagent(const QString& reagent)
 }
 
 // Accessors ==================================================================
-QString Instruction::directions() { return get("directions").toString(); }
+QString Instruction::directions() const
+{
+   return getDB()->getColumn(InstructionDB::kDirectionsColumn).toString();
+}
 
-bool Instruction::hasTimer() { return get("hasTimer").toBool(); }
+bool Instruction::hasTimer() const
+{
+   return getDB()->getColumn(InstructionDB::kHasTimerColumn).toBool();
+}
 
-QString Instruction::timerValue() { return get("timerValue").toString(); }
+QString Instruction::timerValue() const
+{
+   return getDB()->getColumn(InstructionDB::kTimerValueColumn).toString();
+}
 
-bool Instruction::completed() { return get("completed").toBool(); }
+bool Instruction::completed() const
+{
+   return getDB()->getColumn(InstructionDB::kCompletedColumn).toBool();
+}
 
-QList<QString> Instruction::reagents() { return _reagents; }
+QList<QString> Instruction::reagents() const
+{
+   return _reagents;
+}
 
-double Instruction::interval() { return get("interval").toDouble(); }
+double Instruction::interval() const
+{
+   return getDB()->getColumn(InstructionDB::kIntervalColumn).toDouble();
+}
 
-int Instruction::instructionNumber() const { return Database::instance().instructionNumber(this); }
+int Instruction::instructionNumber() const
+{
+   return Database::instance().instructionNumber(this);
+}
