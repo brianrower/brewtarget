@@ -72,12 +72,12 @@ ItemDB* MashStep::getDB() const
 //================================"SET" METHODS=================================
 void MashStep::setInfuseTemp_c(double var)
 {
-   set("infuseTemp_c", "infuse_temp", var);
+   getDB()->updateColumn(MashStepDB::kInfuseTempColumn, var);
 }
 
 void MashStep::setType( Type t )
 {
-   set("type", "mstype", types.at(t));
+   getDB()->updateColumn(MashStepDB::kTypeColumn, types.at(t));
 }
 
 void MashStep::setInfuseAmount_l( double var )
@@ -87,10 +87,8 @@ void MashStep::setInfuseAmount_l( double var )
       Brewtarget::logW( QString("%1 number cannot be negative: %2").arg(Q_FUNC_INFO).arg(var) );
       return;
    }
-   else
-   {
-      set("infuseAmount_l", "infuse_amount", var);
-   }
+
+   getDB()->updateColumn(MashStepDB::kInfuseAmtColumn, var);
 }
 
 void MashStep::setStepTemp_c( double var )
@@ -100,10 +98,8 @@ void MashStep::setStepTemp_c( double var )
       Brewtarget::logW( QString("%1: temp below absolute zero: %2").arg(Q_FUNC_INFO).arg(var) );
       return;
    }
-   else
-   {
-      set("stepTemp_c", "step_temp", var);
-   }
+
+   getDB()->updateColumn(MashStepDB::kStepTempColumn, var);
 }
 
 void MashStep::setStepTime_min( double var )
@@ -113,10 +109,8 @@ void MashStep::setStepTime_min( double var )
       Brewtarget::logW( QString("%1: step time cannot be negative: %2").arg(Q_FUNC_INFO).arg(var) );
       return;
    }
-   else
-   {
-      set("stepTime_min", "step_time", var);
-   }
+
+   getDB()->updateColumn(MashStepDB::kStepTimeColumn, var);
 }
 
 void MashStep::setRampTime_min( double var )
@@ -124,13 +118,10 @@ void MashStep::setRampTime_min( double var )
    if( var < 0.0 )
    {
       Brewtarget::logW( QString("%1: ramp time cannot be negative: %2").arg(Q_FUNC_INFO).arg(var) );
-
       return;
    }
-   else
-   {
-      set("rampTime_min", "ramp_time", var);
-   }
+
+   getDB()->updateColumn(MashStepDB::kRampTimeColumn, var);
 }
 
 void MashStep::setEndTemp_c( double var )
@@ -140,29 +131,70 @@ void MashStep::setEndTemp_c( double var )
       Brewtarget::logW( QString("%1: temp below absolute zero: %2").arg(Q_FUNC_INFO).arg(var) );
       return;
    }
-   else
-   {
-      set("endTemp_c", "end_temp", var);
-   }
+
+   getDB()->updateColumn(MashStepDB::kEndTempColumn, var);
 }
 
 void MashStep::setDecoctionAmount_l(double var)
 {
-   set("decoctionAmount_l", "decoction_amount", var);
+   getDB()->updateColumn(MashStepDB::kDecoctionAmountColumn, var);
 }
 
 //============================="GET" METHODS====================================
-MashStep::Type MashStep::type()        const { return static_cast<MashStep::Type>(types.indexOf(get("mstype").toString())); }
-const QString MashStep::typeString()   const { return get("mstype").toString(); }
-const QString MashStep::typeStringTr() const { return typesTr.at(type()); }
-double MashStep::infuseTemp_c()        const { return get("infuse_temp").toDouble(); }
-double MashStep::infuseAmount_l()      const { return get("infuse_amount").toDouble(); }
-double MashStep::stepTemp_c()          const { return get("step_temp").toDouble(); }
-double MashStep::stepTime_min()        const { return get("step_time").toDouble(); }
-double MashStep::rampTime_min()        const { return get("ramp_time").toDouble(); }
-double MashStep::endTemp_c()           const { return get("end_temp").toDouble(); }
-double MashStep::decoctionAmount_l()   const { return get("decoction_amount").toDouble(); }
-int MashStep::stepNumber()             const { return get("step_number").toInt(); }
+MashStep::Type MashStep::type() const
+{
+   return static_cast<MashStep::Type>(types.indexOf(typeString()));
+}
+
+const QString MashStep::typeString() const
+{
+   return getDB()->getColumn(MashStepDB::kTypeColumn).toString();
+}
+
+const QString MashStep::typeStringTr() const
+{
+   return typesTr.at(type());
+}
+
+double MashStep::infuseTemp_c() const
+{
+   return getDB()->getColumn(MashStepDB::kInfuseTempColumn).toDouble();
+}
+
+double MashStep::infuseAmount_l() const
+{
+   return getDB()->getColumn(MashStepDB::kInfuseAmtColumn).toDouble();
+}
+
+double MashStep::stepTemp_c() const
+{
+   return getDB()->getColumn(MashStepDB::kStepTempColumn).toDouble();
+}
+
+double MashStep::stepTime_min() const
+{
+   return getDB()->getColumn(MashStepDB::kStepTimeColumn).toDouble();
+}
+
+double MashStep::rampTime_min() const
+{
+   return getDB()->getColumn(MashStepDB::kRampTimeColumn).toDouble();
+}
+
+double MashStep::endTemp_c() const
+{
+   return getDB()->getColumn(MashStepDB::kEndTempColumn).toDouble();
+}
+
+double MashStep::decoctionAmount_l() const
+{
+   return getDB()->getColumn(MashStepDB::kDecoctionAmountColumn).toDouble();
+}
+
+int MashStep::stepNumber() const
+{
+   return getDB()->getColumn(MashStepDB::kStepNumberColumn).toInt();
+}
 
 bool MashStep::isInfusion() const
 {
