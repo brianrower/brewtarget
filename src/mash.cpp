@@ -74,11 +74,30 @@ ItemDB* Mash::getDB() const
    return _db.get();
 }
 
-void Mash::setGrainTemp_c( double var ) { set("grainTemp_c", "grain_temp", var); }
-void Mash::setNotes( const QString& var ) { set("notes", "notes", var); }
-void Mash::setTunTemp_c( double var ) { set("tunTemp_c", "tun_temp", var); }
-void Mash::setSpargeTemp_c( double var ) { set("spargeTemp_c", "sparge_temp", var); }
-void Mash::setEquipAdjust( bool var ) { set("equipAdjust", "equip_adjust", var); }
+void Mash::setGrainTemp_c( double var )
+{
+   getDB()->updateColumn(MashDB::kGrainTempColumn, var);
+}
+
+void Mash::setNotes( const QString& var )
+{
+   getDB()->updateColumn(MashDB::kNotesColumn, var);
+}
+
+void Mash::setTunTemp_c( double var )
+{
+   getDB()->updateColumn(MashDB::kTunTempColumn, var);
+}
+
+void Mash::setSpargeTemp_c( double var )
+{
+   getDB()->updateColumn(MashDB::kSpargeTempColumn, var);
+}
+
+void Mash::setEquipAdjust( bool var )
+{
+   getDB()->updateColumn(MashDB::kEquipmentAdjustColumn, var);
+}
 
 void Mash::setPh( double var )
 {
@@ -87,10 +106,8 @@ void Mash::setPh( double var )
       Brewtarget::logW( QString("Mash: 0 < pH < 14: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("ph", "ph", var);
-   }
+
+   getDB()->updateColumn(MashDB::kPhColumn, var);
 }
 
 void Mash::setTunWeight_kg( double var )
@@ -100,10 +117,8 @@ void Mash::setTunWeight_kg( double var )
       Brewtarget::logW( QString("Mash: tun weight < 0: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("tunWeight_kg", "tun_weight", var);
-   }
+
+   getDB()->updateColumn(MashDB::kTunWeightColumn, var);
 }
 
 void Mash::setTunSpecificHeat_calGC( double var )
@@ -113,10 +128,8 @@ void Mash::setTunSpecificHeat_calGC( double var )
       Brewtarget::logW( QString("Mash: sp heat < 0: %1").arg(var) );
       return;
    }
-   else
-   {
-      set("tunSpecificHeat_calGC", "tun_specific_heat", var);
-   }
+
+   getDB()->updateColumn(MashDB::kTunSpecificHeatColumn, var);
 }
 
 void Mash::removeAllMashSteps()
@@ -130,14 +143,45 @@ void Mash::removeAllMashSteps()
 }
 
 //============================="GET" METHODS====================================
-QString Mash::notes()                const { return get("notes").toString(); }
-double Mash::grainTemp_c()           const { return get("grain_temp").toDouble(); }
-double Mash::tunTemp_c()             const { return get("tun_temp").toDouble(); }
-double Mash::spargeTemp_c()          const { return get("sparge_temp").toDouble(); }
-double Mash::ph()                    const { return get("ph").toDouble(); }
-double Mash::tunWeight_kg()          const { return get("tun_weight").toDouble(); }
-double Mash::tunSpecificHeat_calGC() const { return get("tun_specific_heat").toDouble(); }
-bool Mash::equipAdjust()             const { return get("equip_adjust").toBool(); }
+QString Mash::notes() const
+{
+   return getDB()->getColumn(MashDB::kNotesColumn).toString();
+}
+
+double Mash::grainTemp_c() const
+{
+   return getDB()->getColumn(MashDB::kGrainTempColumn).toDouble();
+}
+
+double Mash::tunTemp_c() const
+{
+   return getDB()->getColumn(MashDB::kTunTempColumn).toDouble();
+}
+
+double Mash::spargeTemp_c() const
+{
+   return getDB()->getColumn(MashDB::kSpargeTempColumn).toDouble();
+}
+
+double Mash::ph() const
+{
+   return getDB()->getColumn(MashDB::kPhColumn).toDouble();
+}
+
+double Mash::tunWeight_kg() const
+{
+   return getDB()->getColumn(MashDB::kTunWeightColumn).toDouble();
+}
+
+double Mash::tunSpecificHeat_calGC() const
+{
+   return getDB()->getColumn(MashDB::kTunSpecificHeatColumn).toDouble();
+}
+
+bool Mash::equipAdjust() const
+{
+   return getDB()->getColumn(MashDB::kEquipmentAdjustColumn).toBool();
+}
 
 // === other methods ===
 double Mash::totalMashWater_l()
