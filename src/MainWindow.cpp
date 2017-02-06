@@ -1377,7 +1377,7 @@ void MainWindow::removeSelectedFermentable()
     for(i = 0; i < itemsToRemove.size(); i++)
     {
         fermTableModel->removeFermentable(itemsToRemove.at(i));
-        recipeObs->remove(itemsToRemove.at(i));
+        recipeObs->removeIngredient(itemsToRemove.at(i));
     }
 }
 
@@ -1445,7 +1445,7 @@ void MainWindow::removeSelectedHop()
     for(i = 0; i < itemsToRemove.size(); i++)
     {
         hopTableModel->removeHop(itemsToRemove.at(i));
-        recipeObs->remove(itemsToRemove.at(i));
+        recipeObs->removeIngredient(itemsToRemove.at(i));
     }
 
 }
@@ -1474,7 +1474,7 @@ void MainWindow::removeSelectedMisc()
     for(i = 0; i < itemsToRemove.size(); i++)
     {
        miscTableModel->removeMisc(itemsToRemove.at(i));
-       recipeObs->remove(itemsToRemove.at(i));
+       recipeObs->removeIngredient(itemsToRemove.at(i));
     }
 }
 
@@ -1501,7 +1501,7 @@ void MainWindow::removeSelectedYeast()
     for(i = 0; i < itemsToRemove.size(); i++)
     {
        yeastTableModel->removeYeast(itemsToRemove.at(i));
-       recipeObs->remove(itemsToRemove.at(i));
+       recipeObs->removeIngredient(itemsToRemove.at(i));
     }
 }
 

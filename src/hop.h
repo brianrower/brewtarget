@@ -41,7 +41,7 @@ bool operator==( Hop &h1, Hop &h2 );
  *
  * \brief Model class for a hop record in the database.
  */
-class Hop : public BeerXMLElement
+class Hop : public BeerIngredient
 {
    Q_OBJECT
    Q_CLASSINFO("signal", "hops")

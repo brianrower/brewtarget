@@ -37,7 +37,7 @@ class MiscDB;
  *
  * \brief Model for a misc record in the database.
  */
-class Misc : public BeerXMLElement
+class Misc : public BeerIngredient
 {
    Q_OBJECT
    Q_CLASSINFO("signal", "miscs")

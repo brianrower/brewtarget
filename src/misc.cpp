@@ -50,12 +50,12 @@ QHash<QString,QString> Misc::tagToPropHash()
    return propHash;
 }
 //============================CONSTRUCTORS======================================
-Misc::Misc() : BeerXMLElement()
+Misc::Misc() : BeerIngredient()
 {
    _db.reset(new MiscDB());
 }
 
-Misc::Misc(Misc const& other) : BeerXMLElement(other)
+Misc::Misc(Misc const& other) : BeerIngredient(other)
 {
    _db.reset(new MiscDB());
 }

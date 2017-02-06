@@ -42,7 +42,7 @@ bool operator==(Fermentable &f1, Fermentable &f2);
  *
  * \brief Model for a fermentable record in the database.
  */
-class Fermentable : public BeerXMLElement
+class Fermentable : public BeerIngredient
 {
    Q_OBJECT
    Q_CLASSINFO("signal", "fermentables")

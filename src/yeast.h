@@ -41,7 +41,7 @@ bool operator==(Yeast &y1, Yeast &y2);
  *
  * \brief Model for yeast records in the database.
  */
-class Yeast : public BeerXMLElement
+class Yeast : public BeerIngredient
 {
    Q_OBJECT
    Q_CLASSINFO("signal", "yeasts")

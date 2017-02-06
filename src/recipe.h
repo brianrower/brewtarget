@@ -199,9 +199,7 @@ public:
    Q_PROPERTY( QList<Water*> waters READ waters /*WRITE*/ /*NOTIFY changed*/ STORED false )
    
    // Relational setters.
-   // NOTE: do these add/remove methods belong here? Should they only exist in Database?
-   // One method to bring them all and in darkness bind them
-   void remove( BeerXMLElement *var);
+   void removeIngredient( BeerIngredient *var);
 
    // And you do know what happens next right?
    void addHop( Hop *var );

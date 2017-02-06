@@ -82,13 +82,13 @@ bool Hop::isValidForm(const QString& str)
 }
 
 Hop::Hop()
-   : BeerXMLElement()
+   : BeerIngredient()
 {
    _db.reset(new HopsDB());
 }
 
 Hop::Hop( Hop const& other )
-   : BeerXMLElement(other)
+   : BeerIngredient(other)
 {
    _db.reset(new HopsDB());
 }

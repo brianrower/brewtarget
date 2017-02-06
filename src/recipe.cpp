@@ -1449,14 +1449,9 @@ QDate Recipe::date()               const
 
 //=============================Removers========================================
 
-// Returns true if var is found and removed.
-void Recipe::remove( BeerXMLElement *var )
+void Recipe::removeIngredient( BeerIngredient* var )
 {
-   // brewnotes a bit odd
-   if ( qobject_cast<BrewNote*>(var) != nullptr )
-      var->remove();
-   else
-      Database::instance().removeIngredientFromRecipe( this, var );
+   Database::instance().removeIngredientFromRecipe( this, var );
 }
 
 double Recipe::batchSizeNoLosses_l()

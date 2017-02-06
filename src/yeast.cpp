@@ -68,12 +68,12 @@ bool operator==(Yeast &y1, Yeast &y2)
 
 //============================CONSTRUCTORS======================================
 Yeast::Yeast()
-   : BeerXMLElement()
+   : BeerIngredient()
 {
    _db.reset(new YeastDB());
 }
 
-Yeast::Yeast(Yeast const& other) : BeerXMLElement(other)
+Yeast::Yeast(Yeast const& other) : BeerIngredient(other)
 {
    _db.reset(new YeastDB());
 }
@@ -88,30 +88,101 @@ ItemDB* Yeast::getDB() const
 }
 
 //============================="GET" METHODS====================================
-QString Yeast::laboratory() const { return get("laboratory").toString();; }
-QString Yeast::productID() const { return get("product_id").toString(); }
-QString Yeast::notes() const { return get("notes").toString(); }
-QString Yeast::bestFor() const { return get("best_for").toString(); }
+QString Yeast::laboratory() const
+{
+   return getDB()->getColumn(YeastDB::kLaboratoryColumn).toString();
+}
 
-const QString Yeast::typeString() const { return types.at(type()); }
-const QString Yeast::formString() const { return forms.at(form()); }
-const QString Yeast::flocculationString() const { return flocculations.at(flocculation()); }
+QString Yeast::productID() const
+{
+   return getDB()->getColumn(YeastDB::kProductIDColumn).toString();
+}
 
-double Yeast::amount() const { return get("amount").toDouble(); }
-double Yeast::minTemperature_c() const { return get("min_temperature").toDouble(); }
-double Yeast::maxTemperature_c() const { return get("max_temperature").toDouble(); }
-double Yeast::attenuation_pct() const { return get("attenuation").toDouble(); }
+QString Yeast::notes() const
+{
+   return getDB()->getColumn(YeastDB::kNotesColumn).toString();
+}
 
-int Yeast::inventory() const { return getInventory("quanta").toInt(); }
-int Yeast::timesCultured() const { return get("times_cultured").toInt(); }
-int Yeast::maxReuse() const { return get("max_reuse").toInt(); }
+QString Yeast::bestFor() const
+{
+   return getDB()->getColumn(YeastDB::kBestForColumn).toString();
+}
 
-bool Yeast::addToSecondary() const { return get("add_to_secondary").toBool(); }
-bool Yeast::amountIsWeight() const { return get("amount_is_weight").toBool(); }
+double Yeast::amount() const
+{
+   return getDB()->getColumn(YeastDB::kAmountColumn).toDouble();
+}
 
-Yeast::Form Yeast::form() const { return static_cast<Yeast::Form>( forms.indexOf(get("form").toString())); }
-Yeast::Flocculation Yeast::flocculation() const { return static_cast<Yeast::Flocculation>( flocculations.indexOf(get("flocculation").toString())); }
-Yeast::Type Yeast::type() const { return static_cast<Yeast::Type>( types.indexOf(get("ytype").toString())); }
+double Yeast::minTemperature_c() const
+{
+   return getDB()->getColumn(YeastDB::kMinTempColumn).toDouble();
+}
+
+double Yeast::maxTemperature_c() const
+{
+   return getDB()->getColumn(YeastDB::kMaxTempColumn).toDouble();
+}
+
+double Yeast::attenuation_pct() const
+{
+   return getDB()->getColumn(YeastDB::kAttenuationColumn).toDouble();
+}
+
+int Yeast::inventory() const
+{
+   return getDB()->getInventoryColumn(YeastDB::kQuantityColumn).toInt();
+}
+
+int Yeast::timesCultured() const
+{
+   return getDB()->getColumn(YeastDB::kTimesCulturedColumn).toInt();
+}
+
+int Yeast::maxReuse() const
+{
+   return getDB()->getColumn(YeastDB::kMaxReuseColumn).toInt();
+}
+
+bool Yeast::addToSecondary() const
+{
+   return getDB()->getColumn(YeastDB::kAddToSecondaryColumn).toBool();
+}
+
+bool Yeast::amountIsWeight() const
+{
+   return getDB()->getColumn(YeastDB::kAmtIsWeightColumn).toBool();
+}
+
+Yeast::Form Yeast::form() const
+{
+   return static_cast<Yeast::Form>(forms.indexOf(formString()));
+}
+
+const QString Yeast::formString() const
+{
+   return getDB()->getColumn(YeastDB::kFormColumn).toString();
+}
+
+Yeast::Flocculation Yeast::flocculation() const
+{
+   return static_cast<Yeast::Flocculation>( flocculations.indexOf(flocculationString()));
+}
+
+const QString Yeast::flocculationString() const
+{
+   return getDB()->getColumn(YeastDB::kFlocculationColumn).toString();
+}
+
+Yeast::Type Yeast::type() const
+{
+   return static_cast<Yeast::Type>( types.indexOf(typeString()));
+}
+
+const QString Yeast::typeString() const
+{
+   return getDB()->getColumn(YeastDB::kTypeColumn).toString();
+}
+
 const QString Yeast::typeStringTr() const
 {
    static QStringList typesTr = QStringList() << QObject::tr("Ale")
@@ -143,12 +214,12 @@ const QString Yeast::flocculationStringTr() const
 //============================="SET" METHODS====================================
 void Yeast::setType( Yeast::Type t )
 {
-   set("type", "ytype", types.at(t));
+   getDB()->updateColumn(YeastDB::kTypeColumn, types.at(t));
 }
 
 void Yeast::setForm( Yeast::Form f )
 {
-   set("form", "form", forms.at(f));
+   getDB()->updateColumn(YeastDB::kFormColumn, forms.at(f));
 }
 
 void Yeast::setAmount( double var )
@@ -156,7 +227,7 @@ void Yeast::setAmount( double var )
    if( var < 0.0 )
       Brewtarget::logW( QString("Yeast: amount < 0: %1").arg(var) );
    else
-      set("amount", "amount", var);
+      getDB()->updateColumn(YeastDB::kAmountColumn, var);
 }
 
 void Yeast::setInventoryQuanta( int var )
@@ -164,82 +235,82 @@ void Yeast::setInventoryQuanta( int var )
    if( var < 0.0 )
       Brewtarget::logW( QString("Yeast: inventory < 0: %1").arg(var) );
    else
-      setInventory("inventory", "quanta", var);
+      getDB()->updateInventoryColumn(YeastDB::kQuantityColumn, var);
 }
 
 void Yeast::setAmountIsWeight( bool var )
 {
-   set("amountIsWeight", "amount_is_weight", var);
+   getDB()->updateColumn(YeastDB::kAmtIsWeightColumn, var);
 }
 
 void Yeast::setLaboratory( const QString& var )
 {
-   set("laboratory", "laboratory", var);
+   getDB()->updateColumn(YeastDB::kLaboratoryColumn, var);
 }
 
 void Yeast::setProductID( const QString& var )
 {
-   set("productID", "product_id", var);
+   getDB()->updateColumn(YeastDB::kProductIDColumn, var);
 }
 
 void Yeast::setMinTemperature_c( double var )
 {
    if( var < -273.15 )
       return;
-   else
-      set("minTemperature_c", "min_temperature", var);
+
+   getDB()->updateColumn(YeastDB::kMinTempColumn, var);
 }
 
 void Yeast::setMaxTemperature_c( double var )
 {
    if( var < -273.15 )
       return;
-   else
-      set("maxTemperature_c", "max_temperature", var);
+
+   getDB()->updateColumn(YeastDB::kMaxTempColumn, var);
 }
 
 void Yeast::setFlocculation( Yeast::Flocculation f )
 {
-   set("flocculation", "flocculation", flocculations.at(f));
+   getDB()->updateColumn(YeastDB::kFlocculationColumn, flocculations.at(f));
 }
 
 void Yeast::setAttenuation_pct( double var )
 {
    if( var < 0.0 || var > 100.0 )
       return;
-   else
-      set("attenuation", "attenuation", var);
+
+   getDB()->updateColumn(YeastDB::kAttenuationColumn, var);
 }
 
 void Yeast::setNotes( const QString& var )
 {
-   set("notes", "notes", var);
+   getDB()->updateColumn(YeastDB::kNotesColumn, var);
 }
 
 void Yeast::setBestFor( const QString& var )
 {
-   set("bestFor", "best_for", var);
+   getDB()->updateColumn(YeastDB::kBestForColumn, var);
 }
 
 void Yeast::setTimesCultured( int var )
 {
    if( var < 0 )
       return;
-   else
-      set("timesCultured", "times_cultured", var);
+
+   getDB()->updateColumn(YeastDB::kTimesCulturedColumn, var);
 }
 
 void Yeast::setMaxReuse( int var )
 {
    if( var < 0 )
       return;
-   else
-      set("maxReuse", "max_reuse", var);
+
+   getDB()->updateColumn(YeastDB::kMaxReuseColumn, var);
 }
 
 void Yeast::setAddToSecondary( bool var )
 {
-   set("addToSecondary", "add_to_secondary", var);
+   getDB()->updateColumn(YeastDB::kAddToSecondaryColumn, var);
 }
 
 //========================OTHER METHODS=========================================

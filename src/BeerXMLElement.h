@@ -163,5 +163,11 @@ private:
 };
 
 
+class BeerIngredient : public BeerXMLElement
+{
+   public:
+      BeerIngredient(): BeerXMLElement() {};
+};
+
 #endif   /* _BEERXMLELEMENT_H */
 

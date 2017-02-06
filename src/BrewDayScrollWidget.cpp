@@ -94,7 +94,7 @@ void BrewDayScrollWidget::removeSelectedInstruction()
    int row = listWidget->currentRow();
    if( row < 0 )
       return;
-   recObs->remove(recIns[row]);
+   recObs->removeInstruction(recIns[row]);
 
    if(recIns.isEmpty())
    {
