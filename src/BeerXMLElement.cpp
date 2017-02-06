@@ -75,7 +75,7 @@ void BeerXMLElement::setFolder(const QString& var, bool signal)
 {
    getDB()->updateColumn(ItemDB::kFolderColumn, var);
    if ( signal )
-      emit changedFolder(var);
+      emit folderChanged(var);
 }
 
 QString BeerXMLElement::name() const
@@ -86,7 +86,7 @@ QString BeerXMLElement::name() const
 void BeerXMLElement::setName(const QString newName)
 {
    getDB()->updateColumn(ItemDB::kNameColumn, newName);
-   emit changedName(newName);
+   emit nameChanged(newName);
 }
 
 void BeerXMLElement::remove()

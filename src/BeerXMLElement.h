@@ -139,8 +139,8 @@ signals:
     * the same signature. Otherwise, everything will silently break.
     */
    void changed(QMetaProperty, QVariant value = QVariant());
-   void changedFolder(QString);
-   void changedName(QString);
+   void folderChanged(QString);
+   void nameChanged(QString);
 
 protected:
 

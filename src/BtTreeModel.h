@@ -189,7 +189,7 @@ private slots:
    //! \brief slot to catch a changed folder signal. Folders are odd, because they
    // can hold .. anything, including other folders. So I need the most generic
    // pointer I can get. I hope this works.
-   void folderChanged(QString name);
+   void onFolderChanged(QString name);
 
    //! \brief This is as best as I can see to do it. Qt signaling mechanism is
    //   doing, as I recall, string compares on the signatures. Sigh.
@@ -202,7 +202,7 @@ private slots:
    void elementAdded(Yeast* victim);
    void elementAdded(BrewNote* victim);
    
-   void elementChanged();
+   void onElementChanged();
 
    void elementRemoved(Recipe* victim);
    void elementRemoved(Equipment* victim);

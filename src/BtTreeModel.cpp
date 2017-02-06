@@ -901,7 +901,7 @@ void BtTreeModel::deleteSelected(QModelIndexList victims)
 // It is not easy. Indexes are ephemeral things. We MUST calculate the insert
 // index after we have removed the recipe. BAD THINGS happen otherwise.
 // 
-void BtTreeModel::folderChanged(QString name)
+void BtTreeModel::onFolderChanged(QString name)
 {
    BeerXMLElement* test = qobject_cast<BeerXMLElement*>(sender());
    QModelIndex ndx, pIndex;
@@ -1207,7 +1207,7 @@ QModelIndex BtTreeModel::findFolder( QString name, BtTreeItem* parent, bool crea
 // ============================ SLOT STUFF ===============================
 // =========================================================================
 
-void BtTreeModel::elementChanged()
+void BtTreeModel::onElementChanged()
 {
    BeerXMLElement* d = qobject_cast<BeerXMLElement*>(sender());
    if( !d )
@@ -1307,17 +1307,18 @@ void BtTreeModel::elementRemoved(BeerXMLElement* victim)
    disconnect( victim, 0, this, 0 );
 }
 
-void BtTreeModel::observeElement(BeerXMLElement* d)
+void BtTreeModel::observeElement(BeerXMLElement* element)
 {
-   if ( ! d )
+   if ( !element )
       return;
 
-   if ( qobject_cast<BrewNote*>(d) )
-      connect( d, SIGNAL(brewDateChanged(QDateTime)), this, SLOT(elementChanged()) );
+   BrewNote* note = qobject_cast<BrewNote*>(element);
+   if ( note )
+      connect( note, &BrewNote::brewDateChanged, this, &BtTreeModel::onElementChanged );
    else 
    {
-      connect( d, SIGNAL(changedName(QString)), this, SLOT(elementChanged()) );
-      connect( d, SIGNAL(changedFolder(QString)), this, SLOT(folderChanged(QString)));
+      connect( element, &BeerXMLElement::nameChanged, this, &BtTreeModel::onElementChanged );
+      connect( element, &BeerXMLElement::folderChanged, this, &BtTreeModel::onFolderChanged );
    }
 }
 
