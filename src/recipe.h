@@ -309,6 +309,7 @@ public:
 signals:
    //! \brief Emitted when \c name() changes.
    void changedName(const QString&);
+   void colorChanged();
    
 public slots:
    void acceptEquipChange(QMetaProperty prop, QVariant val);

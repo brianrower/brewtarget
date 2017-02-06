@@ -37,27 +37,24 @@ BeerColorWidget::BeerColorWidget(QWidget* parent) : QWidget(parent)
    setMinimumSize(90, 130);
    
    glass = QImage(GLASS);
-   recObs = 0;
+   recObs = nullptr;
 }
 
 void BeerColorWidget::setRecipe( Recipe* rec )
 {
    if( recObs )
-      disconnect( recObs, SIGNAL(changed(QMetaProperty, QVariant)),
-                  this, SLOT(parseChanges(QMetaProperty, QVariant)) );
+      disconnect( recObs, &Recipe::colorChanged, this, &BeerColorWidget::onColorChanged );
    
    recObs = rec;
    if( recObs )
    {
-      connect( recObs, SIGNAL(changed(QMetaProperty, QVariant)),
-               this, SLOT(parseChanges(QMetaProperty, QVariant)) );
+      connect( recObs, &Recipe::colorChanged, this, &BeerColorWidget::onColorChanged );
       setColor( recObs->SRMColor() );
    }
 }
 
-void BeerColorWidget::parseChanges(QMetaProperty, QVariant)
+void BeerColorWidget::onColorChanged()
 {
-   // For now, don't check to see what QMetaProperty is, just get the color.
    if( recObs )
       setColor( recObs->SRMColor() );
 }

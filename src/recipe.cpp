@@ -1516,27 +1516,23 @@ void Recipe::recalcABV_pct()
 
 void Recipe::recalcColor_srm()
 {
-   Fermentable *ferm;
    double mcu = 0.0;
-   double ret;
-   unsigned int i;
 
    QList<Fermentable*> ferms = fermentables();
-   for( i = 0; static_cast<int>(i) < ferms.size(); ++i )
+   for( Fermentable* ferm : ferms )
    {
-      ferm = ferms[i];
       // Conversion factor for lb/gal to kg/l = 8.34538.
       mcu += ferm->color_srm()*8.34538 * ferm->amount_kg()/_finalVolumeNoLosses_l;
    }
 
-   ret = ColorMethods::mcuToSrm(mcu);
+   double newSrm = ColorMethods::mcuToSrm(mcu);
  
-   if ( _color_srm != ret ) 
+   if ( _color_srm != newSrm )
    {
-      _color_srm = ret;
+      _color_srm = newSrm;
       if (!_uninitializedCalcs)
       {
-        emit changed( metaProperty("color_srm"), _color_srm );
+        emit colorChanged();
       }
    }
 

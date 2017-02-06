@@ -49,7 +49,7 @@ public:
    void setRecipe( Recipe* rec );
    
 public slots:
-   void parseChanges(QMetaProperty prop, QVariant val);
+   void onColorChanged();
    
 protected:
    virtual void paintEvent(QPaintEvent *);
