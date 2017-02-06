@@ -75,16 +75,9 @@ public:
    double interval() const;
 
    int instructionNumber() const;
+
 signals:
-   /*
-   void changedName(QString);
-   void changedDirections(QString);
-   void changedHasTimer(bool);
-   void changedTimerValue(QString);
-   void changedCompleted(bool);
-   void changedInterval(double);
-   void changedReagents(QVector<QString>);
-   */
+   void directionsChanged();
 
 protected:
    virtual ItemDB* getDB() const override;

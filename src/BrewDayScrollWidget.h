@@ -70,11 +70,13 @@ public slots:
    //! Push selected instruction down.
    void pushInstructionDown();
 
-private slots:
-   //! \brief Receive notifications from the recipe.
-   void acceptChanges( QMetaProperty prop, QVariant value );
+protected slots:
+   //! \brief Receive notifications from the recipe when the instruction list changes
+   void onInstructionListChanged();
+
    //! \brief Receive changes from instructions.
-   void acceptInsChanges( QMetaProperty prop, QVariant value );
+   void onOrderChanged();
+   void onDirectionsChanged();
    
 private:
    //! Update the view.
@@ -82,6 +84,9 @@ private:
    //! Repopulate the list widget with all the instructions.
    void repopulateListWidget();
    void clear();
+
+   void disconnectFromAllInstructions();
+   void reconnectToAllInstructions();
    
    QString buildTitleTable(bool includeImage = true);
    QString buildInstructionTable();

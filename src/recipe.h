@@ -310,6 +310,8 @@ signals:
    //! \brief Emitted when \c name() changes.
    void changedName(const QString&);
    void colorChanged();
+   void instructionListChanged();
+   void instructionOrderChanged();
    
 public slots:
    void acceptEquipChange(QMetaProperty prop, QVariant val);

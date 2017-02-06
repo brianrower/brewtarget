@@ -152,6 +152,7 @@ ItemDB* Recipe::getDB() const
 void Recipe::removeInstruction(Instruction* ins)
 {
    Database::instance().removeFromRecipe( this, ins );
+   emit instructionListChanged();
 }
 
 void Recipe::swapInstructions( Instruction* ins1, Instruction* ins2 )
@@ -161,15 +162,15 @@ void Recipe::swapInstructions( Instruction* ins1, Instruction* ins2 )
       return;
    
    Database::instance().swapInstructionOrder(ins1, ins2);
+   emit instructionOrderChanged();
 }
 
 void Recipe::clearInstructions()
 {
    QList<Instruction*> ins = instructions();
-   int i, size;
-   size = ins.size();
-   for( i = 0; i < size; ++i )
-      removeInstruction(ins[i]);
+   for( Instruction* i : ins )
+      Database::instance().removeFromRecipe( this, i );
+   emit instructionListChanged();
 }
 
 void Recipe::insertInstruction(Instruction* ins, int pos)
@@ -178,6 +179,7 @@ void Recipe::insertInstruction(Instruction* ins, int pos)
       return;
 
    Database::instance().insertInstruction(ins,pos);
+   emit instructionListChanged();
 }
 
 Instruction* Recipe::mashFermentableIns()
@@ -724,7 +726,7 @@ void Recipe::generateInstructions()
 
    // END fermentation instructions. Let everybody know that now is the time
    // to update instructions
-   emit changed( metaProperty("instructions"), instructions().size() );
+   emit instructionListChanged();
 }
 
 QString Recipe::nextAddToBoil(double& time)

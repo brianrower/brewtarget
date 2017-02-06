@@ -59,6 +59,7 @@ ItemDB* Instruction::getDB() const
 void Instruction::setDirections(const QString& dir)
 {
    getDB()->updateColumn(InstructionDB::kDirectionsColumn, dir);
+   emit directionsChanged();
 }
 
 void Instruction::setHasTimer(bool has)
