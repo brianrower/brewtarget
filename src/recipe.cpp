@@ -824,12 +824,12 @@ void Recipe::setType( const QString &var )
       tmp = QString(var);
    }
 
-   set( "type", "type", tmp );
+   getDB()->updateColumn(RecipeDB::kTypeColumn, tmp );
 }
 
 void Recipe::setBrewer( const QString &var )
 {
-   set( "brewer", "brewer", var );
+   getDB()->updateColumn(RecipeDB::kBrewerColumn, var );
 }
 
 void Recipe::setBatchSize_l( double var )
@@ -845,7 +845,7 @@ void Recipe::setBatchSize_l( double var )
       tmp = var;
    }
 
-   set( "batchSize_l", "batch_size", tmp );
+   getDB()->updateColumn(RecipeDB::kBatchSizeColumn, tmp );
    
    // NOTE: this is bad, but we have to call recalcAll(), because the estimated
    // boil/batch volumes depend on the target volumes when there are no mash
@@ -866,7 +866,7 @@ void Recipe::setBoilSize_l( double var )
       tmp = var;
    }
 
-   set( "boilSize_l", "boil_size", tmp );
+   getDB()->updateColumn(RecipeDB::kBoilSizeColumn, tmp );
    
    // NOTE: this is bad, but we have to call recalcAll(), because the estimated
    // boil/batch volumes depend on the target volumes when there are no mash
@@ -887,7 +887,7 @@ void Recipe::setBoilTime_min( double var )
       tmp = var;
    }
 
-   set( "boilTime_min", "boil_time", tmp);
+   getDB()->updateColumn(RecipeDB::kBoilTimeColumn, tmp);
 }
 
 void Recipe::setEfficiency_pct( double var )
@@ -904,7 +904,7 @@ void Recipe::setEfficiency_pct( double var )
    }
 
 
-   set( "efficiency_pct", "efficiency", tmp );
+   getDB()->updateColumn(RecipeDB::kEfficiencyColumn, tmp );
 
    // If you change the efficency, you really should recalc. And I'm afraid it
    // means recalc all, since og and fg will change, which means your ratios
@@ -914,17 +914,17 @@ void Recipe::setEfficiency_pct( double var )
 
 void Recipe::setAsstBrewer( const QString &var )
 {
-   set( "asstBrewer", "assistant_brewer", var );
+   getDB()->updateColumn(RecipeDB::kAsstBrewerColumn, var );
 }
 
 void Recipe::setNotes( const QString &var )
 {
-   set( "notes", "notes", var );
+   getDB()->updateColumn(RecipeDB::kNotesColumn, var );
 }
 
 void Recipe::setTasteNotes( const QString &var )
 {
-   set( "tasteNotes", "taste_notes", var );
+   getDB()->updateColumn(RecipeDB::kTasteNotesColumn, var );
 }
 
 void Recipe::setTasteRating( double var )
@@ -940,7 +940,7 @@ void Recipe::setTasteRating( double var )
       tmp = var;
    }
 
-   set( "tasteRating", "taste_rating", tmp );
+   getDB()->updateColumn(RecipeDB::kTasteRatingColumn, tmp );
 }
 
 void Recipe::setOg( double var )
@@ -956,7 +956,7 @@ void Recipe::setOg( double var )
       tmp = var;
    }
 
-   set( "og", "og", tmp );
+   getDB()->updateColumn(RecipeDB::kOGColumn, tmp );
 }
 
 void Recipe::setFg( double var )
@@ -972,7 +972,7 @@ void Recipe::setFg( double var )
       tmp = var;
    }
 
-   set( "fg", "fg", tmp );
+   getDB()->updateColumn(RecipeDB::kFGColumn, tmp );
 }
 
 void Recipe::setFermentationStages( int var )
@@ -988,7 +988,7 @@ void Recipe::setFermentationStages( int var )
       tmp = var;
    }
 
-   set( "fermentationStages", "fermentation_stages", tmp );
+   getDB()->updateColumn(RecipeDB::kFermStagesColumn, tmp );
 }
 
 void Recipe::setPrimaryAge_days( double var )
@@ -1004,12 +1004,12 @@ void Recipe::setPrimaryAge_days( double var )
       tmp = var;
    }
 
-   set( "primaryAge_days", "primary_age", tmp );
+   getDB()->updateColumn(RecipeDB::kPrimaryAgeColumn, tmp );
 }
 
 void Recipe::setPrimaryTemp_c( double var )
 {
-   set( "primaryTemp_c", "primary_temp", var );
+   getDB()->updateColumn(RecipeDB::kPrimaryTempColumn, var );
 }
 
 void Recipe::setSecondaryAge_days( double var )
@@ -1025,12 +1025,12 @@ void Recipe::setSecondaryAge_days( double var )
       tmp = var;
    }
 
-   set( "secondaryAge_days", "secondary_age", tmp );
+   getDB()->updateColumn(RecipeDB::kSecondaryAgeColumn, tmp );
 }
 
 void Recipe::setSecondaryTemp_c( double var )
 {
-   set( "secondaryTemp_c", "secondary_temp", var );
+   getDB()->updateColumn(RecipeDB::kSecondaryTempColumn, var );
 }
 
 void Recipe::setTertiaryAge_days( double var )
@@ -1046,12 +1046,12 @@ void Recipe::setTertiaryAge_days( double var )
       tmp = var;
    }
 
-   set( "tertiaryAge_days", "tertiary_age", tmp );
+   getDB()->updateColumn(RecipeDB::kTertiaryAgeColumn, tmp );
 }
 
 void Recipe::setTertiaryTemp_c( double var )
 {
-   set( "tertiaryTemp_c", "tertiary_temp", var );
+   getDB()->updateColumn(RecipeDB::kTertiaryTempColumn, var );
 }
 
 void Recipe::setAge_days( double var )
@@ -1067,17 +1067,17 @@ void Recipe::setAge_days( double var )
       tmp = var;
    }
 
-   set( "age", "age", tmp );
+   getDB()->updateColumn(RecipeDB::kAgeColumn, tmp );
 }
 
 void Recipe::setAgeTemp_c( double var )
 {
-   set( "ageTemp_c", "age_temp", var );
+   getDB()->updateColumn(RecipeDB::kAgeTempColumn, var );
 }
 
 void Recipe::setDate( const QDate &var )
 {
-   set( "date", "date", var.toString("d/M/yyyy") );
+   getDB()->updateColumn(RecipeDB::kDateColumn, var.toString("d/M/yyyy") );
 }
 
 void Recipe::setCarbonation_vols( double var )
@@ -1093,22 +1093,22 @@ void Recipe::setCarbonation_vols( double var )
       tmp = var;
    }
 
-   set( "carbonation_vols", "carb_volume", tmp );
+   getDB()->updateColumn(RecipeDB::kCarbVolumeColumn, tmp );
 }
 
 void Recipe::setForcedCarbonation( bool var )
 {
-   set( "forcedCarbonation", "forced_carb", var );
+   getDB()->updateColumn(RecipeDB::kForcedCarbColumn, var );
 }
 
 void Recipe::setPrimingSugarName( const QString &var )
 {
-   set( "primingSugarName", "priming_sugar_name", var );
+   getDB()->updateColumn(RecipeDB::kPrimingSugarNameColumn, var );
 }
 
 void Recipe::setCarbonationTemp_c( double var )
 {
-   set( "carbonationTemp_c", "carbonationTemp_c", var );
+   getDB()->updateColumn(RecipeDB::kCarbonationTempColumn, var );
 }
 
 void Recipe::setPrimingSugarEquiv( double var )
@@ -1124,7 +1124,7 @@ void Recipe::setPrimingSugarEquiv( double var )
       tmp = var;
    }
 
-   set( "primingSugarEquiv", "priming_sugar_equiv", tmp );
+   getDB()->updateColumn(RecipeDB::kPrimingSugarEquivColumn, tmp );
 }
 
 void Recipe::setKegPrimingFactor( double var )
@@ -1141,7 +1141,7 @@ void Recipe::setKegPrimingFactor( double var )
       tmp = var;
    }
 
-   set( "kegPrimingFactor", "keg_priming_factor", tmp );
+   getDB()->updateColumn(RecipeDB::kKegPrimingFactorColumn, tmp );
 }
 
 //==========================Calculated Getters============================
@@ -1317,35 +1317,136 @@ QList<Water*> Recipe::waters() const
 }
 
 //==============================Getters===================================
-QString Recipe::type()             const { return get("type").toString(); }
-QString Recipe::brewer()           const { return get("brewer").toString(); }
-QString Recipe::asstBrewer()       const { return get("assistant_brewer").toString(); }
-QString Recipe::notes()            const { return get("notes").toString(); }
-QString Recipe::tasteNotes()       const { return get("taste_notes").toString(); }
-QString Recipe::primingSugarName() const { return get("priming_sugar_name").toString(); }
+QString Recipe::type()             const
+{
+   return getDB()->getColumn(RecipeDB::kTypeColumn).toString();
+}
 
-bool Recipe::forcedCarbonation()   const { return get("forced_carb").toBool(); }
+QString Recipe::brewer()           const
+{
+   return getDB()->getColumn(RecipeDB::kBrewerColumn).toString();
+}
 
-double Recipe::batchSize_l()       const { return get("batch_size").toDouble(); }
-double Recipe::boilSize_l()        const { return get("boil_size").toDouble(); }
-double Recipe::boilTime_min()      const { return get("boil_time").toDouble(); }
-double Recipe::efficiency_pct()    const { return get("efficiency").toDouble(); }
-double Recipe::tasteRating()       const { return get("taste_rating").toDouble(); }
-double Recipe::primaryAge_days()   const { return get("primary_age").toDouble(); }
-double Recipe::primaryTemp_c()     const { return get("primary_temp").toDouble(); }
-double Recipe::secondaryAge_days() const { return get("secondary_age").toDouble(); }
-double Recipe::secondaryTemp_c()   const { return get("secondary_temp").toDouble(); }
-double Recipe::tertiaryAge_days()  const { return get("tertiary_age").toDouble(); }
-double Recipe::tertiaryTemp_c()    const { return get("tertiary_temp").toDouble(); }
-double Recipe::age_days()          const { return get("age").toDouble(); }
-double Recipe::ageTemp_c()         const { return get("age_temp").toDouble(); }
-double Recipe::carbonation_vols()  const { return get("carb_volume").toDouble(); }
-double Recipe::carbonationTemp_c() const { return get("carbonationTemp_c").toDouble(); }
-double Recipe::primingSugarEquiv() const { return get("priming_sugar_equiv").toDouble(); }
-double Recipe::kegPrimingFactor()  const { return get("keg_priming_factor").toDouble(); }
+QString Recipe::asstBrewer()       const
+{
+   return getDB()->getColumn(RecipeDB::kAsstBrewerColumn).toString();
+}
 
-int Recipe::fermentationStages()   const { return get("fermentation_stages").toInt(); }
-QDate Recipe::date()               const { return QDate::fromString( get("date").toString(), "d/M/yyyy"); }
+QString Recipe::notes()            const
+{
+   return getDB()->getColumn(RecipeDB::kNotesColumn).toString();
+}
+
+QString Recipe::tasteNotes()       const
+{
+   return getDB()->getColumn(RecipeDB::kTasteNotesColumn).toString();
+}
+
+QString Recipe::primingSugarName() const
+{
+   return getDB()->getColumn(RecipeDB::kPrimingSugarNameColumn).toString();
+}
+
+bool Recipe::forcedCarbonation()   const
+{
+   return getDB()->getColumn(RecipeDB::kForcedCarbColumn).toBool();
+}
+
+double Recipe::batchSize_l()       const
+{
+   return getDB()->getColumn(RecipeDB::kBatchSizeColumn).toDouble();
+}
+
+double Recipe::boilSize_l()        const
+{
+   return getDB()->getColumn(RecipeDB::kBoilSizeColumn).toDouble();
+}
+
+double Recipe::boilTime_min()      const
+{
+   return getDB()->getColumn(RecipeDB::kBoilTimeColumn).toDouble();
+}
+
+double Recipe::efficiency_pct()    const
+{
+   return getDB()->getColumn(RecipeDB::kEfficiencyColumn).toDouble();
+}
+
+double Recipe::tasteRating()       const
+{
+   return getDB()->getColumn(RecipeDB::kTasteRatingColumn).toDouble();
+}
+
+double Recipe::primaryAge_days()   const
+{
+   return getDB()->getColumn(RecipeDB::kPrimaryAgeColumn).toDouble();
+}
+
+double Recipe::primaryTemp_c()     const
+{
+   return getDB()->getColumn(RecipeDB::kPrimaryTempColumn).toDouble();
+}
+
+double Recipe::secondaryAge_days() const
+{
+   return getDB()->getColumn(RecipeDB::kSecondaryAgeColumn).toDouble();
+}
+
+double Recipe::secondaryTemp_c()   const
+{
+   return getDB()->getColumn(RecipeDB::kSecondaryTempColumn).toDouble();
+}
+
+double Recipe::tertiaryAge_days()  const
+{
+   return getDB()->getColumn(RecipeDB::kTertiaryAgeColumn).toDouble();
+}
+
+double Recipe::tertiaryTemp_c()    const
+{
+   return getDB()->getColumn(RecipeDB::kTertiaryTempColumn).toDouble();
+}
+
+double Recipe::age_days()          const
+{
+   return getDB()->getColumn(RecipeDB::kAgeColumn).toDouble();
+}
+
+double Recipe::ageTemp_c()         const
+{
+   return getDB()->getColumn(RecipeDB::kAgeTempColumn).toDouble();
+}
+
+double Recipe::carbonation_vols()  const
+{
+   return getDB()->getColumn(RecipeDB::kCarbVolumeColumn).toDouble();
+}
+
+double Recipe::carbonationTemp_c() const
+{
+   return getDB()->getColumn(RecipeDB::kCarbonationTempColumn).toDouble();
+}
+
+double Recipe::primingSugarEquiv() const
+{
+   return getDB()->getColumn(RecipeDB::kPrimingSugarEquivColumn).toDouble();
+}
+
+double Recipe::kegPrimingFactor()  const
+{
+   return getDB()->getColumn(RecipeDB::kKegPrimingFactorColumn).toDouble();
+}
+
+int Recipe::fermentationStages()   const
+{
+   return getDB()->getColumn(RecipeDB::kFermStagesColumn).toInt();
+}
+
+QDate Recipe::date()               const
+{
+   return QDate::fromString( getDB()->getColumn(RecipeDB::kDateColumn).toString(), "d/M/yyyy");
+}
+
 //=============================Removers========================================
 
 // Returns true if var is found and removed.
@@ -1888,7 +1989,7 @@ void Recipe::recalcOgFg()
       // these functions in the first place.
       if (!_uninitializedCalcs)
       {
-        set( "og", "og", _og, false );
+        setOg(_og);
         emit changed( metaProperty("og"), _og );
         emit changed( metaProperty("points"), (_og-1.0)*1e3 );
       }
@@ -1899,7 +2000,7 @@ void Recipe::recalcOgFg()
       _fg     = tmp_fg;
       if (!_uninitializedCalcs)
       {
-        set( "fg", "fg", _fg, false );
+        setFg(_fg);
         emit changed( metaProperty("fg"), _fg );
       }
    }
