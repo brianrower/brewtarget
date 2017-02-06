@@ -71,8 +71,8 @@ public slots:
    void updateNotes();
 //   void saveAll();
 
-   void changed(QMetaProperty,QVariant);
-   void showChanges(QString field = "");
+   void onNoteChanged();
+   void showChanges();
 
    void updateProjOg(Unit::unitDisplay oldUnit, Unit::unitScale oldScale);
 

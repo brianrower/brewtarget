@@ -221,16 +221,19 @@ void BrewNote::setBrewDate(QDateTime const& date)
 {
    getDB()->updateColumn(BrewNoteDB::kBrewDateColumn, date.toString(Qt::ISODate));
    emit brewDateChanged(date);
+   emit noteChanged();
 }
 
 void BrewNote::setFermentDate(QDateTime const& date)
 {
    getDB()->updateColumn(BrewNoteDB::kFermentDateColumn, date.toString(Qt::ISODate));
+   emit noteChanged();
 }
 
 void BrewNote::setNotes(QString const& var, bool notify)
 {
    getDB()->updateColumn(BrewNoteDB::kNotesColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setLoading(bool flag) { loading = flag; }
@@ -247,6 +250,7 @@ void BrewNote::setSg(double var)
 
    calculateEffIntoBK_pct();
    calculateOg();
+   emit noteChanged();
 }
 
 void BrewNote::setVolumeIntoBK_l(double var)
@@ -259,6 +263,7 @@ void BrewNote::setVolumeIntoBK_l(double var)
    calculateEffIntoBK_pct();
    calculateOg();
    calculateBrewHouseEff_pct();
+   emit noteChanged();
 }
 
 void BrewNote::setOg(double var)
@@ -271,6 +276,7 @@ void BrewNote::setOg(double var)
    calculateBrewHouseEff_pct();
    calculateABV_pct();
    calculateActualABV_pct();
+   emit noteChanged();
 }
 
 void BrewNote::setVolumeIntoFerm_l(double var)
@@ -281,6 +287,7 @@ void BrewNote::setVolumeIntoFerm_l(double var)
       return;
 
    calculateBrewHouseEff_pct();
+   emit noteChanged();
 }
 
 void BrewNote::setFg(double var)
@@ -291,6 +298,7 @@ void BrewNote::setFg(double var)
       return;
 
    calculateActualABV_pct();
+   emit noteChanged();
 }
 
 // This one is a bit of an odd ball. We need to convert to pure glucose points
@@ -310,6 +318,7 @@ void BrewNote::setProjPoints(double var)
    }
 
    getDB()->updateColumn(BrewNoteDB::kProjectedPointsColumn, convertPnts);
+   emit noteChanged();
 }
 
 void BrewNote::setProjFermPoints(double var)
@@ -327,6 +336,7 @@ void BrewNote::setProjFermPoints(double var)
    }
 
    getDB()->updateColumn(BrewNoteDB::kProjectedFermentationPointsColumn, convertPnts);
+   emit noteChanged();
 }
 
 void BrewNote::setABV(double var)
@@ -337,91 +347,109 @@ void BrewNote::setABV(double var)
 void BrewNote::setEffIntoBK_pct(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kEfficiencyIntoBoilColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setBrewhouseEff_pct(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kBrewhouseEfficiencyColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setStrikeTemp_c(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kStrikeTempColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setMashFinTemp_c(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kMashFinalTempColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setPostBoilVolume_l(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kPostBoilVolumeColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setPitchTemp_c(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kPitchTempColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setFinalVolume_l(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kFinalVolumeColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setProjBoilGrav(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kProjectedBoilGravityColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setProjVolIntoBK_l(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kProjectedVolumeIntoBoilColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setProjStrikeTemp_c(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kProjectedStrikeTempColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setProjMashFinTemp_c(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kProjectedMashFinishTempColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setProjOg(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kProjectedOGColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setProjVolIntoFerm_l(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kProjectedVolumeIntoFermenterColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setProjFg(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kProjectedFGColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setProjEff_pct(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kProjectedEfficiencyColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setProjABV_pct(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kProjectedABVColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setProjAtten(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kProjectedAttenuationColumn, var);
+   emit noteChanged();
 }
 
 void BrewNote::setBoilOff_l(double var)
 {
    getDB()->updateColumn(BrewNoteDB::kBoilOffColumn, var);
+   emit noteChanged();
 }
 
 // Getters

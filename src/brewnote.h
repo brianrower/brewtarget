@@ -177,7 +177,9 @@ public:
    double projAtten() const;
    
 signals:
+   void noteChanged();
    void brewDateChanged(const QDateTime&);
+
 
 protected:
    virtual ItemDB* getDB() const override;
