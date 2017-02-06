@@ -83,194 +83,258 @@ ItemDB* Style::getDB() const
 //==============================="SET" METHODS==================================
 void Style::setCategory( const QString& var )
 {
-   set( "category", "category", var );
+   getDB()->updateColumn(StyleDB::kCategoryColumn, var );
 }
 
 void Style::setCategoryNumber( const QString& var )
 {
-   set( "categoryNumber", "category_number", var );
+   getDB()->updateColumn(StyleDB::kCategoryNumberColumn, var );
 }
 
 void Style::setStyleLetter( const QString& var )
 {
-   set( "styleLetter", "style_letter", var );
+   getDB()->updateColumn(StyleDB::kStyleLetterColumn, var );
 }
 
 void Style::setStyleGuide( const QString& var )
 {
-   set( "styleGuide", "style_guide", var );
+   getDB()->updateColumn(StyleDB::kStyleGuideColumn, var );
 }
 
 void Style::setType( Type t )
 {
-   set( "type", "s_type", types.at(t) );
+   getDB()->updateColumn(StyleDB::kTypeColumn, types.at(t) );
 }
 
 void Style::setOgMin( double var )
 {
    if( var < 0.0 )
       return;
-   else
-   {
-      set("ogMin", "og_min", var);
-   }
+
+   getDB()->updateColumn(StyleDB::kMinOGColumn, var);
 }
 
 void Style::setOgMax( double var )
 {
    if( var < 0.0 )
       return;
-   else
-   {
-      set("ogMax", "og_max", var);
-   }
+
+   getDB()->updateColumn(StyleDB::kMaxOGColumn, var);
 }
 
 void Style::setFgMin( double var )
 {
    if( var < 0.0 )
       return;
-   else
-   {
-      set("fgMin", "fg_min", var);
-   }
+
+   getDB()->updateColumn(StyleDB::kMinFGColumn, var);
 }
 
 void Style::setFgMax( double var )
 {
    if( var < 0.0 )
       return;
-   else
-   {
-      set("fgMax", "fg_max", var);
-   }
+
+   getDB()->updateColumn(StyleDB::kMaxFGColumn, var);
 }
 
 void Style::setIbuMin( double var )
 {
    if( var < 0.0 )
       return;
-   else
-   {
-      set("ibuMin", "ibu_min", var);
-   }
+
+   getDB()->updateColumn(StyleDB::kMinIBUColumn, var);
 }
 
 void Style::setIbuMax( double var )
 {
    if( var < 0.0 )
       return;
-   else
-   {
-      set("ibuMax", "ibu_max", var);
-   }
+
+   getDB()->updateColumn(StyleDB::kMaxIBUColumn, var);
 }
 
 void Style::setColorMin_srm( double var )
 {
    if( var < 0.0 )
       return;
-   else
-   {
-      set("colorMin_srm", "color_min", var);
-   }
+
+   getDB()->updateColumn(StyleDB::kMinColorColumn, var);
 }
 
 void Style::setColorMax_srm( double var )
 {
    if( var < 0.0 )
       return;
-   else
-   {
-      set("colorMax_srm", "color_max", var);
-   }
+
+   getDB()->updateColumn(StyleDB::kMaxColorColumn, var);
 }
 
 void Style::setCarbMin_vol( double var )
 {
    if( var < 0.0 )
       return;
-   else
-   {
-      set("carbMin_vol", "carb_min", var);
-   }
+
+   getDB()->updateColumn(StyleDB::kMinCarbColumn, var);
 }
 
 void Style::setCarbMax_vol( double var )
 {
    if( var < 0.0 )
       return;
-   else
-   {
-      set("carbMax_vol", "carb_max", var);
-   }
+
+   getDB()->updateColumn(StyleDB::kMaxCarbColumn, var);
 }
 
 void Style::setAbvMin_pct( double var )
 {
    if( var < 0.0 || var > 100.0 )
       return;
-   else
-   {
-      set("abvMin_pct", "abv_min", var);
-   }
+
+   getDB()->updateColumn(StyleDB::kMinABVColumn, var);
 }
 
 void Style::setAbvMax_pct( double var )
 {
    if( var < 0.0 || var > 100.0 )
       return;
-   else
-   {
-      set("abvMax_pct", "abv_max", var);
-   }
+
+   getDB()->updateColumn(StyleDB::kMaxABVColumn, var);
 }
 
 void Style::setNotes( const QString& var )
 {
-   set("notes", "notes", var);
+   getDB()->updateColumn(StyleDB::kNotesColumn, var);
 }
 
 void Style::setProfile( const QString& var )
 {
-   set("profile", "profile", var);
+   getDB()->updateColumn(StyleDB::kProfileColumn, var);
 }
 
 void Style::setIngredients( const QString& var )
 {
-   set("ingredients", "ingredients", var);
+   getDB()->updateColumn(StyleDB::kIngredientsColumn, var);
 }
 
 void Style::setExamples( const QString& var )
 {
-   set("examples", "examples", var);
+   getDB()->updateColumn(StyleDB::kExamplesColumn, var);
 }
 
 //============================="GET" METHODS====================================
-QString Style::category() const { return get("category").toString(); }
-QString Style::categoryNumber() const { return get("category_number").toString(); }
-QString Style::styleLetter() const { return get("style_letter").toString(); }
-QString Style::styleGuide() const { return get("style_guide").toString(); }
-QString Style::notes() const { return get("notes").toString(); }
-QString Style::profile() const { return get("profile").toString(); }
-QString Style::ingredients() const { return get("ingredients").toString(); }
-QString Style::examples() const { return get("examples").toString(); }
+QString Style::category() const
+{
+   return getDB()->getColumn(StyleDB::kCategoryColumn).toString();
+}
 
-const Style::Type Style::type() const { return static_cast<Style::Type>(types.indexOf(get("s_type").toString())); }
-const QString Style::typeString() const { return types.at(type()); }
+QString Style::categoryNumber() const
+{
+   return getDB()->getColumn(StyleDB::kCategoryNumberColumn).toString();
+}
 
-double Style::ogMin()        const { return get("og_min").toDouble(); }
-double Style::ogMax()        const { return get("og_max").toDouble(); }
-double Style::fgMin()        const { return get("fg_min").toDouble(); }
-double Style::fgMax()        const { return get("fg_max").toDouble(); }
-double Style::ibuMin()       const { return get("ibu_min").toDouble(); }
-double Style::ibuMax()       const { return get("ibu_max").toDouble(); }
-double Style::colorMin_srm() const { return get("color_min").toDouble(); }
-double Style::colorMax_srm() const { return get("color_max").toDouble(); }
-double Style::carbMin_vol()  const { return get("carb_min").toDouble(); }
-double Style::carbMax_vol()  const { return get("carb_max").toDouble(); }
-double Style::abvMin_pct()   const { return get("abv_min").toDouble(); }
-double Style::abvMax_pct()   const { return get("abv_max").toDouble(); }
+QString Style::styleLetter() const
+{
+   return getDB()->getColumn(StyleDB::kStyleLetterColumn).toString();
+}
 
-bool Style::isValidType( const QString &str ) { return types.contains( str ); }
+QString Style::styleGuide() const
+{
+   return getDB()->getColumn(StyleDB::kStyleGuideColumn).toString();
+}
+
+QString Style::notes() const
+{
+   return getDB()->getColumn(StyleDB::kNotesColumn).toString();
+}
+
+QString Style::profile() const
+{
+   return getDB()->getColumn(StyleDB::kProfileColumn).toString();
+}
+
+QString Style::ingredients() const
+{
+   return getDB()->getColumn(StyleDB::kIngredientsColumn).toString();
+}
+
+QString Style::examples() const
+{
+   return getDB()->getColumn(StyleDB::kExamplesColumn).toString();
+}
+
+const Style::Type Style::type() const
+{
+   return static_cast<Style::Type>(types.indexOf(typeString()));
+}
+
+const QString Style::typeString() const
+{
+   return getDB()->getColumn(StyleDB::kTypeColumn).toString();
+}
+
+double Style::ogMin()        const
+{
+   return getDB()->getColumn(StyleDB::kMinOGColumn).toDouble();
+}
+
+double Style::ogMax()        const
+{
+   return getDB()->getColumn(StyleDB::kMaxOGColumn).toDouble();
+}
+
+double Style::fgMin()        const
+{
+   return getDB()->getColumn(StyleDB::kMinFGColumn).toDouble();
+}
+
+double Style::fgMax()        const
+{
+   return getDB()->getColumn(StyleDB::kMaxFGColumn).toDouble();
+}
+
+double Style::ibuMin()       const
+{
+   return getDB()->getColumn(StyleDB::kMinIBUColumn).toDouble();
+}
+
+double Style::ibuMax()       const
+{
+   return getDB()->getColumn(StyleDB::kMaxIBUColumn).toDouble();
+}
+
+double Style::colorMin_srm() const
+{
+   return getDB()->getColumn(StyleDB::kMinColorColumn).toDouble();
+}
+
+double Style::colorMax_srm() const
+{
+   return getDB()->getColumn(StyleDB::kMaxColorColumn).toDouble();
+}
+
+double Style::carbMin_vol()  const
+{
+   return getDB()->getColumn(StyleDB::kMinCarbColumn).toDouble();
+}
+
+double Style::carbMax_vol()  const
+{
+   return getDB()->getColumn(StyleDB::kMaxCarbColumn).toDouble();
+}
+
+double Style::abvMin_pct()   const
+{
+   return getDB()->getColumn(StyleDB::kMinABVColumn).toDouble();
+}
+
+double Style::abvMax_pct()   const
+{
+   return getDB()->getColumn(StyleDB::kMaxABVColumn).toDouble();
+}
+
+bool Style::isValidType( const QString &str )
+{
+   return types.contains( str );
+}
 
