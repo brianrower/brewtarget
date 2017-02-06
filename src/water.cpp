@@ -74,57 +74,91 @@ ItemDB* Water::getDB() const
 //================================"SET" METHODS=================================
 void Water::setAmount_l( double var )
 {
-   set("amount_l", "amount", var);
+   getDB()->updateColumn(WaterDB::kAmountColumn, var);
 }
 
 void Water::setCalcium_ppm( double var )
 {
-   set("calcium_ppm", "calcium", var);
+   getDB()->updateColumn(WaterDB::kCalciumColumn, var);
 }
 
 void Water::setBicarbonate_ppm( double var )
 {
-   set("bicarbonate_ppm", "bicarbonate", var);
+   getDB()->updateColumn(WaterDB::kBicarbonateColumn, var);
 }
 
 void Water::setChloride_ppm( double var )
 {
-   set("chloride_ppm", "chloride", var);
+   getDB()->updateColumn(WaterDB::kChlorideColumn, var);
 }
 
 void Water::setSodium_ppm( double var )
 {
-   set("sodium_ppm", "sodium", var);
+   getDB()->updateColumn(WaterDB::kSodiumColumn, var);
 }
 
 void Water::setMagnesium_ppm( double var )
 {
-   set("magnesium_ppm", "magnesium", var);
+   getDB()->updateColumn(WaterDB::kMagnesiumColumn, var);
 }
 
 void Water::setPh( double var )
 {
-   set("ph", "ph", var);
+   getDB()->updateColumn(WaterDB::kPhColumn, var);
 }
 
 void Water::setSulfate_ppm( double var )
 {
-   set("sulfate_ppm", "sulfate", var);
+   getDB()->updateColumn(WaterDB::kSulfateColumn, var);
 }
 
 void Water::setNotes( const QString &var )
 {
-   set("notes", "notes", var);
+   getDB()->updateColumn(WaterDB::kNotesColumn, var);
 }
 
 //=========================="GET" METHODS=======================================
-QString Water::notes() const { return get("notes").toString(); }
+QString Water::notes() const
+{
+   return getDB()->getColumn(WaterDB::kNotesColumn).toString();
+}
 
-double Water::sulfate_ppm() const { return get("sulfate").toDouble(); }
-double Water::amount_l() const { return get("amount").toDouble(); }
-double Water::calcium_ppm() const { return get("calcium").toDouble(); }
-double Water::bicarbonate_ppm() const { return get("bicarbonate").toDouble(); }
-double Water::chloride_ppm() const { return get("chloride").toDouble(); }
-double Water::sodium_ppm() const { return get("sodium").toDouble(); }
-double Water::magnesium_ppm() const { return get("magnesium").toDouble(); }
-double Water::ph() const { return get("ph").toDouble(); }
+double Water::sulfate_ppm() const
+{
+   return getDB()->getColumn(WaterDB::kSulfateColumn).toDouble();
+}
+
+double Water::amount_l() const
+{
+   return getDB()->getColumn(WaterDB::kAmountColumn).toDouble();
+}
+
+double Water::calcium_ppm() const
+{
+   return getDB()->getColumn(WaterDB::kCalciumColumn).toDouble();
+}
+
+double Water::bicarbonate_ppm() const
+{
+   return getDB()->getColumn(WaterDB::kBicarbonateColumn).toDouble();
+}
+
+double Water::chloride_ppm() const
+{
+   return getDB()->getColumn(WaterDB::kChlorideColumn).toDouble();
+}
+
+double Water::sodium_ppm() const
+{
+   return getDB()->getColumn(WaterDB::kSodiumColumn).toDouble();
+}
+
+double Water::magnesium_ppm() const
+{
+   return getDB()->getColumn(WaterDB::kMagnesiumColumn).toDouble();
+}
+
+double Water::ph() const
+{
+   return getDB()->getColumn(WaterDB::kPhColumn).toDouble();
+}
