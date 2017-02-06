@@ -58,7 +58,6 @@ SET( brewtarget_SRCS
     ${SRCDIR}/BeerXMLElement.cpp
     ${SRCDIR}/BeerXMLSortProxyModel.cpp
     ${SRCDIR}/boiltime.cpp
-    ${SRCDIR}/BrewDayWidget.cpp
     ${SRCDIR}/BrewDayScrollWidget.cpp
     ${SRCDIR}/brewnote.cpp
     ${SRCDIR}/BrewNoteDB.cpp
@@ -188,7 +187,6 @@ SET( brewtarget_SRCS
 # TODO: can I somehow have a separate CMakeLists.txt
 # in the ui/ directory instead of here?
 SET( brewtarget_UIS
-    ${UIDIR}/brewDayWidget.ui
     ${UIDIR}/brewDayScrollWidget.ui
     ${UIDIR}/brewNoteWidget.ui
     ${UIDIR}/mainWindow.ui
@@ -224,7 +222,6 @@ SET( brewtarget_MOC_HEADERS
     ${SRCDIR}/BeerXMLElement.h
     ${SRCDIR}/BeerXMLSortProxyModel.h
     ${SRCDIR}/boiltime.h
-    ${SRCDIR}/BrewDayWidget.h
     ${SRCDIR}/BrewDayScrollWidget.h
     ${SRCDIR}/brewnote.h
     ${SRCDIR}/BrewNoteDB.h
