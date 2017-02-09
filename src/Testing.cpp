@@ -112,7 +112,7 @@ void Testing::recipeCalcTest_allGrain()
    );
 
    // Add equipment
-   Database::instance().addToRecipe(rec, e);
+   rec->setEquipment(e);
 
    // Add hops (85g)
    cascade_4pct->setAmount_kg(0.085);
@@ -197,8 +197,8 @@ void Testing::postBoilLossOgTest()
    ;
 
    // Add equipment
-   Database::instance().addToRecipe(recNoLoss, eNoLoss);
-   Database::instance().addToRecipe(recLoss, eLoss);
+   recNoLoss->setEquipment(eNoLoss);
+   recLoss->setEquipment(eLoss);
 
    // Add grain
    twoRow->setAmount_kg(grain_kg);

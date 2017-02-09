@@ -37,7 +37,7 @@ void EquipmentButton::setRecipe(Recipe* rec)
    _rec = rec;
    if( _rec )
    {
-      connect( _rec, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(recChanged(QMetaProperty,QVariant)) );
+      connect( _rec, &Recipe::equipmentChanged, this, &EquipmentButton::onEquipmentChanged );
       setEquipment( _rec->equipment() );
    }
    else
@@ -52,24 +52,19 @@ void EquipmentButton::setEquipment(Equipment* equip)
    _equip = equip;
    if( _equip )
    {
-      connect( _equip, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(equipChanged(QMetaProperty,QVariant)) );
+      connect( _equip, &Equipment::nameChanged, this, &EquipmentButton::onNameChanged );
       setText( _equip->name() );
    }
    else
       setText("");
 }
 
-void EquipmentButton::equipChanged(QMetaProperty prop, QVariant val)
+void EquipmentButton::onNameChanged()
 {
-   QString propName(prop.name());
-   if( propName == "name" )
-      setText( val.toString() );
+   setText(_equip->name());
 }
 
-void EquipmentButton::recChanged(QMetaProperty prop, QVariant val)
+void EquipmentButton::onEquipmentChanged()
 {
-   QString propName(prop.name());
-   
-   if( propName == "equipment" )
-      setEquipment( qobject_cast<Equipment*>(BeerXMLElement::extractPtr(val)) );
+   setEquipment( _rec->equipment() );
 }

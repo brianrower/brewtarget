@@ -48,8 +48,8 @@ public:
    void setEquipment(Equipment* equip);
 
 private slots:
-   void recChanged(QMetaProperty,QVariant);
-   void equipChanged(QMetaProperty,QVariant);
+   void onEquipmentChanged();
+   void onNameChanged();
 
 private:
    Recipe* _rec;

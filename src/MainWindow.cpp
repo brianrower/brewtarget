@@ -1067,7 +1067,7 @@ void MainWindow::droppedRecipeEquipment(Equipment *kit)
       return;
 
    // Notice that we are using a copy from the database.
-   Database::instance().addToRecipe(recipeObs,kit);
+   recipeObs->setEquipment(kit);
    equipmentButton->setEquipment(kit);
 
    // Keep the mash tun weight and specific heat up to date.
@@ -1535,7 +1535,7 @@ void MainWindow::newRecipe()
       Equipment* e = Database::instance().equipment(defEquipKey.toInt());
       if ( e )
       {
-         Database::instance().addToRecipe(newRec, e);
+         newRec->setEquipment(e);
          newRec->setBatchSize_l( e->batchSize_l() );
          newRec->setBoilSize_l( e->boilSize_l() );
          newRec->setBoilTime_min( e->boilTime_min() );

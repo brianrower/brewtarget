@@ -287,6 +287,8 @@ public:
    Equipment* equipment() const;
    Style* style() const;
    
+   void setEquipment(Equipment* equip, bool noCopy = false, bool transact = true);
+
    // Other junk.
    QVector<PreInstruction> mashInstructions(double timeRemaining, double totalWaterAdded_l, unsigned int size);
    QVector<PreInstruction> mashSteps();
@@ -312,9 +314,9 @@ signals:
    void colorChanged();
    void instructionListChanged();
    void instructionOrderChanged();
+   void equipmentChanged();
    
 public slots:
-   void acceptEquipChange(QMetaProperty prop, QVariant val);
    void acceptFermChange(QMetaProperty prop, QVariant val);
    void acceptHopChange(QMetaProperty prop, QVariant val);
    void acceptYeastChange(QMetaProperty prop, QVariant val);
@@ -355,6 +357,11 @@ public slots:
    void setPrimingSugarEquiv( double var );
    void setKegPrimingFactor( double var );
    
+protected slots:
+   void onEquipmentChanged();
+   void onBoilSizeChanged();
+   void onBoilTimeChanged();
+
 protected:
    virtual ItemDB* getDB() const override;
 

@@ -1449,6 +1449,34 @@ QDate Recipe::date()               const
    return QDate::fromString( getDB()->getColumn(RecipeDB::kDateColumn).toString(), "d/M/yyyy");
 }
 
+void Recipe::onBoilSizeChanged()
+{
+   setBoilSize_l(equipment()->boilSize_l());
+}
+
+void Recipe::onBoilTimeChanged()
+{
+   setBoilTime_min(equipment()->boilTime_min());
+}
+
+void Recipe::setEquipment(Equipment* equip, bool noCopy /*= false*/, bool transact /*= true*/)
+{
+   Database::instance().addToRecipe(this, equip, noCopy, transact);
+
+   connect( equip, &Equipment::equipmentChanged, this, &Recipe::onEquipmentChanged );
+   connect( equip, &Equipment::boilSizeChanged, this, &Recipe::onBoilSizeChanged);
+   connect( equip, &Equipment::boilTimeChanged, this, &Recipe::onBoilTimeChanged);
+
+   // Emit a changed signal.
+   emit equipmentChanged();
+
+   // If we are already wrapped in a transaction boundary, do not call
+   // recaclAll(). Weirdness ensues. But I want this after all the signals are
+   // attached, etc.
+   if ( transact )
+      recalcAll();
+}
+
 //=============================Removers========================================
 
 void Recipe::removeIngredient( BeerIngredient* var )
@@ -2150,7 +2178,7 @@ QList<QString> Recipe::getReagents( QList<MashStep*> msteps )
 
 //==========================Accept changes from ingredients====================
 
-void Recipe::acceptEquipChange(QMetaProperty prop, QVariant val)
+void Recipe::onEquipmentChanged()
 {
    recalcAll();
 }

@@ -76,7 +76,7 @@ void ScaleRecipeTool::scale(Equipment* equip, double newEff)
    double oldEfficiency = recObs->efficiency_pct();
    double effRatio = oldEfficiency / newEff;
    
-   Database::instance().addToRecipe(recObs, equip);
+   recObs->setEquipment(equip);
    recObs->setBatchSize_l(newBatchSize_l);
    recObs->setBoilSize_l(equip->boilSize_l());
    recObs->setEfficiency_pct(newEff);

@@ -47,39 +47,39 @@ public:
    virtual ~Equipment();
    
    //! \brief The boil size in liters.
-   Q_PROPERTY( double boilSize_l            READ boilSize_l            WRITE setBoilSize_l            NOTIFY changedBoilSize_l )
+   Q_PROPERTY( double boilSize_l            READ boilSize_l            WRITE setBoilSize_l            NOTIFY boilSizeChanged )
    //! \brief The batch size in liters.
-   Q_PROPERTY( double batchSize_l           READ batchSize_l           WRITE setBatchSize_l           NOTIFY changedBatchSize_l )
+   Q_PROPERTY( double batchSize_l           READ batchSize_l           WRITE setBatchSize_l           NOTIFY batchSizeChanged )
    //! \brief The tun volume in liters.
-   Q_PROPERTY( double tunVolume_l           READ tunVolume_l           WRITE setTunVolume_l           NOTIFY changedTunVolume_l )
+   Q_PROPERTY( double tunVolume_l           READ tunVolume_l           WRITE setTunVolume_l           NOTIFY tunVolumeChanged )
    //! \brief Set the tun mass in kg.
-   Q_PROPERTY( double tunWeight_kg          READ tunWeight_kg          WRITE setTunWeight_kg          NOTIFY changedTunWeight_kg )
+   Q_PROPERTY( double tunWeight_kg          READ tunWeight_kg          WRITE setTunWeight_kg          NOTIFY tunWeightChanged )
    //! \brief Set the tun specific heat in kcal/(g*C)
-   Q_PROPERTY( double tunSpecificHeat_calGC READ tunSpecificHeat_calGC WRITE setTunSpecificHeat_calGC NOTIFY changedTunSpecificHeat_calGC )
+   Q_PROPERTY( double tunSpecificHeat_calGC READ tunSpecificHeat_calGC WRITE setTunSpecificHeat_calGC NOTIFY tunSpecificHeatChanged )
    //! \brief Set the top-up water in liters.
-   Q_PROPERTY( double topUpWater_l          READ topUpWater_l          WRITE setTopUpWater_l          NOTIFY changedTopUpWater_l )
+   Q_PROPERTY( double topUpWater_l          READ topUpWater_l          WRITE setTopUpWater_l          NOTIFY topUpWaterChanged )
    //! \brief Set the loss to trub and chiller in liters.
-   Q_PROPERTY( double trubChillerLoss_l     READ trubChillerLoss_l     WRITE setTrubChillerLoss_l     NOTIFY changedTrubChillerLoss_l )
+   Q_PROPERTY( double trubChillerLoss_l     READ trubChillerLoss_l     WRITE setTrubChillerLoss_l     NOTIFY trubChillerLossChanged )
    //! \brief Set the evaporation rate in percent of the boil size per hour. DO NOT USE. Only for BeerXML compatibility.
-   Q_PROPERTY( double evapRate_pctHr        READ evapRate_pctHr        WRITE setEvapRate_pctHr        NOTIFY changedEvapRate_pctHr )
+   Q_PROPERTY( double evapRate_pctHr        READ evapRate_pctHr        WRITE setEvapRate_pctHr        NOTIFY evaporationRateChanged )
    //! \brief Set the evaporation rate in liters/hr.
-   Q_PROPERTY( double evapRate_lHr          READ evapRate_lHr          WRITE setEvapRate_lHr          NOTIFY changedEvapRate_lHr )
+   Q_PROPERTY( double evapRate_lHr          READ evapRate_lHr          WRITE setEvapRate_lHr          NOTIFY evaporationRateChanged )
    //! \brief Set the boil time in minutes.
-   Q_PROPERTY( double boilTime_min          READ boilTime_min          WRITE setBoilTime_min          NOTIFY changedBoilTime_min )
+   Q_PROPERTY( double boilTime_min          READ boilTime_min          WRITE setBoilTime_min          NOTIFY boilTimeChanged )
    //! \brief Set whether you want the boil volume to be automatically calculated.
-   Q_PROPERTY( bool calcBoilVolume          READ calcBoilVolume        WRITE setCalcBoilVolume        NOTIFY changedCalcBoilVolume )
+   Q_PROPERTY( bool calcBoilVolume          READ calcBoilVolume        WRITE setCalcBoilVolume        NOTIFY calcBoilVolumeChanged )
    //! \brief Set the lauter tun's deadspace in liters.
-   Q_PROPERTY( double lauterDeadspace_l     READ lauterDeadspace_l     WRITE setLauterDeadspace_l     NOTIFY changedLauterDeadspace_l )
+   Q_PROPERTY( double lauterDeadspace_l     READ lauterDeadspace_l     WRITE setLauterDeadspace_l     NOTIFY lauterDeadspaceChanged )
    //! \brief Set the kettle top up in liters.
-   Q_PROPERTY( double topUpKettle_l         READ topUpKettle_l         WRITE setTopUpKettle_l         NOTIFY changedTopUpKettle_l )
+   Q_PROPERTY( double topUpKettle_l         READ topUpKettle_l         WRITE setTopUpKettle_l         NOTIFY topUpKettleChanged )
    //! \brief Set the hop utilization factor. I do not believe this is used.
-   Q_PROPERTY( double hopUtilization_pct    READ hopUtilization_pct    WRITE setHopUtilization_pct    NOTIFY changedHopUtilization_pct )
+   Q_PROPERTY( double hopUtilization_pct    READ hopUtilization_pct    WRITE setHopUtilization_pct    NOTIFY hopUtilizationChanged )
    //! \brief Set the notes.
-   Q_PROPERTY( QString notes                READ notes                 WRITE setNotes                 NOTIFY changedNotes )
+   Q_PROPERTY( QString notes                READ notes                 WRITE setNotes                 NOTIFY notesChanged )
    //! \brief Set how much water the grains absorb in liters/kg.
-   Q_PROPERTY( double grainAbsorption_LKg   READ grainAbsorption_LKg   WRITE setGrainAbsorption_LKg   NOTIFY changedGrainAbsorption_LKg )
+   Q_PROPERTY( double grainAbsorption_LKg   READ grainAbsorption_LKg   WRITE setGrainAbsorption_LKg   NOTIFY grainAbsorptionChanged )
    //! \brief Set the boiling point of water in Celsius.
-   Q_PROPERTY( double boilingPoint_c        READ boilingPoint_c        WRITE setBoilingPoint_c        NOTIFY changedBoilingPoint_c )
+   Q_PROPERTY( double boilingPoint_c        READ boilingPoint_c        WRITE setBoilingPoint_c        NOTIFY boilingPointChanged )
 
    // Set
    void setBoilSize_l( double var );
@@ -123,25 +123,9 @@ public:
    double wortEndOfBoil_l( double kettleWort_l ) const;
 
 signals:
-   
-   void changedName(QString);
-   void changedBoilSize_l(double);
-   void changedBatchSize_l(double);
-   void changedTunVolume_l(double);
-   void changedTunWeight_kg(double);
-   void changedTunSpecificHeat_calGC(double);
-   void changedTopUpWater_l(double);
-   void changedTrubChillerLoss_l(double);
-   void changedEvapRate_pctHr(double);
-   void changedEvapRate_lHr(double);
-   void changedBoilTime_min(double);
-   void changedCalcBoilVolume(bool);
-   void changedLauterDeadspace_l(double);
-   void changedTopUpKettle_l(double);
-   void changedHopUtilization_pct(double);
-   void changedNotes(QString);
-   void changedGrainAbsorption_LKg(double);
-   void changedBoilingPoint_c(double);
+   void equipmentChanged();
+   void nameChanged(QString);
+   void boilSizeChanged();
    void batchSizeChanged();
    void tunVolumeChanged();
    void tunWeightChanged();
@@ -149,6 +133,7 @@ signals:
    void topUpWaterChanged();
    void trubChillerLossChanged();
    void evaporationRateChanged();
+   void boilTimeChanged();
    void calcBoilVolumeChanged();
    void lauterDeadspaceChanged();
    void topUpKettleChanged();

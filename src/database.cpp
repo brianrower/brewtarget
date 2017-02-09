@@ -1439,7 +1439,7 @@ Recipe* Database::newRecipe(Recipe* other)
 
       // Copy style/mash/equipment
       // Style or equipment might be non-existent but these methods handle that.
-      addToRecipe( tmp, other->equipment(), false, false);
+      tmp->setEquipment(other->equipment(), false, false);
       addToRecipe( tmp, other->mash(), false, false);
       addToRecipe( tmp, other->style(), false, false);
    }
@@ -1841,21 +1841,6 @@ void Database::addToRecipe( Recipe* rec, Equipment* e, bool noCopy, bool transac
    if ( transact ) {
       sqlDatabase().commit();
    }
-   // NOTE: need to disconnect the recipe's old equipment?
-   connect( newEquip, SIGNAL(changed(QMetaProperty,QVariant)), rec, SLOT(acceptEquipChange(QMetaProperty,QVariant)) );
-   // NOTE: If we don't reconnect these signals, bad things happen when
-   // changing boil times on the mainwindow
-   connect( newEquip, SIGNAL(changedBoilSize_l(double)), rec, SLOT(setBoilSize_l(double)));
-   connect( newEquip, SIGNAL(changedBoilTime_min(double)), rec, SLOT(setBoilTime_min(double)));
-
-   // Emit a changed signal.
-   emit rec->changed( rec->metaProperty("equipment"), BeerXMLElement::qVariantFromPtr(newEquip) );
-
-   // If we are already wrapped in a transaction boundary, do not call
-   // recaclAll(). Weirdness ensues. But I want this after all the signals are
-   // attached, etc.
-   if ( transact )
-      rec->recalcAll();
 }
 
 void Database::addToRecipe( Recipe* rec, Fermentable* ferm, bool noCopy, bool transact )
@@ -3846,7 +3831,7 @@ Equipment* Database::equipmentFromXml( QDomNode const& node, Recipe* parent )
       if( parent )
       {
          ret->setDisplay(false);
-         addToRecipe( parent, ret, true );
+         parent->setEquipment(ret, true);
       }
    }
    catch (QString e) {

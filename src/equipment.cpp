@@ -119,6 +119,38 @@ Equipment::Equipment( Equipment const& other )
    : BeerXMLElement(other)
 {
    _db.reset(new EquipmentDB());
+
+   //Connect all changed<______> signals to also pump out a changed() signal
+   connect(this, &Equipment::nameChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::boilSizeChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::batchSizeChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::tunVolumeChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::tunWeightChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::tunSpecificHeatChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::topUpWaterChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::trubChillerLossChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::boilTimeChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::calcBoilVolumeChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::lauterDeadspaceChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::topUpKettleChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::hopUtilizationChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::notesChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::grainAbsorptionChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::boilingPointChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::batchSizeChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::tunVolumeChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::tunWeightChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::tunSpecificHeatChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::topUpWaterChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::trubChillerLossChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::evaporationRateChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::calcBoilVolumeChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::lauterDeadspaceChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::topUpKettleChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::hopUtilizationChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::notesChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::grainAbsorptionChanged, this, &Equipment::equipmentChanged);
+   connect(this, &Equipment::boilingPointChanged, this, &Equipment::equipmentChanged);
 }
 
 Equipment::~Equipment()
@@ -142,7 +174,7 @@ void Equipment::setBoilSize_l( double var )
    }
 
    getDB()->updateColumn(EquipmentDB::kBoilSizeColumn, var);
-   emit changedBoilSize_l(var);
+   emit boilSizeChanged();
 }
 
 void Equipment::setBatchSize_l( double var )
@@ -258,7 +290,7 @@ void Equipment::setBoilTime_min( double var )
 
    getDB()->updateColumn(EquipmentDB::kBoilTimeColumn, var);
    doCalculations();
-   emit changedBoilTime_min(var);
+   emit boilTimeChanged();
 }
 
 void Equipment::setCalcBoilVolume( bool var )
