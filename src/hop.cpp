@@ -84,13 +84,13 @@ bool Hop::isValidForm(const QString& str)
 Hop::Hop()
    : BeerIngredient()
 {
-   _db.reset(new HopsDB());
+   init();
 }
 
 Hop::Hop( Hop const& other )
    : BeerIngredient(other)
 {
-   _db.reset(new HopsDB());
+   init();
 }
 
 Hop::~Hop()
@@ -101,6 +101,30 @@ Hop::~Hop()
 ItemDB* Hop::getDB() const
 {
    return _db.get();
+}
+
+void Hop::init()
+{
+   _db.reset(new HopsDB());
+
+   connect( this, &Hop::nameChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::folderChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::alphaChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::amountChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::inventoryChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::useChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::timeChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::typeChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::formChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::betaChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::hsiChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::originChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::humuleneChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::caryophylleneChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::cohumuloneChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::myrceneChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::substitutesChanged, this, &Hop::hopChanged );
+   connect( this, &Hop::notesChanged, this, &Hop::hopChanged );
 }
 
 //============================="SET" METHODS====================================

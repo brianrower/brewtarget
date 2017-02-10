@@ -176,8 +176,7 @@ void HopDialog::addHop(const QModelIndex& index)
    }
    
    Hop *hop = hopTableModel->getHop(translated.row());
-   
-   Database::instance().addToRecipe( mainWindow->currentRecipe(), hop );
+   mainWindow->currentRecipe()->addHop(hop);
 }
 
 void HopDialog::editSelected()

@@ -787,9 +787,10 @@ QString Recipe::nextAddToBoil(double& time)
 
 //============================Relational Setters===============================
 
-void Recipe::addHop( Hop *var )
+void Recipe::addHop( Hop *var, bool noCopy /*= false*/, bool transact /*= true*/ )
 {
-   Database::instance().addToRecipe( this, var );
+   Database::instance().addToRecipe( this, var, noCopy, transact);
+   emit hopListChanged();
 }
 
 void Recipe::addFermentable( Fermentable* var, bool noCopy /*= false*/, bool transact /* = true */)
@@ -1497,6 +1498,12 @@ void Recipe::removeFermentable(Fermentable* ferm)
 {
    Database::instance().removeIngredientFromRecipe( this, ferm );
    emit fermentableListChanged();
+}
+
+void Recipe::removeHop(Hop* hop)
+{
+   Database::instance().removeIngredientFromRecipe( this, hop );
+   emit hopListChanged();
 }
 
 void Recipe::removeIngredient( BeerIngredient* var )

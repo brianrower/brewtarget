@@ -70,7 +70,7 @@ HopTableModel::HopTableModel(QTableView* parent, bool editable)
    parentTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
    parentTableWidget->setWordWrap(false);
 
-   connect(headerView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(contextMenu(const QPoint&)));
+   connect(headerView, &QHeaderView::customContextMenuRequested, this, &HopTableModel::onContextMenu );
 }
 
 HopTableModel::~HopTableModel()
@@ -89,7 +89,7 @@ void HopTableModel::observeRecipe(Recipe* rec)
    recObs = rec;
    if( recObs )
    {
-      connect( recObs, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(changed(QMetaProperty,QVariant)) );
+      connect( recObs, &Recipe::hopListChanged, this, &HopTableModel::onHopListChanged );
       addHops( recObs->hops() );
    }
 }
@@ -100,8 +100,8 @@ void HopTableModel::observeDatabase(bool val)
    {
       observeRecipe(0);
       removeAll();
-      connect( &(Database::instance()), SIGNAL(newHopSignal(Hop*)), this, SLOT(addHop(Hop*)) );
-      connect( &(Database::instance()), SIGNAL(deletedSignal(Hop*)), this, SLOT(removeHop(Hop*)) );
+      connect( &(Database::instance()), &Database::hopAdded, this, &HopTableModel::onHopAdded );
+      connect( &(Database::instance()), &Database::hopDeleted, this, &HopTableModel::onHopDeleted );
       addHops( Database::instance().hops() );
    }
    else
@@ -109,6 +109,16 @@ void HopTableModel::observeDatabase(bool val)
       removeAll();
       disconnect( &(Database::instance()), 0, this, 0 );
    }
+}
+
+void HopTableModel::onHopAdded(Hop *h)
+{
+   addHop(h);
+}
+
+void HopTableModel::onHopDeleted(Hop *h)
+{
+   removeHop(h);
 }
 
 void HopTableModel::addHop(Hop* hop)
@@ -130,30 +140,28 @@ void HopTableModel::addHop(Hop* hop)
    int size = hopObs.size();
    beginInsertRows( QModelIndex(), size, size );
    hopObs.append(hop);
-   connect( hop, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(changed(QMetaProperty,QVariant)) );
-   //reset(); // Tell everybody that the table has changed.
+   connect( hop, &Hop::hopChanged, this, &HopTableModel::onHopChanged );
    endInsertRows();
 }
 
 void HopTableModel::addHops(QList<Hop*> hops)
 {
-   QList<Hop*>::iterator i;
    QList<Hop*> tmp;
 
-   for( i = hops.begin(); i != hops.end(); i++ )
+   for( Hop* h : hops )
    {
-      if( !hopObs.contains(*i) )
-         tmp.append(*i);
+      if( !hopObs.contains(h) )
+         tmp.append(h);
    }
 
-   int size = hopObs.size();
-   if (size+tmp.size())
+   if (!tmp.isEmpty())
    {
+      int size = hopObs.size();
       beginInsertRows( QModelIndex(), size, size+tmp.size()-1 );
       hopObs.append(tmp);
 
-      for( i = tmp.begin(); i != tmp.end(); i++ )
-         connect( *i, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(changed(QMetaProperty,QVariant)) );
+      for( Hop* h : tmp )
+         connect( h, &Hop::hopChanged, this, &HopTableModel::onHopChanged );
 
       endInsertRows();
    }
@@ -195,37 +203,28 @@ void HopTableModel::removeAll()
    }
 }
 
-void HopTableModel::changed(QMetaProperty prop, QVariant /*val*/)
+void HopTableModel::onHopChanged()
 {
-   int i;
-
    // Find the notifier in the list
    Hop* hopSender = qobject_cast<Hop*>(sender());
-   if( hopSender )
-   {
-      i = hopObs.indexOf(hopSender);
-      if( i < 0 )
-         return;
-
-      emit dataChanged( QAbstractItemModel::createIndex(i, 0),
-                        QAbstractItemModel::createIndex(i, HOPNUMCOLS-1));
-      emit headerDataChanged( Qt::Vertical, i, i );
+   if( !hopSender )
       return;
-   }
-
-   // See if sender is our recipe.
-   Recipe* recSender = qobject_cast<Recipe*>(sender());
-   if( recSender && recSender == recObs )
-   {
-      if( QString(prop.name()) == "hops" )
-      {
-         removeAll();
-         addHops( recObs->hops() );
-      }
-      if( rowCount() > 0 )
-         emit headerDataChanged( Qt::Vertical, 0, rowCount()-1 );
+   int i = hopObs.indexOf(hopSender);
+   if( i < 0 )
       return;
-   }
+
+   emit dataChanged( QAbstractItemModel::createIndex(i, 0),
+                     QAbstractItemModel::createIndex(i, HOPNUMCOLS-1));
+   emit headerDataChanged( Qt::Vertical, i, i );
+}
+
+void HopTableModel::onHopListChanged()
+{
+   removeAll();
+   addHops( recObs->hops() );
+
+   if( rowCount() > 0 )
+      emit headerDataChanged( Qt::Vertical, 0, rowCount()-1 );
 }
 
 int HopTableModel::rowCount(const QModelIndex& /*parent*/) const
@@ -503,7 +502,7 @@ QString HopTableModel::generateName(int column) const
    return attribute;
 }
 
-void HopTableModel::contextMenu(const QPoint &point)
+void HopTableModel::onContextMenu(const QPoint &point)
 {
    QObject* calledBy = sender();
    QHeaderView* hView = qobject_cast<QHeaderView*>(calledBy);

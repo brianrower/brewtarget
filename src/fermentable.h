@@ -196,17 +196,15 @@ protected:
    virtual ItemDB* getDB() const override;
    
 private:
-
-   std::unique_ptr<FermentablesDB> _db;
-
    Fermentable();
-   Fermentable( Fermentable const& other );
-   
+   Fermentable( Fermentable const& other );   
    static bool isValidType( const QString& str );
+   void init();
+
    static QStringList types;
-   
    static QHash<QString,QString> tagToProp;
    static QHash<QString,QString> tagToPropHash();
+   std::unique_ptr<FermentablesDB> _db;
 };
 
 Q_DECLARE_METATYPE( QList<Fermentable*> )

@@ -71,6 +71,26 @@ bool operator==(Fermentable &f1, Fermentable &f2)
 Fermentable::Fermentable()
    : BeerIngredient()
 {
+   init();
+}
+
+Fermentable::Fermentable( Fermentable const& other )
+        : BeerIngredient( other )
+{
+   init();
+}
+
+Fermentable::~Fermentable()
+{
+}
+
+ItemDB* Fermentable::getDB() const
+{
+   return _db.get();
+}
+
+void Fermentable::init()
+{
    _db.reset(new FermentablesDB());
 
    connect( this, &Fermentable::folderChanged, this, &Fermentable::fermentableChanged );
@@ -92,21 +112,6 @@ Fermentable::Fermentable()
    connect( this, &Fermentable::isMashedChanged, this, &Fermentable::fermentableChanged );
    connect( this, &Fermentable::ibuGalPerLbChanged, this, &Fermentable::fermentableChanged );
    connect( this, &Fermentable::noteChanged, this, &Fermentable::fermentableChanged );
-}
-
-Fermentable::Fermentable( Fermentable const& other )
-        : BeerIngredient( other )
-{
-   _db.reset(new FermentablesDB());
-}
-
-Fermentable::~Fermentable()
-{
-}
-
-ItemDB* Fermentable::getDB() const
-{
-   return _db.get();
 }
 
 // Get

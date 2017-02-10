@@ -201,10 +201,11 @@ public:
    // Relational setters.
    void removeYeast( Yeast *var);
    void removeFermentable(Fermentable* ferm);
+   void removeHop(Hop* hop);
    void removeIngredient( BeerIngredient *var);
 
    // And you do know what happens next right?
-   void addHop( Hop *var );
+   void addHop( Hop *var, bool noCopy = false, bool transact = true );
    void addFermentable( Fermentable* var, bool noCopy = false, bool transact = true);
    void addMisc( Misc* var );
    void addYeast( Yeast* var, bool noCopy = false, bool transact = true);
@@ -319,6 +320,7 @@ signals:
    void equipmentChanged();
    void yeastListChanged();
    void fermentableListChanged();
+   void hopListChanged();
    
 public slots:
    void acceptFermChange(QMetaProperty prop, QVariant val);

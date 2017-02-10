@@ -96,16 +96,19 @@ public:
 
 
    QString generateName(int column) const;
-public slots:
-   void changed(QMetaProperty, QVariant);
+private slots:
+   void onHopChanged();
+   void onHopListChanged();
+   void onHopAdded(Hop* h);
+   void onHopDeleted(Hop* h);
+   void onContextMenu(const QPoint &point);
+
+private:
    //! \brief Add a hop to the model.
    void addHop(Hop* hop);
    //! \returns true if "hop" is successfully found and removed.
    bool removeHop(Hop* hop);
 
-   void contextMenu(const QPoint &point);
-
-private:
    QVector<Qt::ItemFlags> colFlags;
    bool _inventoryEditable;
    QList<Hop*> hopObs;

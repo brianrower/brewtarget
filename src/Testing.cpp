@@ -116,7 +116,7 @@ void Testing::recipeCalcTest_allGrain()
 
    // Add hops (85g)
    cascade_4pct->setAmount_kg(0.085);
-   Database::instance().addToRecipe(rec, cascade_4pct);
+   rec->addHop(cascade_4pct);
 
    // Add grain
    twoRow->setAmount_kg(grain_kg);

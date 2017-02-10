@@ -140,6 +140,7 @@ public:
    void setMyrcene_pct( double num );
 
 signals:
+   void hopChanged();
    void alphaChanged();
    void amountChanged();
    void inventoryChanged();
@@ -161,12 +162,13 @@ protected:
    virtual ItemDB* getDB() const override;
 
 private:
-   std::unique_ptr<HopsDB> _db;
-
    Hop();
    Hop( Hop const& other );
    
    void setDefaults();
+   void init();
+
+   std::unique_ptr<HopsDB> _db;
 
    static bool isValidUse(const QString& str);
    static bool isValidType(const QString& str);

@@ -4063,7 +4063,7 @@ Hop* Database::hopFromXml( QDomNode const& node, Recipe* parent )
       }
 
       if( parent )
-         addToRecipe( parent, ret, true );
+         parent->addHop(ret, true);
    }
    catch (QString e) {
       Brewtarget::logE( QString("%1 %2").arg(Q_FUNC_INFO).arg(e) );
