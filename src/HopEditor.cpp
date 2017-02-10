@@ -34,8 +34,29 @@ HopEditor::HopEditor( QWidget* parent )
 {
    setupUi(this);
    
-   connect( buttonBox, SIGNAL( accepted() ), this, SLOT( save() ));
-   connect( buttonBox, SIGNAL( rejected() ), this, SLOT( clearAndClose() ));
+   connect( buttonBox, &QDialogButtonBox::accepted, this, &HopEditor::save );
+   connect( buttonBox, &QDialogButtonBox::rejected, this, &HopEditor::clearAndClose);
+}
+
+void HopEditor::connectToHop(Hop* h)
+{
+   connect(h, &Hop::nameChanged, this, &HopEditor::onNameChanged );
+   connect(h, &Hop::alphaChanged, this, &HopEditor::onAlphaChanged );
+   connect(h, &Hop::amountChanged, this, &HopEditor::onAmountChanged );
+   connect(h, &Hop::inventoryChanged, this, &HopEditor::onInventoryChanged );
+   connect(h, &Hop::useChanged, this, &HopEditor::onUseChanged );
+   connect(h, &Hop::timeChanged, this, &HopEditor::onTimeChanged );
+   connect(h, &Hop::typeChanged, this, &HopEditor::onTypeChanged );
+   connect(h, &Hop::formChanged, this, &HopEditor::onFormChanged );
+   connect(h, &Hop::betaChanged, this, &HopEditor::onBetaChanged );
+   connect(h, &Hop::hsiChanged, this, &HopEditor::onHSIChanged );
+   connect(h, &Hop::originChanged, this, &HopEditor::onOriginChanged );
+   connect(h, &Hop::humuleneChanged, this, &HopEditor::onHumuleneChanged );
+   connect(h, &Hop::caryophylleneChanged, this, &HopEditor::onCaryophylleneChanged );
+   connect(h, &Hop::cohumuloneChanged, this, &HopEditor::onCohumuloneChanged );
+   connect(h, &Hop::myrceneChanged, this, &HopEditor::onMyrceneChanged );
+   connect(h, &Hop::substitutesChanged, this, &HopEditor::onSubstitutesChanged );
+   connect(h, &Hop::notesChanged, this, &HopEditor::onNotesChanged );
 }
 
 void HopEditor::setHop( Hop* h )
@@ -46,7 +67,7 @@ void HopEditor::setHop( Hop* h )
    obsHop = h;
    if( obsHop )
    {
-      connect( obsHop, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(changed(QMetaProperty,QVariant)) );
+      connectToHop(obsHop);
       showChanges();
    }
 }
@@ -93,113 +114,110 @@ void HopEditor::clearAndClose()
    setVisible(false); // Hide the window.
 }
 
-void HopEditor::changed(QMetaProperty prop, QVariant /*val*/)
+void HopEditor::showChanges()
 {
-   if( sender() == obsHop )
-      showChanges(&prop);
+   onNameChanged();
+   onAlphaChanged();
+   onAmountChanged();
+   onInventoryChanged();
+   onUseChanged();
+   onTimeChanged();
+   onTypeChanged();
+   onFormChanged();
+   onBetaChanged();
+   onHSIChanged();
+   onOriginChanged();
+   onHumuleneChanged();
+   onCaryophylleneChanged();
+   onCohumuloneChanged();
+   onMyrceneChanged();
+   onSubstitutesChanged();
+   onNotesChanged();
 }
 
-void HopEditor::showChanges(QMetaProperty* prop)
+void HopEditor::onNameChanged()
 {
-   bool updateAll = false;
-   QString propName;
-   if( obsHop == 0 )
-      return;
+   lineEdit_name->setText(obsHop->name());
+   lineEdit_name->setCursorPosition(0);
+}
 
-   if( prop == 0 )
-      updateAll = true;
-   else
-   {
-      propName = prop->name();
-   }
-   
-   if( propName == "name" || updateAll )
-   {
-      lineEdit_name->setText(obsHop->name());
-      lineEdit_name->setCursorPosition(0);
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "alpha_pct" || updateAll ) {
-      lineEdit_alpha->setText(obsHop);
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "amount_kg" || updateAll ) {
-      lineEdit_amount->setText(obsHop);
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "inventory" || updateAll ) {
-      lineEdit_inventory->setText(obsHop);
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "use" || updateAll ) {
-      comboBox_use->setCurrentIndex(obsHop->use());
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "time_min" || updateAll ) {
-      lineEdit_time->setText(obsHop);
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "type" || updateAll ) {
-      comboBox_type->setCurrentIndex(obsHop->type());
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "form" || updateAll ) {
-      comboBox_form->setCurrentIndex(obsHop->form());
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "beta_pct" || updateAll ) {
-      lineEdit_beta->setText(obsHop);
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "hsi_pct" || updateAll ) {
-      lineEdit_HSI->setText(obsHop);
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "origin" || updateAll )
-   {
-      lineEdit_origin->setText(obsHop->origin());
-      lineEdit_origin->setCursorPosition(0);
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "humulene_pct" || updateAll ) {
-      lineEdit_humulene->setText(obsHop);
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "caryophyllene_pct" || updateAll ) {
-      lineEdit_caryophyllene->setText(obsHop);
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "cohumulone_pct" || updateAll ) {
-      lineEdit_cohumulone->setText(obsHop);
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "myrcene_pct" || updateAll ) {
-      lineEdit_myrcene->setText(obsHop);
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "substitutes" || updateAll ) {
-      textEdit_substitutes->setPlainText(obsHop->substitutes());
-      if( ! updateAll )
-         return;
-   }
-   if( propName == "notes" || updateAll ) {
-      textEdit_notes->setPlainText(obsHop->notes());
-      if( ! updateAll )
-         return;
-   }
+void HopEditor::onAlphaChanged()
+{
+   lineEdit_alpha->setText(obsHop);
+}
+
+void HopEditor::onAmountChanged()
+{
+   lineEdit_amount->setText(obsHop);
+}
+
+void HopEditor::onInventoryChanged()
+{
+   lineEdit_inventory->setText(obsHop);
+}
+
+void HopEditor::onUseChanged()
+{
+   comboBox_use->setCurrentIndex(obsHop->use());
+}
+
+void HopEditor::onTimeChanged()
+{
+   lineEdit_time->setText(obsHop);
+}
+
+void HopEditor::onTypeChanged()
+{
+   comboBox_type->setCurrentIndex(obsHop->type());
+}
+
+void HopEditor::onFormChanged()
+{
+   comboBox_form->setCurrentIndex(obsHop->form());
+}
+
+void HopEditor::onBetaChanged()
+{
+   lineEdit_beta->setText(obsHop);
+}
+
+void HopEditor::onHSIChanged()
+{
+   lineEdit_HSI->setText(obsHop);
+}
+
+void HopEditor::onOriginChanged()
+{
+   lineEdit_origin->setText(obsHop->origin());
+   lineEdit_origin->setCursorPosition(0);
+}
+
+void HopEditor::onHumuleneChanged()
+{
+   lineEdit_humulene->setText(obsHop);
+}
+
+void HopEditor::onCaryophylleneChanged()
+{
+   lineEdit_caryophyllene->setText(obsHop);
+}
+
+void HopEditor::onCohumuloneChanged()
+{
+   lineEdit_cohumulone->setText(obsHop);
+}
+
+void HopEditor::onMyrceneChanged()
+{
+   lineEdit_myrcene->setText(obsHop);
+}
+
+void HopEditor::onSubstitutesChanged()
+{
+   textEdit_substitutes->setPlainText(obsHop->substitutes());
+}
+
+void HopEditor::onNotesChanged()
+{
+   textEdit_notes->setPlainText(obsHop->notes());
 }

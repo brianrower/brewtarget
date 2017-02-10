@@ -113,6 +113,7 @@ void Hop::setAlpha_pct( double num )
    }
 
    getDB()->updateColumn(HopsDB::kAlphaColumn, num);
+   emit alphaChanged();
 }
 
 void Hop::setAmount_kg( double num )
@@ -124,6 +125,7 @@ void Hop::setAmount_kg( double num )
    }
 
    getDB()->updateColumn(HopsDB::kAmountColumn, num);
+   emit amountChanged();
 }
 
 void Hop::setInventoryAmount( double num )
@@ -135,12 +137,14 @@ void Hop::setInventoryAmount( double num )
    }
 
    getDB()->updateInventoryColumn(HopsDB::kAmountColumn, num);
+   emit inventoryChanged();
 }
 
 void Hop::setUse(Use u)
 {
    if ( u >= 0 ) {
       getDB()->updateColumn(HopsDB::kUseColumn, uses.at(u));
+      emit useChanged();
    }
 }
 
@@ -152,17 +156,20 @@ void Hop::setTime_min( double num )
       return;
    }
    getDB()->updateColumn(HopsDB::kTimeColumn, num);
+   emit timeChanged();
 }
       
 void Hop::setNotes( const QString& str )
 {
    getDB()->updateColumn(HopsDB::kNotesColumn, str);
+   emit notesChanged();
 }
 
 void Hop::setType(Type t)
 {
    if ( t >= 0 ) {
       getDB()->updateColumn(HopsDB::kTypeColumn, types.at(t));
+      emit typeChanged();
    }
 }
 
@@ -170,6 +177,7 @@ void Hop::setForm( Form f )
 {
    if ( f >= 0 ) {
       getDB()->updateColumn(HopsDB::kFormColumn, forms.at(f));
+      emit formChanged();
    }
 }
 
@@ -182,6 +190,7 @@ void Hop::setBeta_pct( double num )
    }
 
    getDB()->updateColumn(HopsDB::kBetaColumn, num);
+   emit betaChanged();
 }
 
 void Hop::setHsi_pct( double num )
@@ -193,16 +202,19 @@ void Hop::setHsi_pct( double num )
    }
 
    getDB()->updateColumn(HopsDB::kHSIColumn, num);
+   emit hsiChanged();
 }
 
 void Hop::setOrigin( const QString& str )
 {
    getDB()->updateColumn(HopsDB::kOriginColumn, str);
+   emit originChanged();
 }
 
 void Hop::setSubstitutes( const QString& str )
 {
    getDB()->updateColumn(HopsDB::kSubstitutesColumn, str);
+   emit substitutesChanged();
 }
 
 void Hop::setHumulene_pct( double num )
@@ -214,6 +226,7 @@ void Hop::setHumulene_pct( double num )
    }
 
    getDB()->updateColumn(HopsDB::kHumuleneColumn, num);
+   emit humuleneChanged();
 }
 
 void Hop::setCaryophyllene_pct( double num )
@@ -224,6 +237,7 @@ void Hop::setCaryophyllene_pct( double num )
       return;
    }
    getDB()->updateColumn(HopsDB::kCaryophylleneColumn, num);
+   emit caryophylleneChanged();
 }
 
 void Hop::setCohumulone_pct( double num )
@@ -235,6 +249,7 @@ void Hop::setCohumulone_pct( double num )
    }
 
    getDB()->updateColumn(HopsDB::kCohumuloneColumn, num);
+   emit cohumuloneChanged();
 }
 
 void Hop::setMyrcene_pct( double num )
@@ -245,6 +260,7 @@ void Hop::setMyrcene_pct( double num )
       return;
    }
    getDB()->updateColumn(HopsDB::kMyrceneColumn, num);
+   emit myrceneChanged();
 }
 
 //============================="GET" METHODS====================================

@@ -140,26 +140,22 @@ public:
    void setMyrcene_pct( double num );
 
 signals:
-   //! \brief Emitted when \c name() changes.
-   void changedName(QString);
-
-   /*
-   void changedAlpha_pct(double);
-   void changedAmount_kg(double);
-   void changedUse(Use);
-   void changedTime_min(double);
-   void changedNotes(QString);
-   void changedType(Type);
-   void changedForm(Form);
-   void changedBeta_pct(double);
-   void changedHsi_pct(double);
-   void changedOrigin(QString);
-   void changedSubstitutes(QString);
-   void changedHumulene_pct(double);
-   void changedCaryophyllene_pct(double);
-   void changedCohumulone_pct(double);
-   void changedMyrcene_pct(double);
-   */
+   void alphaChanged();
+   void amountChanged();
+   void inventoryChanged();
+   void useChanged();
+   void timeChanged();
+   void typeChanged();
+   void formChanged();
+   void betaChanged();
+   void hsiChanged();
+   void originChanged();
+   void humuleneChanged();
+   void caryophylleneChanged();
+   void cohumuloneChanged();
+   void myrceneChanged();
+   void substitutesChanged();
+   void notesChanged();
    
 protected:
    virtual ItemDB* getDB() const override;

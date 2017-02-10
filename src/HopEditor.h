@@ -52,15 +52,34 @@ public slots:
    void save();
    //! Clear the dialog and close it.
    void clearAndClose();
-   void changed(QMetaProperty,QVariant);
+
+   void onNameChanged();
+   void onAlphaChanged();
+   void onAmountChanged();
+   void onInventoryChanged();
+   void onUseChanged();
+   void onTimeChanged();
+   void onTypeChanged();
+   void onFormChanged();
+   void onBetaChanged();
+   void onHSIChanged();
+   void onOriginChanged();
+   void onHumuleneChanged();
+   void onCaryophylleneChanged();
+   void onCohumuloneChanged();
+   void onMyrceneChanged();
+   void onSubstitutesChanged();
+   void onNotesChanged();
+
 
 private:
+   void connectToHop(Hop* h);
    Hop* obsHop;
 
    /*! Updates the UI elements based on \b prop.
     *  If null, updates all UI elements.
     */
-   void showChanges(QMetaProperty* prop = 0);
+   void showChanges();
 };
 
 #endif   /* _HOPEDITOR_H */
