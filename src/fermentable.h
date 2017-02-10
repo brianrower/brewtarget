@@ -173,30 +173,23 @@ public:
    void setIsMashed(bool var);
 
 signals:
-   
-   //! \brief Emitted when \c name() changes.
-   void changedName(QString);
-   /*
-   void changedType( Type newType );
-   void changedTypeString( QString newTypeString );
-   void changedTypeStringTr( QString newTypeStringTr );
-   void changedAmount_kg( double newAmount_kg );
-   void changedInventory( double newInventory );
-   void changedYield_pct( double newYield_pct );
-   void changedColor_srm( double newColor_srm );
-   void changedAddAfterBoil( bool newAddAfterBoil );
-   void changedOrigin( QString newOrigin );
-   void changedSupplier( QString newSupplier );
-   void changedNotes( QString newNotes );
-   void changedCoarseFineDiff_pct( double newCoarseFineDiff_pct );
-   void changedMoisture_pct( double newMoisture_pct );
-   void changedDiastaticPower_lintner( double newDiastaticPower_lintner );
-   void changedProtein_pct( double newProtein_pct );
-   void changedMaxInBatch_pct( double newMaxInBatch_pct );
-   void changedRecommendMash( bool newRecommendMash );
-   void changedIbuGalPerLb( double newIbuGalPerLb );
-   void changedIsMashed( bool newIsMashed );
-   */
+   void typeChanged();
+   void amountChanged();
+   void inventoryChanged();
+   void yieldChanged();
+   void originChanged();
+   void colorChanged();
+   void addAfterBoilChanged();
+   void supplierChanged();
+   void coarseFineDiffChanged();
+   void moisturePercentChanged();
+   void diastaticPowerChanged();
+   void proteinPercentChanged();
+   void maxInBatchPercentChanged();
+   void recommendMashChanged();
+   void isMashedChanged();
+   void ibuGalPerLbChanged();
+   void noteChanged();
 
 protected:
    virtual ItemDB* getDB() const override;

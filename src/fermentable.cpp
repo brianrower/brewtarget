@@ -260,6 +260,7 @@ bool Fermentable::isValidType( const QString& str )
 void Fermentable::setType( Type t )
 {
    getDB()->updateColumn(FermentablesDB::kTypeColumn, types.at(t));
+   emit typeChanged();
 }
 
 
@@ -276,36 +277,43 @@ void Fermentable::setAdditionTime( Fermentable::AdditionTime t )
 void Fermentable::setAddAfterBoil( bool b )
 {
    getDB()->updateColumn(FermentablesDB::kAddAfterBoilColumn, b);
+   emit addAfterBoilChanged();
 }
 
 void Fermentable::setOrigin( const QString& str )
 {
    getDB()->updateColumn(FermentablesDB::kOriginColumn, str);
+   emit originChanged();
 }
 
 void Fermentable::setSupplier( const QString& str)
 {
    getDB()->updateColumn(FermentablesDB::kSupplierColumn, str);
+   emit supplierChanged();
 }
 
 void Fermentable::setNotes( const QString& str )
 {
    getDB()->updateColumn(FermentablesDB::kNotesColumn, str);
+   emit noteChanged();
 }
 
 void Fermentable::setRecommendMash( bool b )
 {
    getDB()->updateColumn(FermentablesDB::kRecommendMashColumn, b);
+   emit recommendMashChanged();
 }
 
 void Fermentable::setIsMashed(bool var)
 {
    getDB()->updateColumn(FermentablesDB::kIsMashedColumn, var);
+   emit isMashedChanged();
 }
 
 void Fermentable::setIbuGalPerLb( double num )
 {
    getDB()->updateColumn(FermentablesDB::kIBUGalPerLbColumn, num);
+   emit ibuGalPerLbChanged();
 }
 
 double Fermentable::equivSucrose_kg() const
@@ -327,7 +335,9 @@ void Fermentable::setAmount_kg( double num )
    }
 
    getDB()->updateColumn(FermentablesDB::kAmountColumn, num);
+   emit amountChanged();
 }
+
 void Fermentable::setInventoryAmount( double num )
 {
    if( num < 0.0 )
@@ -336,6 +346,7 @@ void Fermentable::setInventoryAmount( double num )
       return;
    }
    getDB()->updateInventoryColumn(FermentablesDB::kAmountColumn, num);
+   emit inventoryChanged();
 }
 
 void Fermentable::setYield_pct( double num )
@@ -343,6 +354,7 @@ void Fermentable::setYield_pct( double num )
    if( num >= 0.0 && num <= 100.0 )
    {
       getDB()->updateColumn(FermentablesDB::kYieldColumn, num);
+      emit yieldChanged();
    }
    else
    {
@@ -359,6 +371,7 @@ void Fermentable::setColor_srm( double num )
    }
 
    getDB()->updateColumn(FermentablesDB::kColorColumn, num);
+   emit colorChanged();
 }
 
 void Fermentable::setCoarseFineDiff_pct( double num )
@@ -366,6 +379,7 @@ void Fermentable::setCoarseFineDiff_pct( double num )
    if( num >= 0.0 && num <= 100.0 )
    {
       getDB()->updateColumn(FermentablesDB::kCoarseFineDiffColumn, num);
+      emit coarseFineDiffChanged();
    }
    else
    {
@@ -377,6 +391,7 @@ void Fermentable::setMoisture_pct( double num )
    if( num >= 0.0 && num <= 100.0 )
    {
       getDB()->updateColumn(FermentablesDB::kMoistureColumn, num);
+      emit moisturePercentChanged();
    }
    else
    {
@@ -392,6 +407,7 @@ void Fermentable::setDiastaticPower_lintner( double num )
    }
 
    getDB()->updateColumn(FermentablesDB::kDiastaticPowerColumn, num);
+   emit diastaticPowerChanged();
 
 }
 void Fermentable::setProtein_pct( double num )
@@ -399,6 +415,7 @@ void Fermentable::setProtein_pct( double num )
    if( num >= 0.0 && num <= 100.0 )
    {
       getDB()->updateColumn(FermentablesDB::kProteinColumn, num);
+      emit proteinPercentChanged();
    }
    else
    {
@@ -410,6 +427,7 @@ void Fermentable::setMaxInBatch_pct( double num )
    if( num >= 0.0 && num <= 100.0 )
    {
       getDB()->updateColumn(FermentablesDB::kMaxInBatchColumn, num);
+      emit maxInBatchPercentChanged();
    }
    else
    {

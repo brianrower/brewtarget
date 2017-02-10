@@ -50,14 +50,32 @@ public:
 public slots:
    void save();
    void clearAndClose();
-   void changed(QMetaProperty,QVariant);
+   void onFermNameChanged();
+   void onTypeChanged();
+   void onAmountChanged();
+   void onInventoryChanged();
+   void onYieldChanged();
+   void onOriginChanged();
+   void onColorChanged();
+   void onAddAfterBoilChanged();
+   void onSupplierChanged();
+   void onCoarseFineDiffChanged();
+   void onMoisturePercentChanged();
+   void onDiastaticPowerChanged();
+   void onProteinPercentChanged();
+   void onMaxInBatchPercent();
+   void onRecommendMashChanged();
+   void onIsMashedChanged();
+   void onIBUGalPerLbChanged();
+   void onNoteChanged();
 
 private:
    /*! Updates the UI elements effected by the \b metaProp of
     *  the fermentable we are watching. If \b metaProp is null,
     *  then update all the UI elements at once.
     */
-   void showChanges(QMetaProperty* metaProp = 0);
+   void showChanges();
+   void connectToFerm(Fermentable* f);
 
    Fermentable* _ferm;
 };
