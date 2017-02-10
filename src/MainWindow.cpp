@@ -1208,7 +1208,6 @@ void MainWindow::addMiscToRecipe(Misc* misc)
 void MainWindow::addYeastToRecipe(Yeast* yeast)
 {
    recipeObs->addYeast(yeast);
-   yeastTableModel->addYeast(yeast);
 }
 
 void MainWindow::exportRecipe()
@@ -1500,7 +1499,6 @@ void MainWindow::removeSelectedYeast()
 
     for(i = 0; i < itemsToRemove.size(); i++)
     {
-       yeastTableModel->removeYeast(itemsToRemove.at(i));
        recipeObs->removeIngredient(itemsToRemove.at(i));
     }
 }

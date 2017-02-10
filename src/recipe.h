@@ -199,13 +199,14 @@ public:
    Q_PROPERTY( QList<Water*> waters READ waters /*WRITE*/ /*NOTIFY changed*/ STORED false )
    
    // Relational setters.
+   void removeYeast( Yeast *var);
    void removeIngredient( BeerIngredient *var);
 
    // And you do know what happens next right?
    void addHop( Hop *var );
    void addFermentable( Fermentable* var );
    void addMisc( Misc* var );
-   void addYeast( Yeast* var );
+   void addYeast( Yeast* var, bool noCopy = false, bool transact = true);
    void addWater( Water* var );
    void removeBrewNote(BrewNote* var);
    void removeInstruction( Instruction* ins );
@@ -315,11 +316,12 @@ signals:
    void instructionListChanged();
    void instructionOrderChanged();
    void equipmentChanged();
+   void yeastListChanged();
    
 public slots:
    void acceptFermChange(QMetaProperty prop, QVariant val);
    void acceptHopChange(QMetaProperty prop, QVariant val);
-   void acceptYeastChange(QMetaProperty prop, QVariant val);
+   void onYeastChanged();
    void acceptMashChange(QMetaProperty prop, QVariant val);
 
    void acceptFermChange(Fermentable* ferm);

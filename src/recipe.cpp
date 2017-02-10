@@ -802,9 +802,16 @@ void Recipe::addMisc( Misc* var )
    Database::instance().addToRecipe( this, var );
 }
 
-void Recipe::addYeast( Yeast* var )
+void Recipe::addYeast( Yeast* yeast, bool noCopy /*= false*/, bool transact /*= true*/ )
 {
-   Database::instance().addToRecipe( this, var );
+   Yeast* y = Database::instance().addToRecipe( this, yeast, noCopy, transact);
+   connect( y, &Yeast::changed, this, &Recipe::onYeastChanged );
+   if ( transact && ! noCopy )
+   {
+      recalcOgFg();
+      recalcABV_pct();
+   }
+   emit yeastListChanged();
 }
 
 void Recipe::addWater( Water* var )
@@ -1478,6 +1485,12 @@ void Recipe::setEquipment(Equipment* equip, bool noCopy /*= false*/, bool transa
 }
 
 //=============================Removers========================================
+
+void Recipe::removeYeast( Yeast* yeast)
+{
+   Database::instance().removeIngredientFromRecipe(this, yeast);
+   emit yeastListChanged();
+}
 
 void Recipe::removeIngredient( BeerIngredient* var )
 {
@@ -2203,7 +2216,7 @@ void Recipe::acceptHopChange(Hop* hop)
    recalcIBU();
 }
 
-void Recipe::acceptYeastChange(QMetaProperty prop, QVariant val)
+void Recipe::onYeastChanged()
 {
    recalcOgFg();
    recalcABV_pct();

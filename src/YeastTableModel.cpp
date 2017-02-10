@@ -45,7 +45,7 @@ YeastTableModel::YeastTableModel(QTableView* parent, bool editable)
      editable(editable),
      _inventoryEditable(false),
      parentTableWidget(parent),
-     recObs(0)
+     recObs(nullptr)
 {
    yeastObs.clear();
    setObjectName("yeastTableModel");
@@ -56,28 +56,28 @@ YeastTableModel::YeastTableModel(QTableView* parent, bool editable)
    parentTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
    parentTableWidget->setWordWrap(false);
 
-   connect(headerView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(contextMenu(const QPoint&)));
+   connect(headerView, &QHeaderView::customContextMenuRequested, this, &YeastTableModel::onContextMenu );
+}
+
+void YeastTableModel::onYeastAdded(Yeast* yeast)
+{
+   addYeast(yeast);
 }
 
 void YeastTableModel::addYeast(Yeast* yeast)
 {
    if( yeastObs.contains(yeast) )
       return;
+
    // If we are observing the database, ensure that the item is undeleted and
    // fit to display.
-   if(
-      recObs == 0 &&
-      (
-         yeast->deleted() ||
-         !yeast->display()
-      )
-   )
+   if(recObs == 0 && ( yeast->deleted() || !yeast->display()))
       return;
+
    int size = yeastObs.size();
    beginInsertRows( QModelIndex(), size, size );
    yeastObs.append(yeast);
-   connect( yeast, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(changed(QMetaProperty,QVariant)) );
-   //reset(); // Tell everybody that the table has changed.
+   connect( yeast, &Yeast::yeastChanged, this, &YeastTableModel::onYeastChanged );
    endInsertRows();
 }
 
@@ -92,7 +92,7 @@ void YeastTableModel::observeRecipe(Recipe* rec)
    recObs = rec;
    if( recObs )
    {
-      connect( recObs, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(changed(QMetaProperty,QVariant)) );
+      connect( recObs, &Recipe::yeastListChanged, this, &YeastTableModel::onYeastListChanged );
       addYeasts( recObs->yeasts() );
    }
 }
@@ -104,8 +104,9 @@ void YeastTableModel::observeDatabase(bool val)
       observeRecipe(0);
 
       removeAll();
-      connect( &(Database::instance()), SIGNAL(newYeastSignal(Yeast*)), this, SLOT(addYeast(Yeast*)) );
-      connect( &(Database::instance()), SIGNAL(deletedSignal(Yeast*)), this, SLOT(removeYeast(Yeast*)) );
+
+      connect( &(Database::instance()), &Database::yeastAdded, this, &YeastTableModel::onYeastAdded );
+      connect( &(Database::instance()), &Database::yeastDeleted, this, &YeastTableModel::onYeastDeleted );
       addYeasts( Database::instance().yeasts() );
    }
    else
@@ -117,26 +118,29 @@ void YeastTableModel::observeDatabase(bool val)
 
 void YeastTableModel::addYeasts(QList<Yeast*> yeasts)
 {
-   QList<Yeast*>::iterator i;
-   QList<Yeast*> tmp;
+   QList<Yeast*> addList;
 
-   for( i = yeasts.begin(); i != yeasts.end(); i++ )
+   for( Yeast* y : yeasts )
    {
-      if( !yeastObs.contains(*i) )
-         tmp.append(*i);
+      if( !yeastObs.contains(y) )
+         addList.append(y);
    }
 
-   int size = yeastObs.size();
-   if (size+tmp.size())
+   if (!addList.isEmpty())
    {
-      beginInsertRows( QModelIndex(), size, size+tmp.size()-1 );
-      yeastObs.append(tmp);
+      beginInsertRows( QModelIndex(), 0, yeastObs.size() + addList.size() - 1 );
+      yeastObs.append(addList);
 
-      for( i = tmp.begin(); i != tmp.end(); i++ )
-         connect( *i, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(changed(QMetaProperty,QVariant)) );
+      for( Yeast* y : addList )
+         connect( y, &Yeast::yeastChanged, this, &YeastTableModel::onYeastChanged );
 
       endInsertRows();
    }
+}
+
+void YeastTableModel::onYeastDeleted(Yeast* yeast)
+{
+   removeYeast(yeast);
 }
 
 void YeastTableModel::removeYeast(Yeast* yeast)
@@ -148,7 +152,6 @@ void YeastTableModel::removeYeast(Yeast* yeast)
       beginRemoveRows( QModelIndex(), i, i );
       disconnect( yeast, 0, this, 0 );
       yeastObs.removeAt(i);
-      //reset(); // Tell everybody the table has changed.
       endRemoveRows();
    }
 }
@@ -166,36 +169,28 @@ void YeastTableModel::removeAll()
    }
 }
 
-void YeastTableModel::changed(QMetaProperty prop, QVariant /*val*/)
+void YeastTableModel::onYeastChanged()
 {
-   int i;
-
-   // Find the notifier in the list
    Yeast* yeastSender = qobject_cast<Yeast*>(sender());
-   if( yeastSender )
-   {
-      i = yeastObs.indexOf(yeastSender);
-      if( i < 0 )
-         return;
-
-      emit dataChanged( QAbstractItemModel::createIndex(i, 0),
-                        QAbstractItemModel::createIndex(i, YEASTNUMCOLS-1));
+   if( !yeastSender )
       return;
-   }
 
-   // See if sender is our recipe.
-   Recipe* recSender = qobject_cast<Recipe*>(sender());
-   if( recSender && recSender == recObs )
-   {
-      if( QString(prop.name()) == "yeasts" )
-      {
-         removeAll();
-         addYeasts( recObs->yeasts() );
-      }
-      if( rowCount() > 0 )
-         emit headerDataChanged( Qt::Vertical, 0, rowCount()-1 );
+   int i = yeastObs.indexOf(yeastSender);
+   if( i < 0 )
       return;
-   }
+
+   emit dataChanged( QAbstractItemModel::createIndex(i, 0),
+                     QAbstractItemModel::createIndex(i, columnCount()-1));
+}
+
+void YeastTableModel::onYeastListChanged()
+{
+   removeAll();
+   addYeasts( recObs->yeasts() );
+
+   if( rowCount() > 0 )
+      emit headerDataChanged( Qt::Vertical, 0, rowCount()-1 );
+
 }
 
 int YeastTableModel::rowCount(const QModelIndex& /*parent*/) const
@@ -414,7 +409,6 @@ Unit::unitScale YeastTableModel::displayScale(int column) const
 //      o which should have the side effect of clearing any scale
 void YeastTableModel::setDisplayUnit(int column, Unit::unitDisplay displayUnit)
 {
-   // Yeast* row; // disabled per-cell magic
    QString attribute = generateName(column);
 
    if ( attribute.isEmpty() )
@@ -422,35 +416,17 @@ void YeastTableModel::setDisplayUnit(int column, Unit::unitDisplay displayUnit)
 
    Brewtarget::setOption(attribute,displayUnit,this->objectName(),Brewtarget::UNIT);
    Brewtarget::setOption(attribute,Unit::noScale,this->objectName(),Brewtarget::SCALE);
-
-   /* Disabled cell-specific code
-   for (int i = 0; i < rowCount(); ++i )
-   {
-      row = getYeast(i);
-      row->setDisplayUnit(Unit::noUnit);
-   }
-   */
 }
 
 // Setting the scale should clear any cell-level scaling options
 void YeastTableModel::setDisplayScale(int column, Unit::unitScale displayScale)
 {
-   // Yeast* row; //disabled per-cell magic
-
    QString attribute = generateName(column);
 
    if ( attribute.isEmpty() )
       return;
 
    Brewtarget::setOption(attribute,displayScale,this->objectName(),Brewtarget::SCALE);
-
-   /* disabled cell-specific code
-   for (int i = 0; i < rowCount(); ++i )
-   {
-      row = getYeast(i);
-      row->setDisplayScale(Unit::noScale);
-   }
-   */
 }
 
 QString YeastTableModel::generateName(int column) const
@@ -468,7 +444,7 @@ QString YeastTableModel::generateName(int column) const
    return attribute;
 }
 
-void YeastTableModel::contextMenu(const QPoint &point)
+void YeastTableModel::onContextMenu(const QPoint &point)
 {
    QObject* calledBy = sender();
    QHeaderView* hView = qobject_cast<QHeaderView*>(calledBy);

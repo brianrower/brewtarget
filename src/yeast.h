@@ -150,6 +150,7 @@ signals:
 
    //! \brief Emitted when \c name() changes.
    void changedName(QString);
+   void yeastChanged();
 
 protected:
    virtual ItemDB* getDB() const override;

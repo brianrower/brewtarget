@@ -53,9 +53,6 @@ YeastDialog::YeastDialog(MainWindow* parent)
    connect( pushButton_remove, SIGNAL(clicked()), this, SLOT( removeYeast() ) );
    connect( tableWidget, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT( addYeast(const QModelIndex&) ) );
    connect( qLineEdit_searchBox, SIGNAL(textEdited(QString)), this, SLOT(filterYeasts(QString)));
-
-   yeastTableModel->observeDatabase(true);
-
 }
 
 void YeastDialog::doLayout()
@@ -177,7 +174,7 @@ void YeastDialog::addYeast(const QModelIndex& index)
    Yeast* yeast = yeastTableModel->getYeast(translated.row());
    
    // Adds a copy of yeast.
-   Database::instance().addToRecipe( mainWindow->currentRecipe(), yeast );
+   mainWindow->currentRecipe()->addYeast(yeast);
 }
 
 void YeastDialog::editSelected()

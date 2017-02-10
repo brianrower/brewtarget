@@ -1517,7 +1517,7 @@ Yeast* Database::newYeast(Yeast* other)
    }
 
    emit changed( metaProperty("yeasts"), QVariant() );
-   emit newYeastSignal(tmp);
+   emit yeastAdded(tmp);
 
    return tmp;
 }
@@ -2061,20 +2061,16 @@ void Database::addToRecipe( Recipe* rec, Style* s, bool noCopy, bool transact )
    emit rec->changed( rec->metaProperty("style"), BeerXMLElement::qVariantFromPtr(newStyle) );
 }
 
-void Database::addToRecipe( Recipe* rec, Yeast* y, bool noCopy, bool transact )
+Yeast* Database::addToRecipe( Recipe* rec, Yeast* y, bool noCopy, bool transact )
 {
    try {
       Yeast* newYeast = addIngredientToRecipe<Yeast>( rec, y, noCopy, &allYeasts, true, transact );
-      connect( newYeast, SIGNAL(changed(QMetaProperty,QVariant)), rec, SLOT(acceptYeastChange(QMetaProperty,QVariant)));
-      if ( transact && ! noCopy )
-      {
-         rec->recalcOgFg();
-         rec->recalcABV_pct();
-      }
+      return newYeast;
    }
    catch (QString e) {
       throw;
    }
+   return nullptr;
 }
 
 void Database::addToRecipe( Recipe* rec, QList<Yeast*>yeasts, bool transact )
@@ -4687,7 +4683,7 @@ Yeast* Database::yeastFromXml( QDomNode const& node, Recipe* parent )
       }
 
       if( parent )
-         addToRecipe( parent, ret, true );
+         parent->addYeast(ret, true);
    }
    catch (QString e) {
       Brewtarget::logE(QString("%1 %2").arg(Q_FUNC_INFO).arg(e));
@@ -4701,7 +4697,7 @@ Yeast* Database::yeastFromXml( QDomNode const& node, Recipe* parent )
    if( createdNew )
    {
       emit changed( metaProperty("yeasts"), QVariant() );
-      emit newYeastSignal(ret);
+      emit yeastAdded(ret);
    }
 
    return ret;

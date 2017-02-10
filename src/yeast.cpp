@@ -215,42 +215,56 @@ const QString Yeast::flocculationStringTr() const
 void Yeast::setType( Yeast::Type t )
 {
    getDB()->updateColumn(YeastDB::kTypeColumn, types.at(t));
+   emit yeastChanged();
 }
 
 void Yeast::setForm( Yeast::Form f )
 {
    getDB()->updateColumn(YeastDB::kFormColumn, forms.at(f));
+   emit yeastChanged();
 }
 
 void Yeast::setAmount( double var )
 {
    if( var < 0.0 )
+   {
       Brewtarget::logW( QString("Yeast: amount < 0: %1").arg(var) );
-   else
-      getDB()->updateColumn(YeastDB::kAmountColumn, var);
+      return;
+   }
+
+   getDB()->updateColumn(YeastDB::kAmountColumn, var);
+   emit yeastChanged();
+
 }
 
 void Yeast::setInventoryQuanta( int var )
 {
    if( var < 0.0 )
+   {
       Brewtarget::logW( QString("Yeast: inventory < 0: %1").arg(var) );
-   else
-      getDB()->updateInventoryColumn(YeastDB::kQuantityColumn, var);
+      return;
+   }
+
+   getDB()->updateInventoryColumn(YeastDB::kQuantityColumn, var);
+   emit yeastChanged();
 }
 
 void Yeast::setAmountIsWeight( bool var )
 {
    getDB()->updateColumn(YeastDB::kAmtIsWeightColumn, var);
+   emit yeastChanged();
 }
 
 void Yeast::setLaboratory( const QString& var )
 {
    getDB()->updateColumn(YeastDB::kLaboratoryColumn, var);
+   emit yeastChanged();
 }
 
 void Yeast::setProductID( const QString& var )
 {
    getDB()->updateColumn(YeastDB::kProductIDColumn, var);
+   emit yeastChanged();
 }
 
 void Yeast::setMinTemperature_c( double var )
@@ -259,6 +273,7 @@ void Yeast::setMinTemperature_c( double var )
       return;
 
    getDB()->updateColumn(YeastDB::kMinTempColumn, var);
+   emit yeastChanged();
 }
 
 void Yeast::setMaxTemperature_c( double var )
@@ -267,11 +282,13 @@ void Yeast::setMaxTemperature_c( double var )
       return;
 
    getDB()->updateColumn(YeastDB::kMaxTempColumn, var);
+   emit yeastChanged();
 }
 
 void Yeast::setFlocculation( Yeast::Flocculation f )
 {
    getDB()->updateColumn(YeastDB::kFlocculationColumn, flocculations.at(f));
+   emit yeastChanged();
 }
 
 void Yeast::setAttenuation_pct( double var )
@@ -280,16 +297,19 @@ void Yeast::setAttenuation_pct( double var )
       return;
 
    getDB()->updateColumn(YeastDB::kAttenuationColumn, var);
+   emit yeastChanged();
 }
 
 void Yeast::setNotes( const QString& var )
 {
    getDB()->updateColumn(YeastDB::kNotesColumn, var);
+   emit yeastChanged();
 }
 
 void Yeast::setBestFor( const QString& var )
 {
    getDB()->updateColumn(YeastDB::kBestForColumn, var);
+   emit yeastChanged();
 }
 
 void Yeast::setTimesCultured( int var )
@@ -298,6 +318,7 @@ void Yeast::setTimesCultured( int var )
       return;
 
    getDB()->updateColumn(YeastDB::kTimesCulturedColumn, var);
+   emit yeastChanged();
 }
 
 void Yeast::setMaxReuse( int var )
@@ -306,11 +327,13 @@ void Yeast::setMaxReuse( int var )
       return;
 
    getDB()->updateColumn(YeastDB::kMaxReuseColumn, var);
+   emit yeastChanged();
 }
 
 void Yeast::setAddToSecondary( bool var )
 {
    getDB()->updateColumn(YeastDB::kAddToSecondaryColumn, var);
+   emit yeastChanged();
 }
 
 //========================OTHER METHODS=========================================

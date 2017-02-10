@@ -268,10 +268,8 @@ public:
    //! Add a style, displacing any current style.
    void addToRecipe( Recipe* rec, Style* s, bool noCopy = false, bool transact = true );
    void addToRecipe( Recipe* rec, Water* w, bool noCopy = false, bool transact = true);
-   void addToRecipe( Recipe* rec, Yeast* y, bool noCopy = false, bool transact = true);
-   // NOTE: not possible in this format.
-   //void addToRecipe( Recipe* rec, Instruction* ins );
-   //
+   Yeast* addToRecipe( Recipe* rec, Yeast* y, bool noCopy = false, bool transact = true);
+
    //! \brief bulk add to a recipe.
    void addToRecipe(Recipe* rec, QList<Fermentable*> ferms, bool transact = true);
    void addToRecipe(Recipe* rec, QList<Hop*> hops, bool transact = true);
@@ -396,7 +394,7 @@ signals:
    void newRecipeSignal(Recipe*);
    void newStyleSignal(Style*);
    void newWaterSignal(Water*);
-   void newYeastSignal(Yeast*);
+   void yeastAdded(Yeast*);
    // This is still experimental. Or at least mental
    void newBrewNoteSignal(BrewNote*);
 
@@ -408,7 +406,7 @@ signals:
    void deletedSignal(Recipe*);
    void deletedSignal(Style*);
    void deletedSignal(Water*);
-   void deletedSignal(Yeast*);
+   void yeastDeleted(Yeast*);
    void deletedSignal(BrewNote*);
    void deletedSignal(MashStep*);
 

@@ -94,18 +94,19 @@ public:
    void setDisplayScale(int column, Unit::unitScale displayScale);
    QString generateName(int column) const;
 
-public slots:
-   //! \brief Add a \c yeast to the model.
-   void addYeast(Yeast* yeast);
-   //! \brief Remove a \c yeast from the model.
-   void removeYeast(Yeast* yeast);
-
-   void contextMenu(const QPoint &point);
 private slots:
-   //! \brief Catch changes to Recipe, Database, and Yeast.
-   void changed(QMetaProperty, QVariant);
+   //! \brief Add a \c yeast to the model.
+   void onYeastAdded(Yeast* yeast);
+   //! \brief Remove a \c yeast from the model.
+   void onYeastDeleted(Yeast* yeast);
+   void onContextMenu(const QPoint &point);
+   void onYeastChanged();
+   void onYeastListChanged();
    
 private:
+   void addYeast(Yeast* yeast);
+   void removeYeast(Yeast* yeast);
+
    bool editable;
    bool _inventoryEditable;
    QList<Yeast*> yeastObs;
