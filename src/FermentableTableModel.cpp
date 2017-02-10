@@ -66,7 +66,7 @@ FermentableTableModel::FermentableTableModel(QTableView* parent, bool editable)
    parentTableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
    parentTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
    parentTableWidget->setWordWrap(false);
-   connect(headerView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(contextMenu(const QPoint&)));
+   connect(headerView, &QHeaderView::customContextMenuRequested, this, &FermentableTableModel::onContextMenu);
 }
 
 void FermentableTableModel::observeRecipe(Recipe* rec)
@@ -80,7 +80,7 @@ void FermentableTableModel::observeRecipe(Recipe* rec)
    recObs = rec;
    if( recObs )
    {
-      connect( recObs, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(changed(QMetaProperty,QVariant)) );
+      connect( recObs, &Recipe::fermentableListChanged, this, &FermentableTableModel::onFermentableListChanged );
       addFermentables( recObs->fermentables() );
    }
 }
@@ -93,8 +93,8 @@ void FermentableTableModel::observeDatabase(bool val)
       observeRecipe(0);
 
       removeAll();
-      connect( &(Database::instance()), SIGNAL(newFermentableSignal(Fermentable*)), this, SLOT(addFermentable(Fermentable*)) );
-      connect( &(Database::instance()), SIGNAL(deletedSignal(Fermentable*)), this, SLOT(removeFermentable(Fermentable*)) );
+      connect( &(Database::instance()), &Database::fermentableAdded, this, &FermentableTableModel::onFermentableAdded );
+      connect( &(Database::instance()), &Database::fermentableDeleted, this, &FermentableTableModel::onFermentableDeleted );
       addFermentables( Database::instance().fermentables() );
    }
    else
@@ -102,6 +102,16 @@ void FermentableTableModel::observeDatabase(bool val)
       disconnect( &(Database::instance()), 0, this, 0 );
       removeAll();
    }
+}
+
+void FermentableTableModel::onFermentableDeleted(Fermentable* f)
+{
+   removeFermentable(f);
+}
+
+void FermentableTableModel::onFermentableAdded(Fermentable* f)
+{
+   addFermentable(f);
 }
 
 void FermentableTableModel::addFermentable(Fermentable* ferm)
@@ -123,33 +133,31 @@ void FermentableTableModel::addFermentable(Fermentable* ferm)
    int size = fermObs.size();
    beginInsertRows( QModelIndex(), size, size );
    fermObs.append(ferm);
-   connect( ferm, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(changed(QMetaProperty,QVariant)) );
+   connect( ferm, &Fermentable::fermentableChanged, this, &FermentableTableModel::onFermentableChanged );
    totalFermMass_kg += ferm->amount_kg();
-   //reset(); // Tell everybody that the table has changed.
    endInsertRows();
 }
 
 void FermentableTableModel::addFermentables(QList<Fermentable*> ferms)
 {
-   QList<Fermentable*>::iterator i;
    QList<Fermentable*> tmp;
 
-   for( i = ferms.begin(); i != ferms.end(); i++ )
+   for( Fermentable* f : ferms )
    {
-      if( !fermObs.contains(*i) )
-         tmp.append(*i);
+      if( !fermObs.contains(f) )
+         tmp.append(f);
    }
 
    int size = fermObs.size();
-   if (size+tmp.size())
+   if (!tmp.isEmpty())
    {
       beginInsertRows( QModelIndex(), size, size+tmp.size()-1 );
       fermObs.append(tmp);
 
-      for( i = tmp.begin(); i != tmp.end(); i++ )
+      for(Fermentable* f : tmp )
       {
-         connect( *i, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(changed(QMetaProperty,QVariant)) );
-         totalFermMass_kg += (*i)->amount_kg();
+         connect( f, &Fermentable::fermentableChanged, this, &FermentableTableModel::onFermentableChanged );
+         totalFermMass_kg += f->amount_kg();
       }
 
       endInsertRows();
@@ -208,35 +216,25 @@ void FermentableTableModel::setDisplayPercentages(bool var)
    displayPercentages = var;
 }
 
-void FermentableTableModel::changed(QMetaProperty prop, QVariant /*val*/)
+void FermentableTableModel::onFermentableChanged()
 {
-   int i;
-
-   // Is sender one of our fermentables?
    Fermentable* fermSender = qobject_cast<Fermentable*>(sender());
-   if( fermSender )
-   {
-      i = fermObs.indexOf(fermSender);
-      if( i < 0 )
-         return;
-
-      updateTotalGrains();
-      emit dataChanged( QAbstractItemModel::createIndex(i, 0),
-                        QAbstractItemModel::createIndex(i, FERMNUMCOLS-1));
-      if( displayPercentages && rowCount() > 0 )
-         emit headerDataChanged( Qt::Vertical, 0, rowCount()-1 );
-      //reset();
+   int i = fermObs.indexOf(fermSender);
+   if( i < 0 )
       return;
-   }
 
-   // See if our recipe gained or lost fermentables.
-   Recipe* recSender = qobject_cast<Recipe*>(sender());
-   if( recSender && recSender == recObs && QString(prop.name()) == "fermentables" )
-   {
-      removeAll();
-      addFermentables( recObs->fermentables() );
-      return;
-   }
+   updateTotalGrains();
+   emit dataChanged( QAbstractItemModel::createIndex(i, 0),
+                     QAbstractItemModel::createIndex(i, FERMNUMCOLS-1));
+
+   if( displayPercentages && rowCount() > 0 )
+      emit headerDataChanged( Qt::Vertical, 0, rowCount()-1 );
+}
+
+void FermentableTableModel::onFermentableListChanged()
+{
+   removeAll();
+   addFermentables( recObs->fermentables() );
 }
 
 int FermentableTableModel::rowCount(const QModelIndex& /*parent*/) const
@@ -538,7 +536,7 @@ QString FermentableTableModel::generateName(int column) const
 }
 
 // oofrab
-void FermentableTableModel::contextMenu(const QPoint &point)
+void FermentableTableModel::onContextMenu(const QPoint &point)
 {
    QObject* calledBy = sender();
    QHeaderView* hView = qobject_cast<QHeaderView*>(calledBy);

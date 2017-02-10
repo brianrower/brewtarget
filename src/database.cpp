@@ -1106,7 +1106,7 @@ BrewNote* Database::newBrewNote(BrewNote* other, bool signal)
       if ( signal )
       {
          emit changed( metaProperty("brewNotes"), QVariant() );
-         emit newBrewNoteSignal(tmp);
+         emit noteAdded(tmp);
       }
 
    }
@@ -1137,7 +1137,7 @@ BrewNote* Database::newBrewNote(Recipe* parent, bool signal)
    if ( signal )
    {
       emit changed( metaProperty("brewNotes"), QVariant() );
-      emit newBrewNoteSignal(tmp);
+      emit noteAdded(tmp);
    }
 
    return tmp;
@@ -1174,7 +1174,7 @@ Fermentable* Database::newFermentable(Fermentable* other)
 
    if ( tmp ) {
       emit changed( metaProperty("fermentables"), QVariant() );
-      emit newFermentableSignal(tmp);
+      emit fermentableAdded(tmp);
    }
    else {
       Brewtarget::logE( QString("%1 couldn't copy %2").arg(Q_FUNC_INFO).arg(other->name()));
@@ -1194,7 +1194,7 @@ Hop* Database::newHop(Hop* other)
 
    if ( tmp ) {
       emit changed( metaProperty("hops"), QVariant() );
-      emit newHopSignal(tmp);
+      emit hopAdded(tmp);
    }
    else {
       Brewtarget::logE( QString("%1 could not %2 hop")
@@ -1285,7 +1285,7 @@ Mash* Database::newMash(Mash* other, bool displace)
    if ( other )
       sqlDatabase().commit();
    emit changed( metaProperty("mashs"), QVariant() );
-   emit newMashSignal(tmp);
+   emit mashAdded(tmp);
 
    return tmp;
 }
@@ -1316,7 +1316,7 @@ Mash* Database::newMash(Recipe* parent, bool transact)
       sqlDatabase().commit();
 
    emit changed( metaProperty("mashs"), QVariant() );
-   emit newMashSignal(tmp);
+   emit mashAdded(tmp);
 
    connect( tmp, SIGNAL(changed(QMetaProperty,QVariant)), parent, SLOT(acceptMashChange(QMetaProperty,QVariant)) );
    return tmp;
@@ -1383,7 +1383,7 @@ Misc* Database::newMisc(Misc* other)
 
    if ( tmp ) {
       emit changed( metaProperty("miscs"), QVariant() );
-      emit newMiscSignal(tmp);
+      emit miscAdded(tmp);
    }
    else {
       Brewtarget::logE( QString("%1 could not %2 misc")
@@ -1413,7 +1413,7 @@ Recipe* Database::newRecipe()
 
    sqlDatabase().commit();
    emit changed( metaProperty("recipes"), QVariant() );
-   emit newRecipeSignal(tmp);
+   emit recipeAdded(tmp);
 
    return tmp;
 }
@@ -1424,6 +1424,8 @@ Recipe* Database::newRecipe()
 Recipe* Database::newRecipe(Recipe* other)
 {
    Recipe* tmp;
+
+   //TODO: this could be a DB copy and then re-generate Recipie class from DB
 
    sqlDatabase().transaction();
    try {
@@ -1451,7 +1453,7 @@ Recipe* Database::newRecipe(Recipe* other)
 
    sqlDatabase().commit();
    emit changed( metaProperty("recipes"), QVariant() );
-   emit newRecipeSignal(tmp);
+   emit recipeAdded(tmp);
 
    return tmp;
 }
@@ -1473,7 +1475,7 @@ Style* Database::newStyle(Style* other)
    }
 
    emit changed( metaProperty("styles"), QVariant() );
-   emit newStyleSignal(tmp);
+   emit styleAdded(tmp);
 
    return tmp;
 }
@@ -1495,7 +1497,7 @@ Water* Database::newWater(Water* other)
    }
 
    emit changed( metaProperty("waters"), QVariant() );
-   emit newWaterSignal(tmp);
+   emit waterAdded(tmp);
 
    return tmp;
 }
@@ -1810,6 +1812,7 @@ QMap<int, double> Database::getInventory(const Brewtarget::DBTable table) const
 // Add to recipe ==============================================================
 void Database::addToRecipe( Recipe* rec, Equipment* e, bool noCopy, bool transact )
 {
+   //TODO: move to equipment specific db
    Equipment* newEquip = e;
 
    if( e == 0 )
@@ -3904,7 +3907,7 @@ Fermentable* Database::fermentableFromXml( QDomNode const& node, Recipe* parent 
          throw QString("Could not change the type of the fermentable");
 
       if( parent )
-         addToRecipe( parent, ret, true );
+         parent->addFermentable(ret, true);
    }
    catch (QString e) {
       if ( ! parent )
@@ -3920,7 +3923,7 @@ Fermentable* Database::fermentableFromXml( QDomNode const& node, Recipe* parent 
    if( createdNew )
    {
       emit changed( metaProperty("fermentables"), QVariant() );
-      emit newFermentableSignal(ret);
+      emit fermentableAdded(ret);
    }
 
    return ret;
@@ -4078,7 +4081,7 @@ Hop* Database::hopFromXml( QDomNode const& node, Recipe* parent )
    if( createdNew )
    {
       emit changed( metaProperty("hops"), QVariant() );
-      emit newHopSignal(ret);
+      emit hopAdded(ret);
    }
    return ret;
 }
@@ -4165,7 +4168,7 @@ Mash* Database::mashFromXml( QDomNode const& node, Recipe* parent )
    blockSignals(false);
 
    emit changed( metaProperty("mashs"), QVariant() );
-   emit newMashSignal(ret);
+   emit mashAdded(ret);
    emit ret->mashStepsChanged();
 
    return ret;
@@ -4355,7 +4358,7 @@ Misc* Database::miscFromXml( QDomNode const& node, Recipe* parent )
    if( createdNew )
    {
       emit changed( metaProperty("miscs"), QVariant() );
-      emit newMiscSignal(ret);
+      emit miscAdded(ret);
    }
    return ret;
 }
@@ -4460,7 +4463,7 @@ Recipe* Database::recipeFromXml( QDomNode const& node )
       ret->recalcAll();
       blockSignals(false);
 
-      emit newRecipeSignal(ret);
+      emit recipeAdded(ret);
 
       return ret;
    }
@@ -4545,7 +4548,7 @@ Style* Database::styleFromXml( QDomNode const& node, Recipe* parent )
    if( createdNew )
    {
       emit changed( metaProperty("styles"), QVariant() );
-      emit newStyleSignal(ret);
+      emit styleAdded(ret);
    }
 
    return ret;
@@ -4595,7 +4598,7 @@ Water* Database::waterFromXml( QDomNode const& node, Recipe* parent )
    if( createdNew )
    {
       emit changed( metaProperty("waters"), QVariant() );
-      emit newWaterSignal(ret);
+      emit waterAdded(ret);
    }
 
    return ret;

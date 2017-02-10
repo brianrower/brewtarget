@@ -792,9 +792,10 @@ void Recipe::addHop( Hop *var )
    Database::instance().addToRecipe( this, var );
 }
 
-void Recipe::addFermentable( Fermentable* var )
+void Recipe::addFermentable( Fermentable* var, bool noCopy /*= false*/, bool transact /* = true */)
 {
-   Database::instance().addToRecipe( this, var );
+   Database::instance().addToRecipe( this, var, noCopy, transact );
+   emit fermentableListChanged();
 }
 
 void Recipe::addMisc( Misc* var )
@@ -1490,6 +1491,12 @@ void Recipe::removeYeast( Yeast* yeast)
 {
    Database::instance().removeIngredientFromRecipe(this, yeast);
    emit yeastListChanged();
+}
+
+void Recipe::removeFermentable(Fermentable* ferm)
+{
+   Database::instance().removeIngredientFromRecipe( this, ferm );
+   emit fermentableListChanged();
 }
 
 void Recipe::removeIngredient( BeerIngredient* var )
@@ -2193,6 +2200,7 @@ QList<QString> Recipe::getReagents( QList<MashStep*> msteps )
 
 void Recipe::onEquipmentChanged()
 {
+   //TODO:recalc all could be a connected slot
    recalcAll();
 }
 

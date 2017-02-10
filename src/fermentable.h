@@ -173,6 +173,7 @@ public:
    void setIsMashed(bool var);
 
 signals:
+   void fermentableChanged();
    void typeChanged();
    void amountChanged();
    void inventoryChanged();

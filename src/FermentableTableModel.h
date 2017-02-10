@@ -95,19 +95,22 @@ public:
    
    QTableView* parentTableWidget;
    
-public slots:
-   //! \brief Watch \b ferm for changes.
-   void addFermentable(Fermentable* ferm);
-   //! \returns true if "ferm" is successfully found and removed.
-   bool removeFermentable(Fermentable* ferm);
-   //! \brief pops the context menu for changing units and scales
-   void contextMenu(const QPoint &point);
-
 private slots:
-   //! \brief Catch changes to Recipe, Database, and Fermentable.
-   void changed(QMetaProperty, QVariant);
+   //! \brief pops the context menu for changing units and scales
+   void onContextMenu(const QPoint &point);
+
+   void onFermentableChanged();
+   void onFermentableListChanged();
+   void onFermentableDeleted(Fermentable* f);
+   void onFermentableAdded(Fermentable* f);
 
 private:
+   //! \brief Watch \b ferm for changes.
+   void addFermentable(Fermentable* ferm);
+
+   //! \returns true if "ferm" is successfully found and removed.
+   bool removeFermentable(Fermentable* ferm);
+
    //! \brief Recalculate the total amount of grains in the model.
    void updateTotalGrains();
    QString generateName(int column) const;

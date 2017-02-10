@@ -72,6 +72,26 @@ Fermentable::Fermentable()
    : BeerIngredient()
 {
    _db.reset(new FermentablesDB());
+
+   connect( this, &Fermentable::folderChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::nameChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::typeChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::amountChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::inventoryChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::yieldChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::originChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::colorChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::addAfterBoilChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::supplierChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::coarseFineDiffChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::moisturePercentChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::diastaticPowerChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::proteinPercentChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::maxInBatchPercentChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::recommendMashChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::isMashedChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::ibuGalPerLbChanged, this, &Fermentable::fermentableChanged );
+   connect( this, &Fermentable::noteChanged, this, &Fermentable::fermentableChanged );
 }
 
 Fermentable::Fermentable( Fermentable const& other )

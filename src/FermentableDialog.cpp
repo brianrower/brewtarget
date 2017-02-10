@@ -203,7 +203,7 @@ void FermentableDialog::addFermentable(const QModelIndex& index)
    
    Fermentable *ferm = fermTableModel->getFermentable(translated.row());
    
-   Database::instance().addToRecipe( mainWindow->currentRecipe(), ferm );
+   mainWindow->currentRecipe()->addFermentable(ferm);
 }
 
 void FermentableDialog::newFermentable(QString folder)

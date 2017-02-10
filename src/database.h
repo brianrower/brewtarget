@@ -387,28 +387,28 @@ public:
 signals:
    void changed(QMetaProperty prop, QVariant value);
    void equipmentAdded(Equipment*);
-   void newFermentableSignal(Fermentable*);
-   void newHopSignal(Hop*);
-   void newMashSignal(Mash*);
-   void newMiscSignal(Misc*);
-   void newRecipeSignal(Recipe*);
-   void newStyleSignal(Style*);
-   void newWaterSignal(Water*);
+   void fermentableAdded(Fermentable*);
+   void hopAdded(Hop*);
+   void mashAdded(Mash*);
+   void miscAdded(Misc*);
+   void recipeAdded(Recipe*);
+   void styleAdded(Style*);
+   void waterAdded(Water*);
    void yeastAdded(Yeast*);
    // This is still experimental. Or at least mental
-   void newBrewNoteSignal(BrewNote*);
+   void noteAdded(BrewNote*);
 
    void equipmentDeleted(Equipment*);
-   void deletedSignal(Fermentable*);
-   void deletedSignal(Hop*);
-   void deletedSignal(Mash*);
-   void deletedSignal(Misc*);
-   void deletedSignal(Recipe*);
-   void deletedSignal(Style*);
-   void deletedSignal(Water*);
+   void fermentableDeleted(Fermentable*);
+   void hopDeleted(Hop*);
+   void mashDeleted(Mash*);
+   void miscDeleted(Misc*);
+   void recipeDeleted(Recipe*);
+   void styleDeleted(Style*);
+   void waterDeleted(Water*);
    void yeastDeleted(Yeast*);
-   void deletedSignal(BrewNote*);
-   void deletedSignal(MashStep*);
+   void noteDeleted(BrewNote*);
+   void mashStepDeleted(MashStep*);
 
    // MashSteps need signals too
    void newMashStepSignal(MashStep*);

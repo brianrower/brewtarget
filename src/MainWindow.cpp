@@ -1190,7 +1190,6 @@ void MainWindow::updateRecipeEfficiency()
 void MainWindow::addFermentableToRecipe(Fermentable* ferm)
 {
    recipeObs->addFermentable(ferm);
-   fermTableModel->addFermentable(ferm);
 }
 
 void MainWindow::addHopToRecipe(Hop *hop)
@@ -1375,8 +1374,7 @@ void MainWindow::removeSelectedFermentable()
 
     for(i = 0; i < itemsToRemove.size(); i++)
     {
-        fermTableModel->removeFermentable(itemsToRemove.at(i));
-        recipeObs->removeIngredient(itemsToRemove.at(i));
+        recipeObs->removeFermentable(itemsToRemove.at(i));
     }
 }
 
