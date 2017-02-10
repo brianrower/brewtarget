@@ -27,9 +27,14 @@
 EquipmentListModel::EquipmentListModel(QWidget* parent)
    : QAbstractListModel(parent), recipe(0)
 {
-   connect( &(Database::instance()), SIGNAL(newEquipmentSignal(Equipment*)), this, SLOT(addEquipment(Equipment*)) );
-   connect( &(Database::instance()), SIGNAL(deletedSignal(Equipment*)), this, SLOT(removeEquipment(Equipment*)) );
+   connect( &(Database::instance()), &Database::equipmentAdded, this, &EquipmentListModel::onEquipmentAdded );
+   connect( &(Database::instance()), &Database::equipmentDeleted, this, &EquipmentListModel::onEquipmentDeleted );
    repopulateList();
+}
+
+void EquipmentListModel::onEquipmentAdded(Equipment* eq)
+{
+   addEquipment(eq);
 }
 
 void EquipmentListModel::addEquipment(Equipment* equipment)
@@ -44,37 +49,41 @@ void EquipmentListModel::addEquipment(Equipment* equipment)
    int size = equipments.size();
    beginInsertRows( QModelIndex(), size, size );
    equipments.append(equipment);
-   connect( equipment, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(equipChanged(QMetaProperty,QVariant)) );
+   connect( equipment, &Equipment::nameChanged, this, &EquipmentListModel::onEquipmentNameChanged );
    endInsertRows();
 }
 
 void EquipmentListModel::addEquipments(QList<Equipment*> equips)
 {
-   QList<Equipment*>::iterator i;
    QList<Equipment*> tmp;
    
-   for( i = equips.begin(); i != equips.end(); i++ )
+   for( Equipment* e : equips )
    {
       // if the equipment is not already in the list and
       // if the equipment has not been deleted and
       // if the equipment is to be displayed, then append it
-      if( !equipments.contains(*i) &&
-          !(*i)->deleted()         &&  
-           (*i)->display() )
-         tmp.append(*i);
+      if( !equipments.contains(e)
+               && !e->deleted()
+               && e->display() )
+         tmp.append(e);
    }
    
    int size = equipments.size();
-   if (size+tmp.size())
+   if (tmp.size())
    {
       beginInsertRows( QModelIndex(), size, size+tmp.size()-1 );
       equipments.append(tmp);
    
-      for( i = tmp.begin(); i != tmp.end(); i++ )
-         connect( *i, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(equipChanged(QMetaProperty,QVariant)) );
+      for( Equipment* e : tmp )
+         connect( e, &Equipment::nameChanged, this, &EquipmentListModel::onEquipmentNameChanged );
    
       endInsertRows();
    }
+}
+
+void EquipmentListModel::onEquipmentDeleted(Equipment* eq)
+{
+   removeEquipment(eq);
 }
 
 void EquipmentListModel::removeEquipment(Equipment* equipment)
@@ -102,33 +111,15 @@ void EquipmentListModel::removeAll()
    }
 }
 
-void EquipmentListModel::equipChanged(QMetaProperty prop, QVariant val)
+void EquipmentListModel::onEquipmentNameChanged()
 {   
    Equipment* eSend = qobject_cast<Equipment*>(sender());
-   
-   // NOTE: how to get around the issue that the sender might live in
-   // a different thread and therefore always cause eSend == 0?
-   if( eSend == 0 )
+   if( eSend )
       return;
    
-   QString propName(prop.name());
-   if( propName == "name" )
-   {
-      int ndx = equipments.indexOf(eSend);
-      if( ndx >= 0 )
-         emit dataChanged( createIndex(ndx,0), createIndex(ndx,0) );
-   }
-}
-
-void EquipmentListModel::recChanged(QMetaProperty prop, QVariant val)
-{
-   QString propName(prop.name());
-   if( propName == "equipment" )
-   {
-      Equipment* newEquip = qobject_cast<Equipment*>(BeerXMLElement::extractPtr(val));
-      // Now do something with the equipment.
-      Q_UNUSED(newEquip); // Until then, this will keep the compiler happy
-   }
+   int ndx = equipments.indexOf(eSend);
+   if( ndx >= 0 )
+      emit dataChanged( createIndex(ndx,0), createIndex(ndx,0) );
 }
 
 void EquipmentListModel::repopulateList()
@@ -161,12 +152,7 @@ QModelIndex EquipmentListModel::find(Equipment* e)
 
 void EquipmentListModel::observeRecipe(Recipe* rec)
 {
-   if( recipe )
-      disconnect( recipe, 0, this, 0 );
    recipe = rec;
-   
-   if( recipe )
-      connect( recipe, SIGNAL(changed(QMetaProperty,QVariant)), this, SLOT(recChanged(QMetaProperty,QVariant)) );
 }
 
 int EquipmentListModel::rowCount( QModelIndex const& parent ) const

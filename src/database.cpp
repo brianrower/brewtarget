@@ -1154,7 +1154,7 @@ Equipment* Database::newEquipment(Equipment* other)
 
    if ( tmp ) {
       emit changed( metaProperty("equipments"), QVariant() );
-      emit newEquipmentSignal(tmp);
+      emit equipmentAdded(tmp);
    }
    else {
       Brewtarget::logE( QString("%1 couldn't copy %2").arg(Q_FUNC_INFO).arg(other->name()));
@@ -3845,7 +3845,7 @@ Equipment* Database::equipmentFromXml( QDomNode const& node, Recipe* parent )
    if( createdNew )
    {
       emit changed( metaProperty("equipments"), QVariant() );
-      emit newEquipmentSignal(ret);
+      emit equipmentAdded(ret);
    }
 
    return ret;

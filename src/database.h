@@ -386,7 +386,7 @@ public:
                         int Portnum, Brewtarget::DBTypes newType);
 signals:
    void changed(QMetaProperty prop, QVariant value);
-   void newEquipmentSignal(Equipment*);
+   void equipmentAdded(Equipment*);
    void newFermentableSignal(Fermentable*);
    void newHopSignal(Hop*);
    void newMashSignal(Mash*);
@@ -398,7 +398,7 @@ signals:
    // This is still experimental. Or at least mental
    void newBrewNoteSignal(BrewNote*);
 
-   void deletedSignal(Equipment*);
+   void equipmentDeleted(Equipment*);
    void deletedSignal(Fermentable*);
    void deletedSignal(Hop*);
    void deletedSignal(Mash*);

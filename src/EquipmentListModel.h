@@ -62,15 +62,17 @@ public:
    //! \brief Return the index of a particular equipment.
    QModelIndex find(Equipment* e);
    
-public slots:
-   void recChanged(QMetaProperty,QVariant);
-   void equipChanged(QMetaProperty,QVariant);
+private slots:
+   void onEquipmentNameChanged();
+   void onEquipmentAdded(Equipment* eq);
+   void onEquipmentDeleted(Equipment* eq);
+   
+private:
    //! Add an equipment to the list.
    void addEquipment(Equipment* equipment);
    //! Remove an equipment from the list.
    void removeEquipment(Equipment* equipment);
-   
-private:
+
    QList<Equipment*> equipments;
    Recipe* recipe;
    
