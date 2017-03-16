@@ -646,11 +646,6 @@ double BrewNote::boilOff_l() const
    return get(kBoilOff).toDouble();
 }
 
-int BrewNote::key() const
-{
-   return _key;
-}
-
 // calculators -- these kind of act as both setters and getters.  Likely bad
 // form
 double BrewNote::calculateEffIntoBK_pct()
