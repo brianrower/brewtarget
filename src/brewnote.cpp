@@ -160,6 +160,46 @@ BrewNote::BrewNote(Brewtarget::DBTable table, int key)
    : BeerXMLElement(table, key)
 {
    loading = false;
+
+   setBrewDate(QDateTime::fromString(get(kBrewDate).toString(),Qt::ISODate));
+   setFermentDate(QDateTime::fromString(get(kFermentDate).toString(), Qt::ISODate));
+   setSg(get(kSpecificGravity).toDouble());
+   setABV(get(kABV).toDouble());
+   setVolumeIntoBK_l(get(kVolumeIntoBoil).toDouble());
+   setEffIntoBK_pct(get(kEfficiencyIntoBoil).toDouble());
+   setBrewhouseEff_pct(get(kBrewhouseEfficiency).toDouble());
+   setStrikeTemp_c(get(kStrikeTemp).toDouble());
+   setMashFinTemp_c(get(kMashFinalTemp).toDouble());
+   setOg(get(kOriginalGravity).toDouble());
+   setPostBoilVolume_l(get(kPostBoilVolume).toDouble());
+   setVolumeIntoFerm_l(get(kVolumeIntoFermenter).toDouble());
+   setPitchTemp_c(get(kPitchTemp).toDouble());
+   setFg(get(kFinalGravity).toDouble());
+   setFinalVolume_l(get(kFinalVolume).toDouble());
+   setBoilOff_l(get(kBoilOff).toDouble());
+   setNotes(get(kNotes).toString());
+}
+
+BrewNote::BrewNote(BrewNote const& other)
+   : BeerXMLElement(other)
+{
+   setBrewDate(other.brewDate());
+   setFermentDate(other.fermentDate());
+   setSg(other.sg());
+   setABV(other.abv());
+   setVolumeIntoBK_l(other.volumeIntoBK_l());
+   setEffIntoBK_pct(other.effIntoBK_pct());
+   setBrewhouseEff_pct(other.brewhouseEff_pct());
+   setStrikeTemp_c(other.strikeTemp_c());
+   setMashFinTemp_c(other.mashFinTemp_c());
+   setOg(other.og());
+   setPostBoilVolume_l(other.postBoilVolume_l());
+   setVolumeIntoFerm_l(other.volumeIntoFerm_l());
+   setPitchTemp_c(other.pitchTemp_c());
+   setFg(other.fg());
+   setFinalVolume_l(other.finalVolume_l());
+   setBoilOff_l(other.boilOff_l());
+   setNotes(other.notes());
 }
 
 void BrewNote::populateNote(Recipe* parent)
@@ -266,11 +306,6 @@ void BrewNote::recalculateEff(Recipe* parent)
 
    calculateEffIntoBK_pct();
    calculateBrewHouseEff_pct();
-}
-
-BrewNote::BrewNote(BrewNote const& other)
-   : BeerXMLElement(other)
-{
 }
 
 // Setters=====================================================================
