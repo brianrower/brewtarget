@@ -185,6 +185,24 @@ private:
    QHash<QString,QString> NameToXMLTag();
    static QHash<QString,QString> tagToPropHash();
    static QHash<QString,QString> tagToProp;
+
+   QDateTime _brewDate;
+   QDateTime _fermentDate;
+   double _sg;
+   double _abv;
+   double _volumeIntoBoil;
+   double _effIntoBoil;
+   double _brewhouseEfft;
+   double _strikeTemp;
+   double _mashFinTemp;
+   double _og;
+   double _postBoilVolume;
+   double _volumeIntoFerm;
+   double _pitchTemp;
+   double _fg;
+   double _finalVolume;
+   double _boilOff;
+   QString _notes;
 };
 
 Q_DECLARE_METATYPE( QList<BrewNote*> )
