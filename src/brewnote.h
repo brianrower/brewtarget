@@ -171,9 +171,12 @@ public:
    double projPoints() const;
    double projFermPoints() const;
    double projAtten() const;
+
+   void save();
    
 signals:
    void brewDateChanged(const QDateTime&);
+   void saved();
 
 private:
    BrewNote(Brewtarget::DBTable table, int key);

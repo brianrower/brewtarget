@@ -35,7 +35,11 @@
 #include "equipment.h"
 #include "mash.h"
 #include "yeast.h"
+#include "database.h"
 
+#define SUPER BeerXMLElement
+
+/************* Columns *************/
 const QString kBrewDate("brewDate");
 const QString kFermentDate("fermentDate");
 const QString kNotes("notes");
@@ -65,9 +69,6 @@ const QString kProjectedEfficiency("projected_eff");
 const QString kProjectedABV("projected_abv");
 const QString kProjectedAttenuation("projected_atten");
 const QString kBoilOff("boil_off");
-const QString kSugarKg("sugar_kg");
-const QString kSugarKg_IgnoreEff("sugar_kg_ignoreEfficiency");
-
 
 /************** Props **************/
 const QString kBrewDateProp("brewDate");
@@ -99,6 +100,10 @@ const QString kFinalVolumeProp("finalVolume_l");
 const QString kProjectedVolumeIntoBoilProp("projVolIntoBK_l");
 const QString kProjectedVolumeIntoFermenterProp("projVolIntoFerm_l");
 const QString kBoilOffProp("boilOff_l");
+
+
+const QString kSugarKg("sugar_kg");
+const QString kSugarKg_IgnoreEff("sugar_kg_ignoreEfficiency");
 
 QHash<QString,QString> BrewNote::tagToProp = BrewNote::tagToPropHash();
 
@@ -772,3 +777,41 @@ double BrewNote::calculateActualABV_pct()
    return abv;
 }
 
+void BrewNote::save()
+{
+   QVariantMap map = SUPER::getColumnValueMap();
+   map.insert(kBrewDate, brewDate().toString(Qt::ISODate));
+   map.insert(kFermentDate, fermentDate().toString(Qt::ISODate));
+   map.insert(kNotes, notes());
+   map.insert(kSpecificGravity, sg());
+   map.insert(kVolumeIntoBoil, volumeIntoBK_l());
+   map.insert(kOriginalGravity, og());
+   map.insert(kVolumeIntoFermenter, volumeIntoFerm_l());
+   map.insert(kFinalGravity, fg());
+   map.insert(kProjectedPoints, projPoints());
+   map.insert(kProjectedFermentationPoints, projFermPoints());
+   map.insert(kABV, abv());
+   map.insert(kEfficiencyIntoBoil, effIntoBK_pct());
+   map.insert(kBrewhouseEfficiency, brewhouseEff_pct());
+   map.insert(kStrikeTemp, strikeTemp_c());
+   map.insert(kMashFinalTemp, mashFinTemp_c());
+   map.insert(kPostBoilVolume, postBoilVolume_l());
+   map.insert(kPitchTemp, pitchTemp_c());
+   map.insert(kFinalVolume, finalVolume_l());
+   map.insert(kProjectedBoilGravity, projBoilGrav());
+   map.insert(kProjectedVolumeIntoBoil, projVolIntoBK_l());
+   map.insert(kProjectedStrikeTemp, projStrikeTemp_c());
+   map.insert(kProjectedMashFinishTemp, projMashFinTemp_c());
+   map.insert(kProjectedOG, projOg());
+   map.insert(kProjectedVolumeIntoFermenter, projVolIntoFerm_l());
+   map.insert(kProjectedFG, projFg());
+   map.insert(kProjectedEfficiency, projEff_pct());
+   map.insert(kProjectedABV, projABV_pct());
+   map.insert(kProjectedAttenuation, projAtten());
+   map.insert(kBoilOff, boilOff_l());
+
+   Database::instance().updateColumns( _table, _key, map);
+
+   emit saved();
+
+}
