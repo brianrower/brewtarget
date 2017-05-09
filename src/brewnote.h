@@ -90,7 +90,7 @@ public:
    void setABV(double var);
    void setBrewDate(QDateTime const& date = QDateTime::currentDateTime());
    void setFermentDate(QDateTime const& date);
-   void setNotes(const QString& var, bool notify = true);
+   void setNotes(const QString& var);
    void setSg(double var);
    void setVolumeIntoBK_l(double var);
    void setBrewhouseEff_pct(double var);
@@ -203,6 +203,20 @@ private:
    double _finalVolume;
    double _boilOff;
    QString _notes;
+
+   double _projBoilGrav;
+   double _projVolIntoBoil;
+   double _projStrikeTemp;
+   double _projMashFinTemp;
+   double _projOg;
+   double _projVolIntoFerm;
+   double _projFg;
+   double _projEff_pct;
+   double _projABV_pct;
+   double _projPoints;
+   double _projFermPoints;
+   double _projAtten;
+
 };
 
 Q_DECLARE_METATYPE( QList<BrewNote*> )

@@ -311,18 +311,18 @@ void BrewNote::recalculateEff(Recipe* parent)
 // Setters=====================================================================
 void BrewNote::setBrewDate(QDateTime const& date)
 {
-   set(kBrewDateProp, kBrewDate, date.toString(Qt::ISODate));
+   _brewDate = date;
    emit brewDateChanged(date);
 }
 
 void BrewNote::setFermentDate(QDateTime const& date)
 {
-   set(kFermentDateProp, kFermentDate, date.toString(Qt::ISODate));
+   _fermentDate = date;
 }
 
-void BrewNote::setNotes(QString const& var, bool notify)
+void BrewNote::setNotes(QString const& var)
 {
-   set(kNotesProp, kNotes, var, notify);
+   _notes = var;
 }
 
 void BrewNote::setLoading(bool flag) { loading = flag; }
@@ -332,7 +332,7 @@ void BrewNote::setLoading(bool flag) { loading = flag; }
 // the brewnote.
 void BrewNote::setSg(double var)
 {
-   set(kSpecificGravityProp, kSpecificGravity, var);
+   _sg = var;
 
    if ( loading )
       return;
@@ -343,7 +343,7 @@ void BrewNote::setSg(double var)
 
 void BrewNote::setVolumeIntoBK_l(double var)
 {
-   set(kVolumeIntoBoilProp, kVolumeIntoBoil, var);
+   _volumeIntoBoil = var;
 
    if ( loading )
       return;
@@ -355,7 +355,7 @@ void BrewNote::setVolumeIntoBK_l(double var)
 
 void BrewNote::setOg(double var)
 {
-   set(kOriginalGravityProp, kOriginalGravity, var);
+   _og = var;
 
    if ( loading )
       return;
@@ -367,7 +367,7 @@ void BrewNote::setOg(double var)
 
 void BrewNote::setVolumeIntoFerm_l(double var)
 {
-   set(kVolumeIntoFermenterProp, kVolumeIntoFermenter, var);
+   _volumeIntoFerm = var;
 
    if ( loading )
       return;
@@ -377,7 +377,7 @@ void BrewNote::setVolumeIntoFerm_l(double var)
 
 void BrewNote::setFg(double var)
 {
-   set(kFinalGravityProp, kFinalGravity, var);
+   _fg = var;
 
    if ( loading )
       return;
@@ -401,7 +401,7 @@ void BrewNote::setProjPoints(double var)
       convertPnts = (total_g - 1.0 ) * 1000;
    }
 
-   set(kProjectedPointsProp, kProjectedPoints, convertPnts);
+   _projPoints = convertPnts;
 }
 
 void BrewNote::setProjFermPoints(double var)
@@ -418,123 +418,123 @@ void BrewNote::setProjFermPoints(double var)
       convertPnts = (total_g - 1.0 ) * 1000;
    }
 
-   set(kProjectedPointsProp, kProjectedFermentationPoints, convertPnts);
+   _projFermPoints = convertPnts;
 }
 
 void BrewNote::setABV(double var)
 {
-   set(kABVProp, kABV, var);
+   _abv = var;
 }
 
 void BrewNote::setEffIntoBK_pct(double var)
 {
-   set(kEfficiencyIntoBoilProp, kEfficiencyIntoBoil, var);
+   _effIntoBoil = var;
 }
 
 void BrewNote::setBrewhouseEff_pct(double var)
 {
-   set(kBrewhouseEfficiencyProp, kBrewhouseEfficiency, var);
+   _brewhouseEfft = var;
 }
 
 void BrewNote::setStrikeTemp_c(double var)
 {
-   set(kStrikeTempProp, kStrikeTemp, var);
+   _strikeTemp = var;
 }
 
 void BrewNote::setMashFinTemp_c(double var)
 {
-   set(kMashFinalTempProp, kMashFinalTemp, var);
+   _mashFinTemp = var;
 }
 
 void BrewNote::setPostBoilVolume_l(double var)
 {
-   set(kPostBoilVolumeProp, kPostBoilVolume, var);
+   _postBoilVolume = var;
 }
 
 void BrewNote::setPitchTemp_c(double var)
 {
-   set(kPitchTempProp, kPitchTemp, var);
+   _pitchTemp = var;
 }
 
 void BrewNote::setFinalVolume_l(double var)
 {
-   set(kFinalVolumeProp, kFinalVolume, var);
+   _finalVolume = var;
 }
 
 void BrewNote::setProjBoilGrav(double var)
 {
-   set(kProjectedBoilGravityProp, kProjectedBoilGravity, var);
+   _projBoilGrav = var;
 }
 
 void BrewNote::setProjVolIntoBK_l(double var)
 {
-   set(kProjectedVolumeIntoBoilProp, kProjectedVolumeIntoBoil, var);
+   _projVolIntoBoil = var;
 }
 
 void BrewNote::setProjStrikeTemp_c(double var)
 {
-   set(kProjectedStrikeTempProp, kProjectedStrikeTemp, var);
+   _projStrikeTemp = var;
 }
 
 void BrewNote::setProjMashFinTemp_c(double var)
 {
-   set(kProjectedMashFinishTempProp, kProjectedMashFinishTemp, var);
+   _projMashFinTemp = var;
 }
 
 void BrewNote::setProjOg(double var)
 {
-   set(kProjectedOGProp, kProjectedOG, var);
+   _projOg = var;
 }
 
 void BrewNote::setProjVolIntoFerm_l(double var)
 {
-   set(kProjectedVolumeIntoFermenterProp, kProjectedVolumeIntoFermenter, var);
+   _projVolIntoFerm = var;
 }
 
 void BrewNote::setProjFg(double var)
 {
-   set(kProjectedFGProp, kProjectedFG, var);
+   _projFg = var;
 }
 
 void BrewNote::setProjEff_pct(double var)
 {
-   set(kProjectedEfficiencyProp, kProjectedEfficiency, var);
+   _projEff_pct = var;
 }
 
 void BrewNote::setProjABV_pct(double var)
 {
-   set(kProjectedABVProp, kProjectedABV, var);
+   _projABV_pct = var;
 }
 
 void BrewNote::setProjAtten(double var)
 {
-   set(kProjectedAttenuationProp, kProjectedAttenuation, var);
+   _projAtten = var;
 }
 
 void BrewNote::setBoilOff_l(double var)
 {
-   set(kBoilOffProp, kBoilOff, var);
+   _boilOff = var;
 }
 
 // Getters
 QDateTime BrewNote::brewDate() const
 {
-   return QDateTime::fromString(get(kBrewDate).toString(),Qt::ISODate);
+   return _brewDate;
 }
 
 QString BrewNote::brewDate_str() const
 {
-   return get(kBrewDate).toString();
+   return _brewDate.toString();
 }
 
 QDateTime BrewNote::fermentDate() const
 {
-   return QDateTime::fromString(fermentDate_str(), Qt::ISODate);
+   return _fermentDate;
 }
 
 QString BrewNote::fermentDate_str() const
 {
-   return get(kFermentDate).toString();
+   return _fermentDate.toString();
 }
 
 QString BrewNote::fermentDate_short() const
@@ -544,7 +544,7 @@ QString BrewNote::fermentDate_short() const
 
 QString BrewNote::notes() const
 {
-   return get(kNotes).toString();
+   return _notes;
 }
 
 QString BrewNote::brewDate_short() const
@@ -554,131 +554,131 @@ QString BrewNote::brewDate_short() const
 
 double BrewNote::sg() const
 {
-   return get(kSpecificGravity).toDouble();
+   return _sg;
 }
 
 double BrewNote::abv() const
 {
-   return get(kABV).toDouble();
+   return _abv;
 }
 
 double BrewNote::volumeIntoBK_l() const
 {
-   return get(kVolumeIntoBoil).toDouble();
+   return _volumeIntoBoil;
 }
 
 double BrewNote::effIntoBK_pct() const
 {
-   return get(kEfficiencyIntoBoil).toDouble();
+   return _effIntoBoil;
 }
 
 double BrewNote::brewhouseEff_pct() const
 {
-   return get(kBrewhouseEfficiency).toDouble();
+   return _brewhouseEfft;
 }
 
 double BrewNote::strikeTemp_c() const
 {
-   return get(kStrikeTemp).toDouble();
+   return _strikeTemp;
 }
 
 double BrewNote::mashFinTemp_c() const
 {
-   return get(kMashFinalTemp).toDouble();
+   return _mashFinTemp;
 }
 
 double BrewNote::og() const
 {
-   return get(kOriginalGravity).toDouble();
+   return _og;
 }
 
 double BrewNote::volumeIntoFerm_l() const
 {
-   return get(kVolumeIntoFermenter).toDouble();
+   return _volumeIntoFerm;
 }
 
 double BrewNote::postBoilVolume_l() const
 {
-   return get(kPostBoilVolume).toDouble();
+   return _postBoilVolume;
 }
 
 double BrewNote::pitchTemp_c() const
 {
-   return get(kPitchTemp).toDouble();
+   return _pitchTemp;
 }
 
 double BrewNote::fg() const
 {
-   return get(kFinalGravity).toDouble();
+   return _fg;
 }
 
 double BrewNote::finalVolume_l() const
 {
-   return get(kFinalVolume).toDouble();
+   return _finalVolume;
 }
 
 double BrewNote::projBoilGrav() const
 {
-   return get(kProjectedBoilGravity).toDouble();
+   return _projBoilGrav;
 }
 
 double BrewNote::projVolIntoBK_l() const
 {
-   return get(kProjectedVolumeIntoBoil).toDouble();
+   return _projVolIntoBoil;
 }
 
 double BrewNote::projStrikeTemp_c() const
 {
-   return get(kProjectedStrikeTemp).toDouble();
+   return _projStrikeTemp;
 }
 
 double BrewNote::projMashFinTemp_c() const
 {
-   return get(kProjectedMashFinishTemp).toDouble();
+   return _projMashFinTemp;
 }
 
 double BrewNote::projOg() const
 {
-   return get(kProjectedOG).toDouble();
+   return _projOg;
 }
 
 double BrewNote::projVolIntoFerm_l() const
 {
-   return get(kProjectedVolumeIntoFermenter).toDouble();
+   return _projVolIntoFerm;
 }
 
 double BrewNote::projFg() const
 {
-   return get(kProjectedFG).toDouble();
+   return _projFg;
 }
 
 double BrewNote::projEff_pct() const
 {
-   return get(kProjectedEfficiency).toDouble();
+   return _projEff_pct;
 }
 
 double BrewNote::projABV_pct() const
 {
-   return get(kProjectedABV).toDouble();
+   return _projABV_pct;
 }
 
 double BrewNote::projPoints() const
 {
-   return get(kProjectedPoints).toDouble();
+   return _projPoints;
 }
 double BrewNote::projFermPoints() const
 {
-   return get(kProjectedFermentationPoints).toDouble();
+   return _projFermPoints;
 }
 
 double BrewNote::projAtten() const
 {
-   return get(kProjectedAttenuation).toDouble();
+   return _projAtten;
 }
 
 double BrewNote::boilOff_l() const
 {
-   return get(kBoilOff).toDouble();
+   return _boilOff;
 }
 
 // calculators -- these kind of act as both setters and getters.  Likely bad
