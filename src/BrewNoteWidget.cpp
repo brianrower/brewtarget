@@ -141,7 +141,7 @@ bool BrewNoteWidget::isBrewNote(BrewNote* note) { return bNoteObs == note; }
 
 void BrewNoteWidget::updateSG()
 {
-   if (bNoteObs == 0)
+   if (bNoteObs == nullptr)
       return;
 
    bNoteObs->setSg(lineEdit_SG->toSI());
@@ -149,7 +149,7 @@ void BrewNoteWidget::updateSG()
 
 void BrewNoteWidget::updateVolumeIntoBK_l()
 {
-   if (bNoteObs == 0)
+   if (bNoteObs == nullptr)
       return;
 
    bNoteObs->setVolumeIntoBK_l(lineEdit_volIntoBK->toSI());
@@ -157,7 +157,7 @@ void BrewNoteWidget::updateVolumeIntoBK_l()
 
 void BrewNoteWidget::updateStrikeTemp_c()
 {
-   if (bNoteObs == 0)
+   if (bNoteObs == nullptr)
       return;
 
    bNoteObs->setStrikeTemp_c(lineEdit_strikeTemp->toSI());
@@ -165,7 +165,7 @@ void BrewNoteWidget::updateStrikeTemp_c()
 
 void BrewNoteWidget::updateMashFinTemp_c()
 {
-   if (bNoteObs == 0)
+   if (bNoteObs == nullptr)
       return;
 
    bNoteObs->setMashFinTemp_c(lineEdit_mashFinTemp->toSI());
@@ -173,7 +173,7 @@ void BrewNoteWidget::updateMashFinTemp_c()
 
 void BrewNoteWidget::updateOG()
 {
-   if (bNoteObs == 0)
+   if (bNoteObs == nullptr)
       return;
 
    bNoteObs->setOg(lineEdit_OG->toSI());
@@ -181,7 +181,7 @@ void BrewNoteWidget::updateOG()
 
 void BrewNoteWidget::updatePostBoilVolume_l()
 {
-   if (bNoteObs == 0)
+   if (bNoteObs == nullptr)
       return;
 
    bNoteObs->setPostBoilVolume_l(lineEdit_postBoilVol->toSI());
@@ -190,7 +190,7 @@ void BrewNoteWidget::updatePostBoilVolume_l()
 
 void BrewNoteWidget::updateVolumeIntoFerm_l()
 {
-   if (bNoteObs == 0)
+   if (bNoteObs == nullptr)
       return;
 
    bNoteObs->setVolumeIntoFerm_l(lineEdit_volIntoFerm->toSI());
@@ -199,7 +199,7 @@ void BrewNoteWidget::updateVolumeIntoFerm_l()
 
 void BrewNoteWidget::updatePitchTemp_c()
 {
-   if (bNoteObs == 0)
+   if (bNoteObs == nullptr)
       return;
 
    bNoteObs->setPitchTemp_c(lineEdit_pitchTemp->toSI());
@@ -208,7 +208,7 @@ void BrewNoteWidget::updatePitchTemp_c()
 
 void BrewNoteWidget::updateFG()
 {
-   if (bNoteObs == 0)
+   if (bNoteObs == nullptr)
       return;
 
    bNoteObs->setFg(lineEdit_FG->toSI());
@@ -217,7 +217,7 @@ void BrewNoteWidget::updateFG()
 
 void BrewNoteWidget::updateFinalVolume_l()
 {
-   if (bNoteObs == 0)
+   if (bNoteObs == nullptr)
       return;
 
    bNoteObs->setFinalVolume_l(lineEdit_finalVol->toSI());
@@ -226,7 +226,7 @@ void BrewNoteWidget::updateFinalVolume_l()
 
 void BrewNoteWidget::updateFermentDate(const QDateTime& datetime)
 {
-   if (bNoteObs == 0)
+   if (bNoteObs == nullptr)
       return;
 
    bNoteObs->setFermentDate(datetime);
@@ -234,7 +234,7 @@ void BrewNoteWidget::updateFermentDate(const QDateTime& datetime)
 
 void BrewNoteWidget::updateNotes()
 {
-   if (bNoteObs == 0)
+   if (bNoteObs == nullptr)
       return;
 
    bNoteObs->setNotes(btTextEdit_brewNotes->toPlainText());
@@ -250,7 +250,7 @@ void BrewNoteWidget::changed(QMetaProperty /*prop*/, QVariant /*val*/)
 
 void BrewNoteWidget::showChanges(QString field)
 {
-   if (bNoteObs == 0)
+   if (bNoteObs == nullptr)
       return;
 
    lineEdit_SG->setText(bNoteObs);
