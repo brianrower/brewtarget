@@ -37,8 +37,6 @@
 #include "yeast.h"
 #include "database.h"
 
-#define SUPER BeerXMLElement
-
 /************* Columns *************/
 const QString kBrewDate("brewDate");
 const QString kFermentDate("fermentDate");
@@ -104,6 +102,7 @@ const QString kBoilOffProp("boilOff_l");
 
 const QString kSugarKg("sugar_kg");
 const QString kSugarKg_IgnoreEff("sugar_kg_ignoreEfficiency");
+static const QString kFolder("folder");
 
 QHash<QString,QString> BrewNote::tagToProp = BrewNote::tagToPropHash();
 
@@ -428,17 +427,29 @@ void BrewNote::setProjFermPoints(double var)
 
 void BrewNote::setABV(double var)
 {
-   _abv = var;
+   if(_abv != var)
+   {
+      _abv = var;
+      emit abvChanged();
+   }
 }
 
 void BrewNote::setEffIntoBK_pct(double var)
 {
-   _effIntoBoil = var;
+   if(_effIntoBoil != var)
+   {
+      _effIntoBoil = var;
+      emit effIntoBoilChanged();
+   }
 }
 
 void BrewNote::setBrewhouseEff_pct(double var)
 {
-   _brewhouseEfft = var;
+   if(_brewhouseEfft != var)
+   {
+      _brewhouseEfft = var;
+      emit brewHouseEffChanged();
+   }
 }
 
 void BrewNote::setStrikeTemp_c(double var)
@@ -488,7 +499,11 @@ void BrewNote::setProjMashFinTemp_c(double var)
 
 void BrewNote::setProjOg(double var)
 {
-   _projOg = var;
+   if(_projOg != var)
+   {
+      _projOg = var;
+      emit projOGChanged();
+   }
 }
 
 void BrewNote::setProjVolIntoFerm_l(double var)
@@ -508,7 +523,12 @@ void BrewNote::setProjEff_pct(double var)
 
 void BrewNote::setProjABV_pct(double var)
 {
-   _projABV_pct = var;
+   if(var != _projABV_pct)
+   {
+      _projABV_pct = var;
+      emit projABVChanged();
+   }
+
 }
 
 void BrewNote::setProjAtten(double var)
@@ -779,7 +799,8 @@ double BrewNote::calculateActualABV_pct()
 
 void BrewNote::save()
 {
-   QVariantMap map = SUPER::getColumnValueMap();
+   QVariantMap map;
+   map.insert(kFolder, folder());
    map.insert(kBrewDate, brewDate().toString(Qt::ISODate));
    map.insert(kFermentDate, fermentDate().toString(Qt::ISODate));
    map.insert(kNotes, notes());

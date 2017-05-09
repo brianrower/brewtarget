@@ -177,6 +177,11 @@ public:
 signals:
    void brewDateChanged(const QDateTime&);
    void saved();
+   void projABVChanged();
+   void projOGChanged();
+   void effIntoBoilChanged();
+   void brewHouseEffChanged();
+   void abvChanged();
 
 private:
    BrewNote(Brewtarget::DBTable table, int key);

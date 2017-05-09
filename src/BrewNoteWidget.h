@@ -69,13 +69,15 @@ public slots:
    void updateDateFormat(Unit::unitDisplay display,Unit::unitScale scale);
 
    void updateNotes();
-//   void saveAll();
-
-   void changed(QMetaProperty,QVariant);
-   void showChanges(QString field = "");
 
    void updateProjOg(Unit::unitDisplay oldUnit, Unit::unitScale oldScale);
 
+protected slots:
+   void onProjABVChanged();
+   void onProjOGChanged();
+   void onEffIntoBoilChanged();
+   void onBrewHouseEffChanged();
+   void onABVChanged();
 
 private:
    BrewNote* bNoteObs;
