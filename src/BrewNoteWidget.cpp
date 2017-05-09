@@ -29,7 +29,7 @@
 BrewNoteWidget::BrewNoteWidget(QWidget *parent) : QWidget(parent)
 {
    setupUi(this);
-   bNoteObs = 0;
+   bNoteObs = nullptr;
    setObjectName("BrewNoteWidget");
 
    connect(lineEdit_SG, &BtLineEdit::textModified, this, &BrewNoteWidget::updateSG);
@@ -109,8 +109,8 @@ void BrewNoteWidget::setBrewNote(BrewNote* bNote)
    double low = 0.95;
    double high = 1.05;
 
-   if( bNoteObs != 0 )
-      disconnect( bNoteObs, 0, this, 0 );
+   if( bNoteObs != nullptr )
+      disconnect( bNoteObs, nullptr, this, nullptr );
    
    if ( bNote )
    {
@@ -247,29 +247,6 @@ void BrewNoteWidget::changed(QMetaProperty /*prop*/, QVariant /*val*/)
 
    showChanges();
 }
-
-/*
-void BrewNoteWidget::saveAll()
-{
-   if ( ! bNoteObs )
-      return;
-   
-   updateSG();
-   updateVolumeIntoBK_l();
-   updateStrikeTemp_c();
-   updateMashFinTemp_c();
-   updateOG();
-   updatePostBoilVolume_l();
-   updateVolumeIntoFerm_l();
-   updatePitchTemp_c();
-   updateFG();
-   updateFinalVolume_l();
-   updateFermentDate();
-   updateNotes();
-
-   hide();
-}
-*/
 
 void BrewNoteWidget::showChanges(QString field)
 {
