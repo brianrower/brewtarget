@@ -734,28 +734,14 @@ void MainWindow::treeActivated(const QModelIndex &index)
 void MainWindow::setBrewNoteByIndex(const QModelIndex &index)
 {
    BrewNoteWidget* ni;
-
    BrewNote* bNote = treeView_recipe->brewNote(index);
 
-   if ( ! bNote )
+   if ( !bNote )
       return;
-   // HERE
-   // This is some clean up work. REMOVE FROM HERE TO THERE
-   if ( bNote->projPoints() < 15 )
-   {
-      double pnts = bNote->projPoints();
-      bNote->setProjPoints(pnts);
-   }
-   if ( bNote->effIntoBK_pct() < 10 )
-   {
-      bNote->calculateEffIntoBK_pct();
-      bNote->calculateBrewHouseEff_pct();
-   }
-   // THERE
 
    Recipe* parent  = Database::instance().getParentRecipe(bNote);
-   // I think this means a brew note for a different recipe has been selected.
-   // We need to select that recipe, which will clear the current tabs
+   // If a brew note for a different recipe has been selected,
+   // select that recipe, which will clear the current tabs
    if (  parent != recipeObs )
       setRecipe(parent);
 

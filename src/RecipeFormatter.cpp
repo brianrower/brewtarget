@@ -1422,9 +1422,9 @@ QString RecipeFormatter::buildBrewNotesHtml()
 
       bnTable += QString("<tr><td class=\"left\">%1</td><td class=\"value\">%2%</td><td class=\"right\">%3</td><td class=\"value\">%4</td></tr>")
                  .arg(tr("Eff into BK"))
-                 .arg(Brewtarget::displayAmount(note->calculateEffIntoBK_pct(), 0, 2))
+                 .arg(Brewtarget::displayAmount(note->effIntoBK_pct(), 0, 2))
                  .arg(tr("Projected OG"))
-                 .arg(Brewtarget::displayAmount(note->calculateOg(), section, "projOg", Units::sp_grav, 3));
+                 .arg(Brewtarget::displayAmount(note->projOg(), section, "projOg", Units::sp_grav, 3));
       bnTable += "</table>";
 
       // POSTBOIL
@@ -1440,10 +1440,10 @@ QString RecipeFormatter::buildBrewNotesHtml()
                  .arg(tr("Volume Into Fermenter"))
                  .arg(Brewtarget::displayAmount(note->volumeIntoFerm_l(), section, "volumeIntoFerm_l", Units::liters))
                  .arg(tr("Brewhouse Eff"))
-                 .arg(Brewtarget::displayAmount(note->calculateBrewHouseEff_pct(), 0, 2));
+                 .arg(Brewtarget::displayAmount(note->brewhouseEff_pct(), 0, 2));
       bnTable += QString("<tr><td class=\"left\">%1</td><td class=\"value\">%2%</td></tr>")
                  .arg(tr("Projected ABV"))
-                 .arg(Brewtarget::displayAmount(note->calculateABV_pct(), 0, 2));
+                 .arg(Brewtarget::displayAmount(note->projABV_pct(), 0, 2));
       bnTable += "</table>";
 
 
@@ -1461,7 +1461,7 @@ QString RecipeFormatter::buildBrewNotesHtml()
                  .arg(tr("Date"))
                  .arg(note->fermentDate_short())
                  .arg(tr("ABV"))
-                 .arg(Brewtarget::displayAmount(note->calculateActualABV_pct(), 0, 2));
+                 .arg(Brewtarget::displayAmount(note->abv(), 0, 2));
       bnTable += "</table>";
 
    }

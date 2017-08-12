@@ -2535,7 +2535,6 @@ bool Database::importFromXML(const QString& filename)
 
 void Database::toXml( BrewNote* a, QDomDocument& doc, QDomNode& parent )
 {
-   // TODO: implement
    QDomElement bNode;
    QDomElement tmpElement;
    QDomText tmpText;
@@ -2608,7 +2607,7 @@ void Database::toXml( BrewNote* a, QDomDocument& doc, QDomNode& parent )
    bNode.appendChild(tmpElement);
 
    tmpElement = doc.createElement("PREDICTED_OG");
-   tmpText = doc.createTextNode(BeerXMLElement::text(a->calculateOg()));
+   tmpText = doc.createTextNode(BeerXMLElement::text(a->projOg()));
    tmpElement.appendChild(tmpText);
    bNode.appendChild(tmpElement);
 
@@ -2618,7 +2617,7 @@ void Database::toXml( BrewNote* a, QDomDocument& doc, QDomNode& parent )
    bNode.appendChild(tmpElement);
 
    tmpElement = doc.createElement("PREDICTED_ABV");
-   tmpText = doc.createTextNode(BeerXMLElement::text(a->calculateABV_pct()));
+   tmpText = doc.createTextNode(BeerXMLElement::text(a->projABV_pct()));
    tmpElement.appendChild(tmpText);
    bNode.appendChild(tmpElement);
 

@@ -60,9 +60,9 @@ public:
    Q_PROPERTY( QDateTime fermentDate READ fermentDate  WRITE setFermentDate /*NOTIFY changed*/ STORED false )
    Q_PROPERTY( QString notes READ notes WRITE setNotes /*NOTIFY changed*/ STORED false )
    Q_PROPERTY( double sg READ sg WRITE setSg /*NOTIFY changed*/ STORED false )
-   Q_PROPERTY( double abv READ abv WRITE setABV /*NOTIFY changed*/ STORED false )
-   Q_PROPERTY( double effIntoBK_pct READ effIntoBK_pct WRITE setEffIntoBK_pct STORED false )
-   Q_PROPERTY( double brewhouseEff_pct READ brewhouseEff_pct WRITE setBrewhouseEff_pct STORED false )
+   Q_PROPERTY( double abv READ abv /*NOTIFY changed*/ STORED false )
+   Q_PROPERTY( double effIntoBK_pct READ effIntoBK_pct STORED false )
+   Q_PROPERTY( double brewhouseEff_pct READ brewhouseEff_pct STORED false )
    Q_PROPERTY( double volumeIntoBK_l READ volumeIntoBK_l WRITE setVolumeIntoBK_l /*NOTIFY changed*/ STORED false )
    Q_PROPERTY( double strikeTemp_c READ strikeTemp_c WRITE setStrikeTemp_c /*NOTIFY changed*/ STORED false )
    Q_PROPERTY( double mashFinTemp_c READ mashFinTemp_c WRITE setMashFinTemp_c /*NOTIFY changed*/ STORED false )
@@ -77,24 +77,21 @@ public:
    Q_PROPERTY( double projVolIntoBK_l READ projVolIntoBK_l WRITE setProjVolIntoBK_l /*NOTIFY changed*/ STORED false )
    Q_PROPERTY( double projStrikeTemp_c READ projStrikeTemp_c WRITE setProjStrikeTemp_c /*NOTIFY changed*/ STORED false )
    Q_PROPERTY( double projMashFinTemp_c READ projMashFinTemp_c WRITE setProjMashFinTemp_c /*NOTIFY changed*/ STORED false )
-   Q_PROPERTY( double projOg READ projOg WRITE setProjOg /*NOTIFY changed*/ STORED false )
+   Q_PROPERTY( double projOg READ projOg /*NOTIFY changed*/ STORED false )
    Q_PROPERTY( double projVolIntoFerm_l READ projVolIntoFerm_l WRITE setProjVolIntoFerm_l /*NOTIFY changed*/ STORED false )
    Q_PROPERTY( double projFg READ projFg WRITE setProjFg /*NOTIFY changed*/ STORED false )
    Q_PROPERTY( double projEff_pct READ projEff_pct WRITE setProjEff_pct /*NOTIFY changed*/ STORED false )
-   Q_PROPERTY( double projABV_pct READ projABV_pct WRITE setProjABV_pct /*NOTIFY changed*/ STORED false )
+   Q_PROPERTY( double projABV_pct READ projABV_pct /*NOTIFY changed*/ STORED false )
    Q_PROPERTY( double projPoints READ projPoints WRITE setProjPoints /*NOTIFY changed*/ STORED false )
    Q_PROPERTY( double projFermPoints READ projFermPoints WRITE setProjFermPoints /*NOTIFY changed*/ STORED false )
    Q_PROPERTY( double projAtten READ projAtten WRITE setProjAtten /*NOTIFY changed*/ STORED false )
 
    // Setters
-   void setABV(double var);
    void setBrewDate(QDateTime const& date = QDateTime::currentDateTime());
    void setFermentDate(QDateTime const& date);
    void setNotes(const QString& var);
    void setSg(double var);
    void setVolumeIntoBK_l(double var);
-   void setBrewhouseEff_pct(double var);
-   void setEffIntoBK_pct(double var);
    void setStrikeTemp_c(double var);
    void setMashFinTemp_c(double var);
    void setOg(double var);
@@ -137,24 +134,23 @@ public:
    QString notes() const;
 
    // Calculations
-   double calculateEffIntoBK_pct();
-   double calculateOg();
-   double calculateBrewHouseEff_pct();
+   void calcAll();
+   void calcEffIntoBK_pct();
+   void calcOg();
+   void calcBrewHouseEff_pct();
    //! Projected ABV after fermentation.
-   double calculateABV_pct();
+   void calcABV_pct();
    //! Actual ABV after we have measured og/fg.
-   double calculateActualABV_pct();
+   void calcActualABV_pct();
 
    // Projected values
    void setProjBoilGrav(double var);
    void setProjVolIntoBK_l(double var);
    void setProjStrikeTemp_c(double var);
    void setProjMashFinTemp_c(double var);
-   void setProjOg(double var);
    void setProjVolIntoFerm_l(double var);
    void setProjFg(double var);
    void setProjEff_pct(double var);
-   void setProjABV_pct(double var);
    void setProjPoints(double var);
    void setProjFermPoints(double var);
    void setProjAtten(double var);

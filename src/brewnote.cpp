@@ -48,9 +48,6 @@ const QString kVolumeIntoFermenter("volume_into_fermenter");
 const QString kFinalGravity("fg");
 const QString kProjectedPoints("projected_points");
 const QString kProjectedFermentationPoints("projected_ferm_points");
-const QString kABV("abv");
-const QString kEfficiencyIntoBoil("eff_into_bk");
-const QString kBrewhouseEfficiency("brewhouse_eff");
 const QString kStrikeTemp("strike_temp");
 const QString kMashFinalTemp("mash_final_temp");
 const QString kPostBoilVolume("post_boil_volume");
@@ -60,11 +57,9 @@ const QString kProjectedBoilGravity("projected_boil_grav");
 const QString kProjectedVolumeIntoBoil("projected_vol_into_bk");
 const QString kProjectedStrikeTemp("projected_strike_temp");
 const QString kProjectedMashFinishTemp("projected_mash_fin_temp");
-const QString kProjectedOG("projected_og");
 const QString kProjectedVolumeIntoFermenter("projected_vol_into_ferm");
 const QString kProjectedFG("projected_fg");
 const QString kProjectedEfficiency("projected_eff");
-const QString kProjectedABV("projected_abv");
 const QString kProjectedAttenuation("projected_atten");
 const QString kBoilOff("boil_off");
 
@@ -168,10 +163,7 @@ BrewNote::BrewNote(Brewtarget::DBTable table, int key)
    setBrewDate(QDateTime::fromString(get(kBrewDate).toString(),Qt::ISODate));
    setFermentDate(QDateTime::fromString(get(kFermentDate).toString(), Qt::ISODate));
    setSg(get(kSpecificGravity).toDouble());
-   setABV(get(kABV).toDouble());
    setVolumeIntoBK_l(get(kVolumeIntoBoil).toDouble());
-   setEffIntoBK_pct(get(kEfficiencyIntoBoil).toDouble());
-   setBrewhouseEff_pct(get(kBrewhouseEfficiency).toDouble());
    setStrikeTemp_c(get(kStrikeTemp).toDouble());
    setMashFinTemp_c(get(kMashFinalTemp).toDouble());
    setOg(get(kOriginalGravity).toDouble());
@@ -182,8 +174,14 @@ BrewNote::BrewNote(Brewtarget::DBTable table, int key)
    setFinalVolume_l(get(kFinalVolume).toDouble());
    setBoilOff_l(get(kBoilOff).toDouble());
    setNotes(get(kNotes).toString());
-   setProjOg(get(kProjectedOG).toDouble());
-   setProjABV_pct(get(kProjectedABV).toDouble());
+   setProjVolIntoBK_l(get(kProjectedVolumeIntoBoil).toDouble());
+   setProjVolIntoFerm_l(get(kProjectedVolumeIntoFermenter).toDouble());
+   setProjAtten(get(kProjectedAttenuation).toDouble());
+   _projFermPoints = get(kProjectedFermentationPoints).toDouble();
+   _projPoints = get(kProjectedPoints).toDouble();
+
+
+   calcAll();
 }
 
 BrewNote::BrewNote(BrewNote const& other)
@@ -192,10 +190,7 @@ BrewNote::BrewNote(BrewNote const& other)
    setBrewDate(other.brewDate());
    setFermentDate(other.fermentDate());
    setSg(other.sg());
-   setABV(other.abv());
    setVolumeIntoBK_l(other.volumeIntoBK_l());
-   setEffIntoBK_pct(other.effIntoBK_pct());
-   setBrewhouseEff_pct(other.brewhouseEff_pct());
    setStrikeTemp_c(other.strikeTemp_c());
    setMashFinTemp_c(other.mashFinTemp_c());
    setOg(other.og());
@@ -206,6 +201,8 @@ BrewNote::BrewNote(BrewNote const& other)
    setFinalVolume_l(other.finalVolume_l());
    setBoilOff_l(other.boilOff_l());
    setNotes(other.notes());
+
+   calcAll();
 }
 
 void BrewNote::populateNote(Recipe* parent)
@@ -274,7 +271,6 @@ void BrewNote::populateNote(Recipe* parent)
    }
 
    setOg( parent->og());
-   setProjOg(parent->og());
 
    setPitchTemp_c(parent->primaryTemp_c());
 
@@ -282,7 +278,6 @@ void BrewNote::populateNote(Recipe* parent)
    setProjFg( parent->fg() );
 
    setProjEff_pct(parent->efficiency_pct());
-   setProjABV_pct( parent->ABV_pct());
 
    for (int i = 0; i < yeasts.size(); ++i)
    {
@@ -294,6 +289,8 @@ void BrewNote::populateNote(Recipe* parent)
    if ( yeasts.size() == 0 || atten_pct < 0.0 )
       atten_pct = 75;
    setProjAtten(atten_pct);
+
+   calcAll();
 
 }
 
@@ -310,8 +307,8 @@ void BrewNote::recalculateEff(Recipe* parent)
    sugars = parent->calcTotalPoints();
    setProjFermPoints(sugars.value(kSugarKg) + sugars.value(kSugarKg_IgnoreEff));
 
-   calculateEffIntoBK_pct();
-   calculateBrewHouseEff_pct();
+   calcEffIntoBK_pct();
+   calcBrewHouseEff_pct();
 }
 
 // Setters=====================================================================
@@ -333,9 +330,7 @@ void BrewNote::setNotes(QString const& var)
 
 void BrewNote::setLoading(bool flag) { loading = flag; }
 
-// These five items cause the calculated fields to change. I should do this
-// with signals/slots, likely, but the *only* slot for the signal will be
-// the brewnote.
+// These five items cause the calculated fields to change
 void BrewNote::setSg(double var)
 {
    _sg = var;
@@ -343,8 +338,8 @@ void BrewNote::setSg(double var)
    if ( loading )
       return;
 
-   calculateEffIntoBK_pct();
-   calculateOg();
+   calcEffIntoBK_pct();
+   calcOg();
 }
 
 void BrewNote::setVolumeIntoBK_l(double var)
@@ -354,9 +349,9 @@ void BrewNote::setVolumeIntoBK_l(double var)
    if ( loading )
       return;
 
-   calculateEffIntoBK_pct();
-   calculateOg();
-   calculateBrewHouseEff_pct();
+   calcEffIntoBK_pct();
+   calcOg();
+   calcBrewHouseEff_pct();
 }
 
 void BrewNote::setOg(double var)
@@ -366,9 +361,9 @@ void BrewNote::setOg(double var)
    if ( loading )
       return;
 
-   calculateBrewHouseEff_pct();
-   calculateABV_pct();
-   calculateActualABV_pct();
+   calcBrewHouseEff_pct();
+   calcABV_pct();
+   calcActualABV_pct();
 }
 
 void BrewNote::setVolumeIntoFerm_l(double var)
@@ -378,7 +373,7 @@ void BrewNote::setVolumeIntoFerm_l(double var)
    if ( loading )
       return;
 
-   calculateBrewHouseEff_pct();
+   calcBrewHouseEff_pct();
 }
 
 void BrewNote::setFg(double var)
@@ -388,7 +383,7 @@ void BrewNote::setFg(double var)
    if ( loading )
       return;
 
-   calculateActualABV_pct();
+   calcActualABV_pct();
 }
 
 // This one is a bit of an odd ball. We need to convert to pure glucose points
@@ -425,33 +420,6 @@ void BrewNote::setProjFermPoints(double var)
    }
 
    _projFermPoints = convertPnts;
-}
-
-void BrewNote::setABV(double var)
-{
-   if(_abv != var)
-   {
-      _abv = var;
-      emit abvChanged();
-   }
-}
-
-void BrewNote::setEffIntoBK_pct(double var)
-{
-   if(_effIntoBoil != var)
-   {
-      _effIntoBoil = var;
-      emit effIntoBoilChanged();
-   }
-}
-
-void BrewNote::setBrewhouseEff_pct(double var)
-{
-   if(_brewhouseEfft != var)
-   {
-      _brewhouseEfft = var;
-      emit brewHouseEffChanged();
-   }
 }
 
 void BrewNote::setStrikeTemp_c(double var)
@@ -499,15 +467,6 @@ void BrewNote::setProjMashFinTemp_c(double var)
    _projMashFinTemp = var;
 }
 
-void BrewNote::setProjOg(double var)
-{
-   if(_projOg != var)
-   {
-      _projOg = var;
-      emit projOGChanged();
-   }
-}
-
 void BrewNote::setProjVolIntoFerm_l(double var)
 {
    _projVolIntoFerm = var;
@@ -521,16 +480,6 @@ void BrewNote::setProjFg(double var)
 void BrewNote::setProjEff_pct(double var)
 {
    _projEff_pct = var;
-}
-
-void BrewNote::setProjABV_pct(double var)
-{
-   if(var != _projABV_pct)
-   {
-      _projABV_pct = var;
-      emit projABVChanged();
-   }
-
 }
 
 void BrewNote::setProjAtten(double var)
@@ -708,34 +657,39 @@ double BrewNote::boilOff_l() const
    return _boilOff;
 }
 
-// calculators -- these kind of act as both setters and getters.  Likely bad
-// form
-double BrewNote::calculateEffIntoBK_pct()
+// calculators
+void BrewNote::calcAll()
 {
-   double effIntoBK;
+   calcEffIntoBK_pct();
+   calcOg();
+   calcBrewHouseEff_pct();
+   calcABV_pct();
+   calcActualABV_pct();
+}
+
+void BrewNote::calcEffIntoBK_pct()
+{
    double maxPoints, actualPoints;
-
-   // I don't think we need a lot of math here. Points has already been
-   // translated from SG into pure glucose points
    maxPoints = projPoints() * projVolIntoBK_l();
-
    actualPoints = (sg() - 1) * 1000 * volumeIntoBK_l();
 
    if (maxPoints <= 0.0)
    {
       Brewtarget::logW(QString("calculateEffIntoBK :: Avoiding div by 0, maxpoints is %1").arg(maxPoints));
-      return 0.0;
+      _effIntoBoil = 0.0;
+      return;
    }
 
-   effIntoBK = actualPoints/maxPoints * 100;
-   setEffIntoBK_pct(effIntoBK);
-
-   return effIntoBK;
+   double effIntoBK = actualPoints/maxPoints * 100;
+   if(effIntoBK != _effIntoBoil)
+   {
+      _effIntoBoil = effIntoBK;
+      emit effIntoBoilChanged();
+   }
 }
 
-// The idea is that based on the preboil gravity, estimate what the actual OG
-// will be.
-double BrewNote::calculateOg()
+// Based on the preboil gravity, estimate what the actual OG will be.
+void BrewNote::calcOg()
 {
    double cOG;
    double points, expectedVol, actualVol;
@@ -747,16 +701,18 @@ double BrewNote::calculateOg()
    if ( expectedVol <= 0.0 )
    {
       Brewtarget::logW(QString("calculated OG will be off because of bad expected volume into bk %1").arg(expectedVol));
-      return 0.0;
+      return;
    }
 
    cOG = 1+ ((points * actualVol / expectedVol) / 1000);
-   setProjOg(cOG);
-
-   return cOG;
+   if(cOG != _projOg)
+   {
+      _projOg = cOG;
+      emit projOGChanged();
+   }
 }
 
-double BrewNote::calculateBrewHouseEff_pct()
+void BrewNote::calcBrewHouseEff_pct()
 {
    double expectedPoints, actualPoints;
    double brewhouseEff;
@@ -765,14 +721,16 @@ double BrewNote::calculateBrewHouseEff_pct()
    actualPoints = (og()-1.0) * 1000.0 * volumeIntoFerm_l();
 
    brewhouseEff = actualPoints/expectedPoints * 100.0;
-   setBrewhouseEff_pct(brewhouseEff);
-
-   return brewhouseEff;
+   if(_brewhouseEfft != brewhouseEff)
+   {
+      _brewhouseEfft = brewhouseEff;
+      emit brewHouseEffChanged();
+   }
 }
 
 // Need to do some work here to figure out what the expected FG will be based
 // on the actual OG, not the calculated.
-double BrewNote::calculateABV_pct()
+void BrewNote::calcABV_pct()
 {
    double atten_pct = projAtten();
    double calculatedABV;
@@ -784,19 +742,21 @@ double BrewNote::calculateABV_pct()
    estFg = 1 + ((og()-1.0)*(1.0 - atten_pct/100.0));
 
    calculatedABV = (og()-estFg)*130;
-   setProjABV_pct(calculatedABV);
-
-   return calculatedABV;
+   if(calculatedABV != _projABV_pct)
+   {
+      _projABV_pct = calculatedABV;
+      emit projABVChanged();
+   }
 }
 
-double BrewNote::calculateActualABV_pct()
+void BrewNote::calcActualABV_pct()
 {
-   double abv;
-
-   abv = (og() - fg()) * 130;
-   setABV(abv);
-
-   return abv;
+   double abv = (og() - fg()) * 130;
+   if(_abv != abv)
+   {
+      _abv = abv;
+      emit abvChanged();
+   }
 }
 
 void BrewNote::save()
@@ -813,9 +773,6 @@ void BrewNote::save()
    map.insert(kFinalGravity, fg());
    map.insert(kProjectedPoints, projPoints());
    map.insert(kProjectedFermentationPoints, projFermPoints());
-   map.insert(kABV, abv());
-   map.insert(kEfficiencyIntoBoil, effIntoBK_pct());
-   map.insert(kBrewhouseEfficiency, brewhouseEff_pct());
    map.insert(kStrikeTemp, strikeTemp_c());
    map.insert(kMashFinalTemp, mashFinTemp_c());
    map.insert(kPostBoilVolume, postBoilVolume_l());
@@ -825,11 +782,9 @@ void BrewNote::save()
    map.insert(kProjectedVolumeIntoBoil, projVolIntoBK_l());
    map.insert(kProjectedStrikeTemp, projStrikeTemp_c());
    map.insert(kProjectedMashFinishTemp, projMashFinTemp_c());
-   map.insert(kProjectedOG, projOg());
    map.insert(kProjectedVolumeIntoFermenter, projVolIntoFerm_l());
    map.insert(kProjectedFG, projFg());
    map.insert(kProjectedEfficiency, projEff_pct());
-   map.insert(kProjectedABV, projABV_pct());
    map.insert(kProjectedAttenuation, projAtten());
    map.insert(kBoilOff, boilOff_l());
 
