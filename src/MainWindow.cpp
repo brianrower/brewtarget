@@ -1764,10 +1764,8 @@ void MainWindow::newBrewNote()
 
    foreach(QModelIndex selected, indexes)
    {
-      Recipe*   rec   = treeView_recipe->recipe(selected);
-      QModelIndex newItem;
-
-      if( rec == 0 )
+      Recipe* rec = treeView_recipe->recipe(selected);
+      if( rec == nullptr )
          continue;
 
       // Make sure everything is properly set and selected
@@ -1777,6 +1775,7 @@ void MainWindow::newBrewNote()
       BrewNote* bNote = Database::instance().newBrewNote(rec);
       bNote->populateNote(rec);
       bNote->setBrewDate();
+      bNote->save();
 
       setBrewNote(bNote);
 

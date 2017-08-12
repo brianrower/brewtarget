@@ -182,6 +182,8 @@ BrewNote::BrewNote(Brewtarget::DBTable table, int key)
    setFinalVolume_l(get(kFinalVolume).toDouble());
    setBoilOff_l(get(kBoilOff).toDouble());
    setNotes(get(kNotes).toString());
+   setProjOg(get(kProjectedOG).toDouble());
+   setProjABV_pct(get(kProjectedABV).toDouble());
 }
 
 BrewNote::BrewNote(BrewNote const& other)
