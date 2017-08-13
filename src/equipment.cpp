@@ -25,6 +25,7 @@
 #include "equipment.h"
 #include "brewtarget.h"
 #include "HeatCalculations.h"
+#include "database.h"
 
 /************* Columns *************/
 const QString kName("name");
@@ -111,6 +112,25 @@ bool operator==(Equipment &e1, Equipment &e2)
 Equipment::Equipment(Brewtarget::DBTable table, int key)
    : BeerXMLElement(table, key)
 {
+   setName(get(kName).toString());
+
+   _boilSize = get(kBoilSize).toDouble();
+   _batchSize = get(kBatchSize).toDouble();
+   _tunVolume = get(kTunVolume).toDouble();
+   _tunWeight = get(kTunWeight).toDouble();
+   _tunSpecificHeat = get(kTunSpecificHeat).toDouble();
+   _topUpWater = get(kTopUpWater).toDouble();
+   _trubChillerLoss = get(kTrubChillerLoss).toDouble();
+   _evapRate_pctHr = get(kEvaporationRate).toDouble();
+   _evapRate_lHr = get(kRealEvaporationRate).toDouble();
+   _boilTime = get(kBoilTime).toDouble();
+   _calcBoilVolume = get(kCalcBoilVolume).toBool();
+   _lauterDeadspace = get(kLauterDeadspace).toDouble();
+   _topUpKettle = get(kTopUpKettle).toDouble();
+   _hopUtilization = get(kHopUtilization).toDouble();
+   _notes = get(kNotes).toString();
+   _grainAbsorption = get(kAbsorption).toDouble();
+   _boilingPoint = get(kBoilingPoint).toDouble();
 }
 
 Equipment::Equipment( Equipment const& other )
@@ -124,6 +144,34 @@ QString Equipment::classNameStr()
    return name;
 }
 
+void Equipment::save()
+{
+   QVariantMap map;
+
+   map.insert(kName, name());
+   map.insert(kBoilSize, boilSize_l());
+   map.insert(kBatchSize, batchSize_l());
+   map.insert(kTunVolume, tunVolume_l());
+   map.insert(kTunWeight, tunWeight_kg());
+   map.insert(kTunSpecificHeat, tunSpecificHeat_calGC());
+   map.insert(kTopUpWater, topUpWater_l());
+   map.insert(kTrubChillerLoss, trubChillerLoss_l());
+   map.insert(kEvaporationRate, evapRate_pctHr());
+   map.insert(kRealEvaporationRate, evapRate_lHr());
+   map.insert(kBoilTime, boilTime_min());
+   map.insert(kCalcBoilVolume, calcBoilVolume());
+   map.insert(kLauterDeadspace, lauterDeadspace_l());
+   map.insert(kTopUpKettle, topUpKettle_l());
+   map.insert(kHopUtilization, hopUtilization_pct());
+   map.insert(kNotes, notes());
+   map.insert(kAbsorption, grainAbsorption_LKg());
+   map.insert(kBoilingPoint, boilingPoint_c());
+
+   Database::instance().updateColumns( _table, _key, map);
+
+   emit saved();
+}
+
 //============================"SET" METHODS=====================================
 
 void Equipment::setBoilSize_l( double var )
@@ -135,7 +183,7 @@ void Equipment::setBoilSize_l( double var )
    }
    else
    {
-      set(kBoilSizeProp, kBoilSize, var);
+      _boilSize = var;
       emit changedBoilSize_l(var);
    }
 }
@@ -149,7 +197,7 @@ void Equipment::setBatchSize_l( double var )
    }
    else
    {
-      set(kBatchSizeProp, kBatchSize, var);
+      _batchSize = var;
       doCalculations();
    }
 }
@@ -163,7 +211,7 @@ void Equipment::setTunVolume_l( double var )
    }
    else
    {
-      set(kTunVolumeProp, kTunVolume, var);
+      _tunVolume = var;
    }
 }
 
@@ -176,7 +224,7 @@ void Equipment::setTunWeight_kg( double var )
    }
    else
    {
-      set(kTunWeightProp, kTunWeight, var);
+      _tunWeight = var;
    }
 }
 
@@ -189,7 +237,7 @@ void Equipment::setTunSpecificHeat_calGC( double var )
    }
    else
    {
-      set(kTunSpecificHeatProp, kTunSpecificHeat, var);
+      _tunSpecificHeat = var;
    }
 }
 
@@ -202,7 +250,7 @@ void Equipment::setTopUpWater_l( double var )
    }
    else
    {
-      set(kTopUpWaterProp, kTopUpWater, var);
+      _topUpWater = var;
       doCalculations();
    }
 }
@@ -216,7 +264,7 @@ void Equipment::setTrubChillerLoss_l( double var )
    }
    else
    {
-      set(kTrubChillerLossProp, kTrubChillerLoss, var);
+      _trubChillerLoss = var;
       doCalculations();
    }
 }
@@ -230,8 +278,8 @@ void Equipment::setEvapRate_pctHr( double var )
    }
    else
    {
-      set(kEvaporationRateProp, kEvaporationRate, var);
-      set(kRealEvaporationRateProp, kRealEvaporationRate, var/100.0 * batchSize_l() ); // We always use this one, so set it.
+      _evapRate_pctHr = var;
+      _evapRate_lHr = var/100.0 * batchSize_l();
       doCalculations();
    }
 }
@@ -245,8 +293,8 @@ void Equipment::setEvapRate_lHr( double var )
    }
    else
    {
-      set(kRealEvaporationRateProp, kRealEvaporationRate, var);
-      setEvapRate_pctHr( var/batchSize_l() * 100.0 ); // We don't use it, but keep it current.
+      _evapRate_lHr = var;
+      _evapRate_pctHr = var/batchSize_l() * 100.0;
       doCalculations();
    }
 }
@@ -260,7 +308,7 @@ void Equipment::setBoilTime_min( double var )
    }
    else
    {
-      set(kBoilTimeProp, kBoilTime, var);
+      _boilTime = var;
       emit changedBoilTime_min(var);
       doCalculations();
    }
@@ -268,7 +316,7 @@ void Equipment::setBoilTime_min( double var )
 
 void Equipment::setCalcBoilVolume( bool var )
 {
-   set(kCalcBoilVolumeProp, kCalcBoilVolume, var);
+   _calcBoilVolume = var;
    if( var )
       doCalculations();
 }
@@ -282,7 +330,7 @@ void Equipment::setLauterDeadspace_l( double var )
    }
    else
    {
-      set(kLauterDeadspaceProp, kLauterDeadspace, var);
+      _lauterDeadspace = var;
    }
 }
 
@@ -295,7 +343,7 @@ void Equipment::setTopUpKettle_l( double var )
    }
    else
    {
-      set(kTopUpKettleProp, kTopUpKettle, var);
+      _topUpKettle = var;
    }
 }
 
@@ -308,13 +356,13 @@ void Equipment::setHopUtilization_pct( double var )
    }
    else
    {
-      set(kHopUtilizationProp, kHopUtilization, var);
+      _hopUtilization = var;
    }
 }
 
 void Equipment::setNotes( const QString &var )
 {
-   set(kNotesProp, kNotes, var);
+   _notes = var;
 }
 
 void Equipment::setGrainAbsorption_LKg(double var)
@@ -326,7 +374,7 @@ void Equipment::setGrainAbsorption_LKg(double var)
    }
    else
    {
-      set(kAbsorptionProp, kAbsorption, var);
+      _grainAbsorption = var;
    }
 }
 
@@ -339,7 +387,7 @@ void Equipment::setBoilingPoint_c(double var)
    }
    else 
    {
-      set(kBoildPointProp, kBoilingPoint, var);
+      _boilingPoint = var;
    }
 }
 
@@ -347,87 +395,87 @@ void Equipment::setBoilingPoint_c(double var)
 
 QString Equipment::notes() const
 {
-   return get(kNotes).toString();
+   return _notes;
 }
 
 bool Equipment::calcBoilVolume() const
 {
-   return get(kCalcBoilVolume).toBool();
+   return _calcBoilVolume;
 }
 
 double Equipment::boilSize_l() const
 {
-   return get(kBoilSize).toDouble();
+   return _boilSize;
 }
 
 double Equipment::batchSize_l() const
 {
-   return get(kBatchSize).toDouble();
+   return _batchSize;
 }
 
 double Equipment::tunVolume_l() const
 {
-   return get(kTunVolume).toDouble();
+   return _tunVolume;
 }
 
 double Equipment::tunWeight_kg() const
 {
-   return get(kTunWeight).toDouble();
+   return _tunWeight;
 }
 
 double Equipment::tunSpecificHeat_calGC() const
 {
-   return get(kTunSpecificHeat).toDouble();
+   return _tunSpecificHeat;
 }
 
 double Equipment::topUpWater_l() const
 {
-   return get(kTopUpWater).toDouble();
+   return _topUpWater;
 }
 
 double Equipment::trubChillerLoss_l() const
 {
-   return get(kTrubChillerLoss).toDouble();
+   return _trubChillerLoss;
 }
 
 double Equipment::evapRate_pctHr() const
 {
-   return get(kEvaporationRate).toDouble();
+   return _evapRate_pctHr;
 }
 
 double Equipment::evapRate_lHr() const
 {
-   return get(kRealEvaporationRate).toDouble();
+   return _evapRate_lHr;
 }
 
 double Equipment::boilTime_min() const
 {
-   return get(kBoilTime).toDouble();
+   return _boilTime;
 }
 
 double Equipment::lauterDeadspace_l() const
 {
-   return get(kLauterDeadspace).toDouble();
+   return _lauterDeadspace;
 }
 
 double Equipment::topUpKettle_l() const
 {
-   return get(kTopUpKettle).toDouble();
+   return _topUpKettle;
 }
 
 double Equipment::hopUtilization_pct() const
 {
-   return get(kHopUtilization).toDouble();
+   return _hopUtilization;
 }
 
 double Equipment::grainAbsorption_LKg()
 {
-   return get(kAbsorption).toDouble();
+   return _grainAbsorption;
 }
 
 double Equipment::boilingPoint_c() const
 {
-   return get(kBoilingPoint).toDouble();
+   return _boilingPoint;
 }
 
 void Equipment::doCalculations()

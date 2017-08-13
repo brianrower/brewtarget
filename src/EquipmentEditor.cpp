@@ -71,23 +71,23 @@ EquipmentEditor::EquipmentEditor(QWidget* parent, bool singleEquipEditor)
    obsEquip = 0;
 
    // Connect all the edit boxen
-   connect(lineEdit_boilTime,&BtLineEdit::textModified,this,&EquipmentEditor::updateCheckboxRecord);
-   connect(lineEdit_evaporationRate,&BtLineEdit::textModified,this,&EquipmentEditor::updateCheckboxRecord);
-   connect(lineEdit_topUpWater,&BtLineEdit::textModified,this,&EquipmentEditor::updateCheckboxRecord);
-   connect(lineEdit_trubChillerLoss,&BtLineEdit::textModified,this,&EquipmentEditor::updateCheckboxRecord);
-   connect(lineEdit_batchSize, &QLineEdit::editingFinished, this,&EquipmentEditor::updateCheckboxRecord);
+   connect(lineEdit_boilTime, &BtLineEdit::textModified, this, &EquipmentEditor::onUpdateCheckboxRecord);
+   connect(lineEdit_evaporationRate, &BtLineEdit::textModified, this, &EquipmentEditor::onUpdateCheckboxRecord);
+   connect(lineEdit_topUpWater, &BtLineEdit::textModified, this, &EquipmentEditor::onUpdateCheckboxRecord);
+   connect(lineEdit_trubChillerLoss, &BtLineEdit::textModified, this, &EquipmentEditor::onUpdateCheckboxRecord);
+   connect(lineEdit_batchSize, &QLineEdit::editingFinished, this, &EquipmentEditor::onUpdateCheckboxRecord);
                      
    // Set up the buttons
-   connect( pushButton_save, &QAbstractButton::clicked, this, &EquipmentEditor::save );
-   connect( pushButton_new, SIGNAL( clicked() ), this, SLOT( newEquipment() ) );
-   connect( pushButton_cancel, &QAbstractButton::clicked, this, &EquipmentEditor::cancel );
-   connect( pushButton_remove, &QAbstractButton::clicked, this, &EquipmentEditor::removeEquipment );
-   connect( pushButton_absorption, &QAbstractButton::clicked, this, &EquipmentEditor::resetAbsorption );
-   connect( equipmentComboBox, SIGNAL(activated(const QString&)), this, SLOT( equipmentSelected() ) );
+   connect( pushButton_save, &QAbstractButton::clicked, this, &EquipmentEditor::onSave );
+   connect( pushButton_new, &QAbstractButton::clicked, this, &EquipmentEditor::onNewEquipment );
+   connect( pushButton_cancel, &QAbstractButton::clicked, this, &EquipmentEditor::onCancel );
+   connect( pushButton_remove, &QAbstractButton::clicked, this, &EquipmentEditor::onRemoveEquipment );
+   connect( pushButton_absorption, &QAbstractButton::clicked, this, &EquipmentEditor::onResetAbsorption );
+   connect( equipmentComboBox, SIGNAL(activated(const QString&)), this, SLOT( onEquipmentSelected() ) );
 
    // Check boxen
-   connect(checkBox_calcBoilVolume, &QCheckBox::stateChanged, this, &EquipmentEditor::updateCheckboxRecord);
-   connect(checkBox_defaultEquipment, &QCheckBox::stateChanged, this, &EquipmentEditor::updateDefaultEquipment);
+   connect(checkBox_calcBoilVolume, &QCheckBox::stateChanged, this, &EquipmentEditor::onUpdateCheckboxRecord);
+   connect(checkBox_defaultEquipment, &QCheckBox::stateChanged, this, &EquipmentEditor::onUpdateDefaultEquipment);
 
    // Labels
    connect(label_boilSize, &BtLabel::labelChanged, lineEdit_boilSize, &BtLineEdit::lineChanged);
@@ -105,9 +105,9 @@ EquipmentEditor::EquipmentEditor(QWidget* parent, bool singleEquipEditor)
    QMetaObject::connectSlotsByName(this);
 
    // make sure the dialog gets populated the first time it's opened from the menu
-   equipmentSelected();
+   onEquipmentSelected();
    // Ensure correct state of Boil Volume edit box.
-   updateCheckboxRecord();
+   onUpdateCheckboxRecord();
 }
 
 void EquipmentEditor::doLayout()
@@ -533,7 +533,7 @@ void EquipmentEditor::setEquipment( Equipment* e )
    }
 }
 
-void EquipmentEditor::removeEquipment()
+void EquipmentEditor::onRemoveEquipment()
 {
    if( obsEquip )
       Database::instance().remove(obsEquip);
@@ -542,7 +542,7 @@ void EquipmentEditor::removeEquipment()
    setEquipment(0);
 }
 
-void EquipmentEditor::clear()
+void EquipmentEditor::onClear()
 {
    lineEdit_name->setText(QString(""));
    lineEdit_name->setCursorPosition(0);
@@ -568,7 +568,7 @@ void EquipmentEditor::clear()
    lineEdit_grainAbsorption->setText(QString(""));
 }
 
-void EquipmentEditor::equipmentSelected()
+void EquipmentEditor::onEquipmentSelected()
 {
    QModelIndex modelIndex;
    QModelIndex viewIndex(
@@ -580,7 +580,7 @@ void EquipmentEditor::equipmentSelected()
    setEquipment( equipmentListModel->at(modelIndex.row()) );
 }
 
-void EquipmentEditor::save()
+void EquipmentEditor::onSave()
 {
    if( obsEquip == 0 )
    {
@@ -595,7 +595,7 @@ void EquipmentEditor::save()
 
    double grainAbs = Brewtarget::toDouble( lineEdit_grainAbsorption->text(), &ok );
    if ( ! ok )
-      Brewtarget::logW( QString("EquipmentEditor::save() could not convert %1 to double").arg(lineEdit_grainAbsorption->text()));
+      Brewtarget::logW( QString("EquipmentEditor::onSave() could not convert %1 to double").arg(lineEdit_grainAbsorption->text()));
 
    double ga_LKg = grainAbs * volumeUnit->toSI(1.0) * weightUnit->fromSI(1.0);
 
@@ -661,11 +661,13 @@ void EquipmentEditor::save()
    obsEquip->setNotes(textEdit_notes->toPlainText());
    obsEquip->setCalcBoilVolume(checkBox_calcBoilVolume->checkState() == Qt::Checked);
 
+   obsEquip->save();
+
    setVisible(false);
    return;
 }
 
-void EquipmentEditor::newEquipment()
+void EquipmentEditor::onNewEquipment()
 {
    newEquipment(QString());
 }
@@ -687,14 +689,14 @@ void EquipmentEditor::newEquipment(QString folder)
    show();
 }
 
-void EquipmentEditor::cancel()
+void EquipmentEditor::onCancel()
 {
    setEquipment(obsEquip);
 
    setVisible(false);
 }
 
-void EquipmentEditor::resetAbsorption()
+void EquipmentEditor::onResetAbsorption()
 {
    if( obsEquip == 0 )
       return;
@@ -708,7 +710,7 @@ void EquipmentEditor::resetAbsorption()
    lineEdit_grainAbsorption->displayAmount(gaCustomUnits);
 }
 
-void EquipmentEditor::changed(QMetaProperty /*prop*/, QVariant /*val*/)
+void EquipmentEditor::onChanged(QMetaProperty /*prop*/, QVariant /*val*/)
 {
    if( sender() == obsEquip )
       showChanges();
@@ -719,7 +721,7 @@ void EquipmentEditor::showChanges()
    Equipment *e = obsEquip;
    if( e == 0 )
    {
-      clear();
+      onClear();
       return;
    }
 
@@ -767,19 +769,19 @@ void EquipmentEditor::showChanges()
    checkBox_defaultEquipment->blockSignals(false);
 }
 
-void EquipmentEditor::updateCheckboxRecord()
+void EquipmentEditor::onUpdateCheckboxRecord()
 {
    int state = checkBox_calcBoilVolume->checkState();
    if ( state == Qt::Checked )
    {
-      double bar = calcBatchSize();
+      double bar = onCalcBatchSize();
       lineEdit_boilSize->setText(bar);
       lineEdit_boilSize->setEnabled(false);
    }
    else lineEdit_boilSize->setEnabled(true);
 }
 
-double EquipmentEditor::calcBatchSize()
+double EquipmentEditor::onCalcBatchSize()
 {
    double size, topUp, trubLoss, time, evapRate;
    size     = lineEdit_batchSize->toSI();
@@ -791,7 +793,7 @@ double EquipmentEditor::calcBatchSize()
    return size - topUp + trubLoss + (time/(double)60)*evapRate;
 }
 
-void EquipmentEditor::updateDefaultEquipment(int state)
+void EquipmentEditor::onUpdateDefaultEquipment(int state)
 {
    QString optionName = "defaultEquipmentKey";
 
@@ -808,6 +810,6 @@ void EquipmentEditor::updateDefaultEquipment(int state)
 
 void EquipmentEditor::closeEvent(QCloseEvent *event)
 {
-   cancel();
+   onCancel();
    event->accept();
 }

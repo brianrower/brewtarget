@@ -143,28 +143,28 @@ public:
 
 public slots:
    //! Save the changes to the equipment.
-   void save();
+   void onSave();
    //! Create a new equipment record.
-   void newEquipment();
+   void onNewEquipment();
    //! Delete the equipment from the database.
-   void removeEquipment();
+   void onRemoveEquipment();
    //! Set the equipment to default values.
-   void clear();
+   void onClear();
    //! Close the dialog, throwing away changes.
-   void cancel();
+   void onCancel();
    //! Set absorption back to default.
-   void resetAbsorption();
+   void onResetAbsorption();
 
    //! Edit the equipment currently selected in our combobox.
-   void equipmentSelected();
+   void onEquipmentSelected();
    //! If state==Qt::Checked, set the "calculate boil volume" checkbox. Otherwise, unset.
-   void updateCheckboxRecord();
+   void onUpdateCheckboxRecord();
    //! \brief set the default equipment, or unset the current equipment as the default
-   void updateDefaultEquipment(int state);
+   void onUpdateDefaultEquipment(int state);
 
-   void changed(QMetaProperty,QVariant);
+   void onChanged(QMetaProperty,QVariant);
 
-   double calcBatchSize();
+   double onCalcBatchSize();
 
 protected:
    //! User closed the dialog

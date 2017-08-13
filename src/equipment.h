@@ -119,10 +119,14 @@ public:
    //! \brief Calculate how much wort is left immediately at knockout.
    double wortEndOfBoil_l( double kettleWort_l ) const;
 
+   void save();
+
    static QString classNameStr();
+
 
 signals:
    
+   void saved();
    void changedName(QString);
    void changedBoilSize_l(double);
    void changedBatchSize_l(double);
@@ -151,6 +155,25 @@ private:
    
    static QHash<QString,QString> tagToProp;
    static QHash<QString,QString> tagToPropHash();
+
+   double _boilSize;
+   double _batchSize;
+   double _tunVolume;
+   double _tunWeight;
+   double _tunSpecificHeat;
+   double _topUpWater;
+   double _trubChillerLoss;
+   double _evapRate_pctHr;
+   double _evapRate_lHr;
+   double _boilTime;
+   double _lauterDeadspace;
+   double _topUpKettle;
+   double _hopUtilization;
+   QString _notes;
+   bool _calcBoilVolume;
+   double _grainAbsorption;
+   double _boilingPoint;
+
 };
 
 Q_DECLARE_METATYPE( Equipment* )

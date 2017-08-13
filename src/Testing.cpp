@@ -60,6 +60,7 @@ void Testing::initTestCase()
    equipFiveGalNoLoss->setHopUtilization_pct(100);
    equipFiveGalNoLoss->setGrainAbsorption_LKg(1.0);
    equipFiveGalNoLoss->setBoilingPoint_c(100);
+   equipFiveGalNoLoss->save();
 
    // Cascade pellets at 4% AA
    cascade_4pct = Database::instance().newHop();
@@ -178,6 +179,7 @@ void Testing::postBoilLossOgTest()
    // - 2 L extra of boil size (to hit the same batch size)
    eLoss->setTrubChillerLoss_l(2.0);
    eLoss->setBoilSize_l(eNoLoss->boilSize_l() + eLoss->trubChillerLoss_l());
+   eLoss->save();
 
    // Basic recipe parameters
    recNoLoss->setName("TestRecipe_noLoss");
