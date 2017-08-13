@@ -137,29 +137,15 @@ public:
    void setCohumulone_pct( double num );
    void setMyrcene_pct( double num );
 
+   void save();
+
    static QString classNameStr();
+
 signals:
    //! \brief Emitted when \c name() changes.
    void changedName(QString);
+   void saved();
 
-   /*
-   void changedAlpha_pct(double);
-   void changedAmount_kg(double);
-   void changedUse(Use);
-   void changedTime_min(double);
-   void changedNotes(QString);
-   void changedType(Type);
-   void changedForm(Form);
-   void changedBeta_pct(double);
-   void changedHsi_pct(double);
-   void changedOrigin(QString);
-   void changedSubstitutes(QString);
-   void changedHumulene_pct(double);
-   void changedCaryophyllene_pct(double);
-   void changedCohumulone_pct(double);
-   void changedMyrcene_pct(double);
-   */
-   
 private:
    Hop(Brewtarget::DBTable table, int key);
    Hop( Hop const& other );
@@ -176,6 +162,24 @@ private:
    
    static QHash<QString,QString> tagToProp;
    static QHash<QString,QString> tagToPropHash();
+
+   double _time_min;
+   double _alpha;
+   double _amount;
+   QString _notes;
+   QString _typeString;
+   QString _formString;
+   QString _use;
+   double _beta_pct;
+   double _hsi_pct;
+   QString _origin;
+   QString _substitutes;
+   double _humulene_pct;
+   double _caryophyllene_pct;
+   double _cohumulone_pct;
+   double _myrcene_pct;
+   double _inventoryAmt;
+
 };
 
 Q_DECLARE_METATYPE( QList<Hop*> )

@@ -412,7 +412,10 @@ bool HopTableModel::setData( const QModelIndex& index, const QVariant& value, in
          return false;
    }
    if ( retVal )
+   {
+      row->save();
       headerDataChanged( Qt::Vertical, index.row(), index.row() ); // Need to re-show header (IBUs).
+   }
 
    return retVal;
 }

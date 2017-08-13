@@ -49,10 +49,10 @@ public:
 
 public slots:
    //! Save the changes.
-   void save();
+   void onSave();
    //! Clear the dialog and close it.
-   void clearAndClose();
-   void changed(QMetaProperty,QVariant);
+   void onClearAndClose();
+   void onChanged(QMetaProperty,QVariant);
 
 private:
    Hop* obsHop;

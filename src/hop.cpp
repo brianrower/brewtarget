@@ -25,8 +25,11 @@
 #include <QObject>
 #include "hop.h"
 #include "brewtarget.h"
+#include "database.h"
 
 /************* Columns *************/
+const QString kName("name");
+const QString kFolder("folder");
 const QString kUse("use");
 const QString kForm("form");
 const QString kNotes("notes");
@@ -125,11 +128,53 @@ QString Hop::classNameStr()
 Hop::Hop(Brewtarget::DBTable table, int key)
    : BeerXMLElement(table, key)
 {
+   _time_min = get(kTime).toDouble();
+   _notes = get(kNotes).toString();
+   _typeString = get(kType).toString();
+   _formString = get(kForm).toString();
+   _beta_pct = get(kBeta).toDouble();
+   _hsi_pct = get(kHSI).toDouble();
+   _origin = get(kOrigin).toString();
+   _substitutes = get(kSubstitutes).toString();
+   _humulene_pct = get(kHumulene).toDouble();
+   _caryophyllene_pct = get(kCaryophyllene).toDouble();
+   _cohumulone_pct = get(kCohumulone).toDouble();
+   _myrcene_pct = get(kMyrcene).toDouble();
+   _alpha = get(kAlpha).toDouble();
+   _amount = get(kAmount).toDouble();
+   _use = get(kUse).toString();
 }
 
 Hop::Hop( Hop const& other )
    : BeerXMLElement(other)
 {
+}
+
+void Hop::save()
+{
+   QVariantMap map;
+
+   map.insert(kUse, useString());
+   map.insert(kForm, formString());
+   map.insert(kNotes, notes());
+   map.insert(kType, typeString());
+   map.insert(kOrigin, origin());
+   map.insert(kSubstitutes, substitutes());
+   map.insert(kAlpha, alpha_pct());
+   map.insert(kAmount, amount_kg());
+   map.insert(kTime, time_min());
+   map.insert(kBeta, beta_pct());
+   map.insert(kHSI, hsi_pct());
+   map.insert(kHumulene, humulene_pct());
+   map.insert(kCaryophyllene, caryophyllene_pct());
+   map.insert(kCohumulone, cohumulone_pct());
+   map.insert(kMyrcene, myrcene_pct());
+
+   Database::instance().updateColumns( _table, _key, map);
+
+   setInventory("", kAmount, inventory());
+
+   emit saved();
 }
 
 //============================="SET" METHODS====================================
@@ -142,7 +187,7 @@ void Hop::setAlpha_pct( double num )
    }
    else
    {
-      set(kAlphaProp, kAlpha, num);
+      _alpha = num;
    }
 }
 
@@ -155,7 +200,7 @@ void Hop::setAmount_kg( double num )
    }
    else
    {
-      set(kAmountProp, kAmount, num);
+      _amount = num;
    }
 }
 
@@ -168,14 +213,14 @@ void Hop::setInventoryAmount( double num )
    }
    else
    {
-      setInventory(kInventoryProp, kAmount, num);
+      _inventoryAmt = num;
    }
 }
 
 void Hop::setUse(Use u)
 {
    if ( u >= 0 )
-      set(kUseProp, kUse, uses.at(u));
+      _use = uses.at(u);
 }
 
 void Hop::setTime_min( double num )
@@ -187,25 +232,26 @@ void Hop::setTime_min( double num )
    }
    else
    {
-      set(kTimeProp, kTime, num);
+      _time_min = num;
    }
 }
       
 void Hop::setNotes( const QString& str )
 {
-   set(kNotesProp, kNotes, str);
+   _notes = str;
 }
 
 void Hop::setType(Type t)
 {
   if ( t >= 0 )
-     set(kTypeProp, kType, types.at(t));
+     _typeString = types.at(t);
+
 }
 
 void Hop::setForm( Form f )
 {
    if ( f >= 0 )
-     set(kFormProp, kForm, forms.at(f));
+     _formString = forms.at(f);
 }
 
 void Hop::setBeta_pct( double num )
@@ -217,7 +263,7 @@ void Hop::setBeta_pct( double num )
    }
    else
    {
-      set(kBetaProp, kBeta, num);
+      _beta_pct = num;
    }
 }
 
@@ -230,18 +276,18 @@ void Hop::setHsi_pct( double num )
    }
    else
    {
-      set(kHSIProp, kHSI, num);
+      _hsi_pct = num;
    }
 }
 
 void Hop::setOrigin( const QString& str )
 {
-   set(kOriginProp, kOrigin, str);
+   _origin = str;
 }
 
 void Hop::setSubstitutes( const QString& str )
 {
-   set(kSubstitutesProp, kSubstitutes, str);
+   _substitutes = str;
 }
 
 void Hop::setHumulene_pct( double num )
@@ -253,7 +299,7 @@ void Hop::setHumulene_pct( double num )
    }
    else
    {
-      set(kHumuleneProp, kHumulene, num);
+      _humulene_pct = num;
    }
 }
 
@@ -266,7 +312,7 @@ void Hop::setCaryophyllene_pct( double num )
    }
    else
    {
-      set(kCaryophylleneProp, kCaryophyllene, num);
+      _caryophyllene_pct = num;
    }
 }
 
@@ -279,7 +325,7 @@ void Hop::setCohumulone_pct( double num )
    }
    else
    {
-      set(kCohumuloneProp, kCohumulone, num);
+      _cohumulone_pct = num;
    }
 }
 
@@ -292,7 +338,7 @@ void Hop::setMyrcene_pct( double num )
    }
    else
    {
-      set(kMyrceneProp, kMyrcene, num);
+      _myrcene_pct = num;
    }
 }
 
@@ -305,12 +351,12 @@ Hop::Use Hop::use() const
 
 const QString Hop::useString() const
 {
-   return get(kUse).toString();
+   return _use;
 }
 
 const QString Hop::notes() const
 {
-   return get(kNotes).toString();
+   return _notes;
 }
 
 Hop::Type Hop::type() const
@@ -320,7 +366,7 @@ Hop::Type Hop::type() const
 
 const QString Hop::typeString() const
 {
-   return get(kType).toString();
+   return _typeString;
 }
 
 Hop::Form Hop::form() const
@@ -330,62 +376,62 @@ Hop::Form Hop::form() const
 
 const QString Hop::formString() const
 {
-   return get(kForm).toString();
+   return _formString;
 }
 
 const QString Hop::origin() const
 {
-   return get(kOrigin).toString();
+   return _origin;
 }
 
 const QString Hop::substitutes() const
 {
-   return get(kSubstitutes).toString();
+   return _substitutes;
 }
 
 double Hop::alpha_pct() const
 {
-   return get(kAlpha).toDouble();
+   return _alpha;
 }
 
 double Hop::amount_kg() const
 {
-   return get(kAmount).toDouble();
+   return _amount;
 }
 
 double Hop::time_min() const
 {
-   return get(kTime).toDouble();
+   return _time_min;
 }
 
 double Hop::beta_pct() const
 {
-   return get(kBeta).toDouble();
+   return _beta_pct;
 }
 
 double Hop::hsi_pct() const
 {
-   return get(kHSI).toDouble();
+   return _hsi_pct;
 }
 
 double Hop::humulene_pct() const
 {
-   return get(kHumulene).toDouble();
+   return _humulene_pct;
 }
 
 double Hop::caryophyllene_pct() const
 {
-   return get(kCaryophyllene).toDouble();
+   return _caryophyllene_pct;
 }
 
 double Hop::cohumulone_pct() const
 {
-   return get(kCohumulone).toDouble();
+   return _cohumulone_pct;
 }
 
 double Hop::myrcene_pct() const
 {
-   return get(kMyrcene).toDouble();
+   return _myrcene_pct;
 }
 
 // inventory still must be handled separately, and I'm still annoyed.

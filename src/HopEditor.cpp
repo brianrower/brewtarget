@@ -34,8 +34,8 @@ HopEditor::HopEditor( QWidget* parent )
 {
    setupUi(this);
    
-   connect( buttonBox, &QDialogButtonBox::accepted, this, &HopEditor::save);
-   connect( buttonBox, &QDialogButtonBox::rejected, this, &HopEditor::clearAndClose);
+   connect( buttonBox, &QDialogButtonBox::accepted, this, &HopEditor::onSave);
+   connect( buttonBox, &QDialogButtonBox::rejected, this, &HopEditor::onClearAndClose);
 }
 
 void HopEditor::setHop( Hop* h )
@@ -46,12 +46,12 @@ void HopEditor::setHop( Hop* h )
    obsHop = h;
    if( obsHop )
    {
-      connect( obsHop, &BeerXMLElement::changed, this, &HopEditor::changed );
+      connect( obsHop, &BeerXMLElement::changed, this, &HopEditor::onChanged );
       showChanges();
    }
 }
 
-void HopEditor::save()
+void HopEditor::onSave()
 {
    Hop* h = obsHop;
 
@@ -83,17 +83,18 @@ void HopEditor::save()
 
    h->setSubstitutes(textEdit_substitutes->toPlainText());
    h->setNotes(textEdit_notes->toPlainText());
+   h->save();
 
    setVisible(false);
 }
 
-void HopEditor::clearAndClose()
+void HopEditor::onClearAndClose()
 {
    setHop(0);
    setVisible(false); // Hide the window.
 }
 
-void HopEditor::changed(QMetaProperty prop, QVariant /*val*/)
+void HopEditor::onChanged(QMetaProperty prop, QVariant /*val*/)
 {
    if( sender() == obsHop )
       showChanges(&prop);
